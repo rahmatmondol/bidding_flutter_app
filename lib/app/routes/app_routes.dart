@@ -87,6 +87,7 @@ abstract class _Paths {
   static const RESET_PASSWORD = '/reset-password';
   static const CREATE_PASSWORD = '/create-password';
   static const OTP = '/otp';
+
   static const DESCRIPTION = '/description';
   static const APPLY = '/apply';
   static const LOCATION = '/location';
