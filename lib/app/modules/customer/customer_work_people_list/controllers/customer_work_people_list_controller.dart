@@ -1,12 +1,11 @@
-import 'package:get/get.dart';
 import 'package:dirham_uae/app/components/custom_snackbar.dart';
 import 'package:dirham_uae/app/data/local/my_shared_pref.dart';
 import 'package:dirham_uae/app/modules/customer/customer_work_people_list/model/get_betting_list_model.dart';
 import 'package:dirham_uae/app/services/base_client.dart';
-import 'package:dirham_uae/utils/constants.dart';
+import 'package:dirham_uae/utils/urls.dart';
+import 'package:get/get.dart';
 
 class CustomerWorkPeopleListController extends GetxController {
-
   Rx<GetBettingListModel> getBettingListModel = GetBettingListModel().obs;
   var isLoading = false.obs;
 
@@ -20,7 +19,6 @@ class CustomerWorkPeopleListController extends GetxController {
         'Authorization':
             'Bearer ${MySharedPref.getToken("token".obs).toString()}',
       },
-
       onSuccess: (response) {
         if (response.statusCode == 201) {
           getBettingListModel.value =

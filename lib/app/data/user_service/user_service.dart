@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService {
   SharedPreferences? prefs;
+
   // Server server = Server();
 
   saveString({String? key, String? value}) async {
@@ -19,14 +20,15 @@ class UserService {
     return prefs!.getString(key!);
   }
 
-  saveBoolean({required String key, required bool value}) async {
+  Future<bool> saveBoolean({required String key, required bool value}) async {
     prefs = await SharedPreferences.getInstance();
-    prefs!.setBool(key, value);
+    return await prefs!.setBool(key, value);
   }
 
-  saveBooleanProvider({required String key, required bool value}) async {
+  Future<bool> saveBooleanProvider(
+      {required String key, required bool value}) async {
     prefs = await SharedPreferences.getInstance();
-    prefs!.setBool(key, value);
+    return await prefs!.setBool(key, value);
   }
 
   saveDouble({String? key, double? value}) async {

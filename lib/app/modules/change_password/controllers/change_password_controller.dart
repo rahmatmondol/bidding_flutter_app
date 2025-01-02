@@ -1,7 +1,7 @@
 import 'package:dirham_uae/app/components/custom_snackbar.dart';
 import 'package:dirham_uae/app/data/user_service/user_service.dart';
 import 'package:dirham_uae/app/services/base_client.dart';
-import 'package:dirham_uae/utils/constants.dart';
+import 'package:dirham_uae/utils/urls.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -63,6 +63,7 @@ class ChangePasswordController extends GetxController {
   }
 
   final count = 0.obs;
+
   @override
   void onInit() {
     super.onInit();

@@ -1,7 +1,7 @@
-import 'package:get/get.dart';
 import 'package:dirham_uae/app/modules/services/models/get_services_models.dart';
+import 'package:get/get.dart';
 
-import '../../../../utils/constants.dart';
+import '../../../../utils/urls.dart';
 import '../../../components/custom_snackbar.dart';
 import '../../../data/local/my_shared_pref.dart';
 import '../../../services/base_client.dart';
@@ -10,6 +10,7 @@ class ServicesController extends GetxController {
   RxBool isGetServiceloading = false.obs;
   RxObjectMixin<GetServiceDataModel> getServiceDataModel =
       GetServiceDataModel().obs;
+
 // **************** Get Customer Info **************
   Future getServiceData() async {
     isGetServiceloading.value = true;
@@ -21,7 +22,6 @@ class ServicesController extends GetxController {
       },
       Constants.getServiceUrl,
       RequestType.get,
-
       onSuccess: (response) {
         if (response.statusCode == 200) {
           print("get customer info status code 200");
@@ -43,6 +43,7 @@ class ServicesController extends GetxController {
   }
 
   final count = 0.obs;
+
   @override
   void onInit() {
     getServiceData();

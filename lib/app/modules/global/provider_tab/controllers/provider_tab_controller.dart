@@ -1,12 +1,12 @@
 import 'dart:ui';
 
 import 'package:country_list_pick/country_list_pick.dart';
+import 'package:dirham_uae/app/modules/global/provider_tab/models/get_zone_id_models.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:dirham_uae/app/modules/provider/provider_tab/models/get_zone_id_models.dart';
 
 import '../../../../../config/theme/light_theme_colors.dart';
-import '../../../../../utils/constants.dart';
+import '../../../../../utils/urls.dart';
 import '../../../../components/custom_loading_dialog_widget.dart';
 import '../../../../components/custom_snackbar.dart';
 import '../../../../data/user_service/user_service.dart';
@@ -35,6 +35,7 @@ class ProviderTabController extends GetxController {
       Rx(TextEditingController());
 
   RxObjectMixin<GetZoneId> getZoneIDModel = GetZoneId().obs;
+
   // *************SignUp Provider APi******************
   Future<void> signUpProvider(BuildContext context, int selectZoneId) async {
     showDialog(
@@ -61,7 +62,6 @@ class ProviderTabController extends GetxController {
       },
       Constants.providerSignUpUrl,
       RequestType.post,
-
       onSuccess: (response) {
         // if (response.data['success'] = false) {}
         print("success");
@@ -109,7 +109,6 @@ class ProviderTabController extends GetxController {
     await BaseClient.safeApiCall(
       Constants.getZoneId,
       RequestType.get,
-
       onSuccess: (response) {
         if (response.statusCode == 200) {
           print("get Zone status code 200");
@@ -130,6 +129,7 @@ class ProviderTabController extends GetxController {
   }
 
   final count = 0.obs;
+
   @override
   void onInit() {
     getZoneID();

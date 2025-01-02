@@ -1,9 +1,10 @@
+import 'package:dirham_uae/app/components/custom_text_field.dart';
+import 'package:dirham_uae/app/modules/global/login/controllers/login_controller.dart';
+import 'package:dirham_uae/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:dirham_uae/app/components/custom_text_field.dart';
-import 'package:dirham_uae/app/modules/provider/login/controllers/login_controller.dart';
-import 'package:dirham_uae/app/routes/app_pages.dart';
+
 import '../../../../../config/theme/light_theme_colors.dart';
 import '../../../../../config/theme/my_images.dart';
 import '../../../../../config/theme/my_styles.dart';
@@ -46,7 +47,6 @@ class CustomerLoginView extends StatelessWidget {
               style: kSubtitleStyle,
             ),
             CustomPasswordTextField(
-              
               hintText: "password",
               controller: loginController.customerPassController,
             ),

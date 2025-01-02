@@ -1,19 +1,19 @@
 // ignore_for_file: invalid_use_of_protected_member, non_constant_identifier_names, unnecessary_brace_in_string_interps, unused_local_variable
 
+import 'package:dio/dio.dart' as diox;
 import 'package:dirham_uae/app/components/custom_snackbar.dart';
 import 'package:dirham_uae/app/data/local/my_shared_pref.dart';
 import 'package:dirham_uae/app/modules/customer/customer_add_service/model/customer_add_service_model.dart';
 import 'package:dirham_uae/app/modules/customer/customer_payment/location_service/location_service.dart';
 import 'package:dirham_uae/app/services/base_client.dart';
-import 'package:dirham_uae/utils/constants.dart';
+import 'package:dirham_uae/utils/urls.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quill_html_editor/quill_html_editor.dart';
-import 'package:dio/dio.dart' as diox;
-import 'package:http_parser/http_parser.dart';
 
 class CustomerAddServiceController extends GetxController {
   RxString enteredText = "".obs;
@@ -22,11 +22,10 @@ class CustomerAddServiceController extends GetxController {
   Rx<TextEditingController> skill = TextEditingController().obs;
   Rx<TextEditingController> price = TextEditingController().obs;
   Rx<TextEditingController> address = TextEditingController().obs;
+
   // Rx<TextEditingController> description = TextEditingController().obs;
 
-  Rx<QuillEditorController> description= QuillEditorController().obs;
-
-   
+  Rx<QuillEditorController> description = QuillEditorController().obs;
 
   var lat;
   var lng;
@@ -71,7 +70,6 @@ class CustomerAddServiceController extends GetxController {
 
   final myBox = Hive.box('mapBox');
 
-
   var isLoading = false.obs;
 
   RxList<XFile?> selectedthumbnail = RxList<XFile?>([]);
@@ -81,7 +79,8 @@ class CustomerAddServiceController extends GetxController {
 
   final ImagePicker picker = ImagePicker();
 
-RxList<String?> ListTags = RxList<String?>();
+  RxList<String?> ListTags = RxList<String?>();
+
   // var ListTags = List<String>.empty(growable: true).obs;
 
   var suggestList = [];
@@ -99,8 +98,7 @@ RxList<String?> ListTags = RxList<String?>();
     var currentAddress;
     currentAddress = myBox.get("address3");
 
-        String htmlText= await description.value.getText();
-
+    String htmlText = await description.value.getText();
 
     isLoading.value = true;
     if (selectedthumbnail.value.isEmpty ||
@@ -108,8 +106,9 @@ RxList<String?> ListTags = RxList<String?>();
       CustomSnackBar.showCustomErrorToast(
           message: "Please Select feature image");
     } else {
-      List<String> thumbnailPaths = selectedthumbnail.map((file) => file!.path).toList();
-    String tag = ListTags.join(", ");
+      List<String> thumbnailPaths =
+          selectedthumbnail.map((file) => file!.path).toList();
+      String tag = ListTags.join(", ");
 
       try {
         print(' thumbnail path${thumbnailPaths}');
@@ -142,7 +141,6 @@ RxList<String?> ListTags = RxList<String?>();
           },
           Constants.customerCreateService,
           RequestType.post,
-
           onSuccess: (response) {
             // if (response.statusCode == 201) {
             //   print("ADDDDDDDDDDDDDDDDDDDDD${response.data}");
@@ -175,10 +173,10 @@ RxList<String?> ListTags = RxList<String?>();
       }
     }
   }
- @override
+
+  @override
   void dispose() {
     name.value.clear();
-    
 
     super.dispose();
   }

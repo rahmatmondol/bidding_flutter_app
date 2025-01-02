@@ -1,10 +1,10 @@
-import 'package:get/get.dart';
 import 'package:dirham_uae/app/components/custom_snackbar.dart';
 import 'package:dirham_uae/app/data/local/my_shared_pref.dart';
 import 'package:dirham_uae/app/data/user_service/user_service.dart';
 import 'package:dirham_uae/app/routes/app_pages.dart';
 import 'package:dirham_uae/app/services/base_client.dart';
-import 'package:dirham_uae/utils/constants.dart';
+import 'package:dirham_uae/utils/urls.dart';
+import 'package:get/get.dart';
 
 class CustomerProfileController extends GetxController {
   RxBool isLogoutLoading = false.obs;
@@ -22,7 +22,6 @@ class CustomerProfileController extends GetxController {
         },
         Constants.customerlogOutUrl,
         RequestType.post,
-
         onSuccess: (response) {
           print("success");
           if (response.statusCode == 200) {
@@ -51,6 +50,7 @@ class CustomerProfileController extends GetxController {
   }
 
   final count = 0.obs;
+
   @override
   void onInit() {
     super.onInit();

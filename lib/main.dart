@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+
 import 'app/data/local/my_shared_pref.dart';
 import 'app/routes/app_pages.dart';
 import 'config/theme/my_theme.dart';
@@ -33,15 +34,13 @@ Future<void> main() async {
             return Theme(
               data: MyTheme.getThemeData(isLight: themeIsLight),
               child: MediaQuery(
-                
                 data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
                 child: widget!,
               ),
             );
           },
-          initialRoute:
-              AppPages.INITIAL, 
-          getPages: AppPages.routes, 
+          initialRoute: AppPages.INITIAL,
+          getPages: AppPages.routes,
         );
       },
     ),
