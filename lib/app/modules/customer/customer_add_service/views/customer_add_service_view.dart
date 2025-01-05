@@ -1,11 +1,6 @@
 // ignore_for_file: invalid_use_of_protected_member, unnecessary_null_comparison, unused_local_variable, unnecessary_brace_in_string_interps
 
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:quill_html_editor/quill_html_editor.dart';
+import 'package:dirham_uae/app/components/custom_appBar.dart';
 import 'package:dirham_uae/app/components/custom_button.dart';
 import 'package:dirham_uae/app/components/custom_text_field.dart';
 import 'package:dirham_uae/app/modules/customer/customer_pick_location/views/customer_pick_location_view.dart';
@@ -13,8 +8,15 @@ import 'package:dirham_uae/app/modules/provider/home/controllers/home_controller
 import 'package:dirham_uae/config/theme/light_theme_colors.dart';
 import 'package:dirham_uae/config/theme/my_styles.dart';
 import 'package:dirham_uae/utils/global_variable/my_scaffold_background.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:image_picker/image_picker.dart';
+
 import '../../../../../config/theme/my_images.dart';
 import '../../../../../utils/global_variable/divider.dart';
+import '../../../provider/home/models/get_categories_model.dart';
 import '../controllers/customer_add_service_controller.dart';
 
 class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
@@ -36,9 +38,19 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
       body: MyScaffoldBackground(
         size: size,
         child: Obx(() {
-          final catrgory =
-              (homeC.getCategoriesDataModel.value.data?.category ?? [])
-                  .firstWhere((c) => c.id == c.id); // Ch
+          // final catrgory =
+          //     (homeC.getCategoriesDataModel.value.data?.category ?? [])
+          //         .firstWhere((c) => c.id == c.id); // Ch
+          final categories =
+              homeC.getCategoriesDataModel.value.data?.category ?? [];
+
+          // Find the selected category safely
+          Category? selectedCategory;
+          if (controller.selectedCategory.value.isNotEmpty) {
+            selectedCategory = categories.firstWhereOrNull((category) =>
+                category.name == controller.selectedCategory.value);
+          }
+
           return SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: SafeArea(
@@ -49,54 +61,17 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      divider,
-                      Text(
-                        "Create a Service",
-                        style: kTitleTextstyle.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      divider,
-                      divider,
+                      CustomHeaderBar(title: 'Change Password'),
                       Text("Service Name",
                           style: kTitleTextstyle.copyWith(
                             fontWeight: FontWeight.w600,
                           )),
+                      divider,
                       CustomTextField(
                         fillColor: LightThemeColors.scaffoldBackgroundColor,
                         hintText: "Enter Your First name",
                         controller: controller.name.value,
                       ),
-                      divider,
-                      // *************************
-                      // Container(
-                      //   height: size.height / 5.5,
-                      //   decoration: BoxDecoration(
-                      //     color: LightThemeColors.grayColor,
-                      //     borderRadius: BorderRadius.circular(5),
-                      //   ),
-                      //   child: controller.images == null
-                      //       ? Center(
-                      //           child: Text("Add Images"),
-                      //         )
-                      //       : ListView.builder(
-                      //           scrollDirection: Axis.horizontal,
-                      //           itemCount: controller.images!.length,
-                      //           itemBuilder: (context, int index) {
-                      //             return Padding(
-                      //               padding: const EdgeInsets.only(right: 10.0),
-                      //               child: ClipRRect(
-                      //                 borderRadius: BorderRadius.circular(15),
-                      //                 child: Image.file(
-                      //                   File(controller.images![index].path
-                      //                       .toString()),
-                      //                   height: 150,
-                      //                 ),
-                      //               ),
-                      //             );
-                      //           },
-                      //         ),
-                      // ),
 
                       divider,
                       // *********** Add button****************
@@ -109,12 +84,12 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                                 .map((pickedFile) => XFile(pickedFile.path))
                                 .toList();
                             controller.customerCreateService(
-                                catrgory.id!.toInt(),
+                                selectedCategory?.id ?? 0,
                                 controller.selectedCurrency.value,
                                 controller.selectedPriceType.value,
                                 controller.selectedLevelList.value);
                           } else {
-                            print('dvgfcvgebvvbcudebvcudvuvvcdbv');
+                            print('Image picked successfully');
                           }
                         },
                         child: Container(
@@ -130,51 +105,6 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                         ),
                       ),
 
-                      // controller.images == null
-                      //     ? Container(
-                      //         height: size.height / 5.5,
-                      //         decoration: BoxDecoration(
-                      //             color: LightThemeColors.grayColor,
-                      //             borderRadius: BorderRadius.circular(5)),
-                      //         child: Center(
-                      //           child: Text("Add Image's"),
-                      //         ),
-                      //       )
-                      //     : ListView.builder(
-                      //         scrollDirection: Axis.horizontal,
-                      //         itemCount: controller.images!.length,
-                      //         itemBuilder: (context, int index) {
-                      //           return Padding(
-                      //             padding: const EdgeInsets.only(right: 10.0),
-                      //             child: ClipRRect(
-                      //               borderRadius: BorderRadius.circular(15),
-                      //               child: Image.file(
-                      //                 File(controller.images![index].path),
-                      //                 height: 150,
-                      //               ),
-                      //             ),
-                      //           );
-                      //         }),
-
-                      // divider,
-                      // InkWell(
-                      //   onTap: () {
-                      //     // showMyBottomSheet(
-                      //     //     context: context, controller: controller);
-                      //     controller.pickMultiImage();
-                      //   },
-                      //   child: Container(
-                      //     padding: EdgeInsets.symmetric(
-                      //         vertical: 15.r, horizontal: 20),
-                      //     decoration: BoxDecoration(
-                      //       color: LightThemeColors.secounderyColor,
-                      //       borderRadius: BorderRadius.circular(20.r),
-                      //       // border: BorderRadius.all(),
-                      //     ),
-                      //     child: Center(child: Text("Add Photos")),
-                      //   ),
-                      // ),
-
                       divider,
                       Text(" Service Description",
                           style: kTitleTextstyle.copyWith(
@@ -183,59 +113,34 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                       //
                       gapHeight(size: 2.0.h),
                       Container(
-                        height: size.height * 0.60,
-                        //height: 200.0,
+                        height: size.height * 0.25,
+                        // Reduced height since we don't need toolbar
                         decoration: BoxDecoration(
                           color: LightThemeColors.secounderyColor,
                           borderRadius: BorderRadius.circular(10.0.r),
                         ),
-                        child: Column(
-                          children: [
-                            ToolBar(
-                              toolBarColor: Colors.white,
-                              activeIconColor: Colors.green,
-                              padding: const EdgeInsets.all(8),
-                              iconSize: 25,
-                              controller: controller.description.value,
+                        child: TextField(
+                          controller: controller.description.value,
+                          style: TextStyle(color: LightThemeColors.whiteColor),
+                          maxLines: null,
+                          // Allows multiple lines
+                          expands: true,
+                          // Makes the TextField expand to fill the container
+                          textAlignVertical: TextAlignVertical.top,
+                          decoration: InputDecoration(
+                            hintText: 'Describe your service...',
+                            hintStyle: TextStyle(
+                                color: LightThemeColors.whiteColor
+                                    .withOpacity(0.5)),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0.r),
+                              borderSide: BorderSide.none,
                             ),
-                            QuillHtmlEditor(
-                              textStyle:
-                                  TextStyle(color: LightThemeColors.whiteColor),
-                              backgroundColor: LightThemeColors.secounderyColor,
-                              hintText: 'Hint text goes here',
-                              controller: controller.description.value,
-                              isEnabled: true,
-                              ensureVisible: false,
-                              minHeight: 300,
-                              hintTextAlign: TextAlign.start,
-                              padding: const EdgeInsets.only(left: 10, top: 5),
-                              hintTextPadding: EdgeInsets.zero,
-                            ),
-                          ],
+                            contentPadding: EdgeInsets.all(15),
+                          ),
                         ),
                       ),
-                      // Container(
-                      //   height: size.height * 0.30,
-                      //   decoration: BoxDecoration(
-                      //       color: LightThemeColors.secounderyColor,
-                      //       borderRadius: BorderRadius.circular(8.0.r)),
-                      //   child: HtmlEditor(
-                      //     controller: controller.description,
-                      //     htmlEditorOptions: HtmlEditorOptions(
-                      //       shouldEnsureVisible: true,
-                      //       hint: "write a describe your service",
-                      //       spellCheck: true,
-                      //       autoAdjustHeight: true,
-                      //       adjustHeightForKeyboard: true,
-                      //     ),
-                      //     htmlToolbarOptions: HtmlToolbarOptions(
-                      //       textStyle:
-                      //           TextStyle(color: LightThemeColors.whiteColor),
-                      //       toolbarPosition: ToolbarPosition.aboveEditor,
-                      //       buttonColor: LightThemeColors.whiteColor,
-                      //     ),
-                      //   ),
-                      // ),
+
                       SizedBox(
                         height: 25,
                       ),
@@ -246,75 +151,122 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                         ),
                       ),
                       gapHeight(size: 2.0.h),
-                      // *****************
                       Container(
-                        height: size.height / 5,
-                        //height: 200.0,
                         decoration: BoxDecoration(
                           color: LightThemeColors.secounderyColor,
                           borderRadius: BorderRadius.circular(10.0.r),
                         ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10.0.w),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // TypeAheadField(
-                              //   textFieldConfiguration: TextFieldConfiguration(
-                              //     style: TextStyle(
-                              //         color: LightThemeColors.whiteColor),
-                              //     controller: controller.skill.value,
-                              //     onEditingComplete: () {
-                              //       if (controller.ListTags.length < 5) {
-                              //         controller.ListTags.add(
-                              //             controller.skill.value.text);
-                              //         print(controller.skill.value.text);
-                              //       }
-                              //       controller.skill.value.clear();
-                              //     },
-                              //     autofocus: false,
-                              //     decoration: InputDecoration(
-                              //         border: UnderlineInputBorder(
-                              //             borderSide: BorderSide.none),
-                              //         hintText: 'add your five skill'),
-                              //   ),
-                              //   suggestionsCallback: (pattern) {
-                              //     return controller.suggestList
-                              //         .where((element) => false);
-                              //   },
-                              //   itemBuilder: (context, itemData) {
-                              //     return ListTile(
-                              //       leading: Icon(Icons.tag),
-                              //       title: Text(itemData),
-                              //     );
-                              //   },
-                              //   onSuggestionSelected: (suggestion) {
-                              //     controller.ListTags.add(suggestion);
-                              //     print("${suggestion}");
-                              //   }, onSelected: (Object? value) {  },
-                              // ),
-                              controller.ListTags.length == 0
-                                  ? Center(child: Text('No tag selected'))
-                                  : Wrap(
-                                      children: controller.ListTags.map(
-                                          (element) => Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 4),
-                                                child: Chip(
-                                                  backgroundColor:
-                                                      LightThemeColors
-                                                          .grayColor,
-                                                  label: Text(element!),
-                                                  deleteIcon: Icon(Icons.clear),
-                                                  onDeleted: () {
-                                                    controller.ListTags.remove(
-                                                        element);
-                                                  },
+                        child: Column(
+                          children: [
+                            // Tag Input Field
+                            Padding(
+                              padding: EdgeInsets.all(8.r),
+                              child: TextField(
+                                controller: controller.tagController.value,
+                                style: TextStyle(
+                                    color: LightThemeColors.whiteColor),
+                                decoration: InputDecoration(
+                                  hintText: 'Add up to 5 skills...',
+                                  hintStyle: TextStyle(
+                                      color: LightThemeColors.whiteColor
+                                          .withOpacity(0.5)),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.r),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  filled: true,
+                                  fillColor: LightThemeColors.grayColor
+                                      .withOpacity(0.2),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(Icons.add,
+                                        color: LightThemeColors.whiteColor),
+                                    onPressed: () {
+                                      if (controller.tagController.value.text
+                                          .isNotEmpty) {
+                                        controller.addTag(controller
+                                            .tagController.value.text
+                                            .trim());
+                                      }
+                                    },
+                                  ),
+                                ),
+                                onSubmitted: (value) {
+                                  if (value.isNotEmpty) {
+                                    controller.addTag(value.trim());
+                                  }
+                                },
+                              ),
+                            ),
+
+                            // API Tags Suggestions
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              padding: EdgeInsets.symmetric(horizontal: 8.r),
+                              child: Obx(() => Row(
+                                    children: controller.apiTags
+                                        .where((tag) => !controller.selectedTags
+                                            .contains(tag))
+                                        .take(5)
+                                        .map((tag) => Padding(
+                                              padding:
+                                                  EdgeInsets.only(right: 8.r),
+                                              child: InkWell(
+                                                onTap: () =>
+                                                    controller.addTag(tag),
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 12.r,
+                                                      vertical: 6.r),
+                                                  decoration: BoxDecoration(
+                                                    color: LightThemeColors
+                                                        .grayColor
+                                                        .withOpacity(0.2),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            16.r),
+                                                  ),
+                                                  child: Text(
+                                                    tag,
+                                                    style: TextStyle(
+                                                        color: LightThemeColors
+                                                            .whiteColor),
+                                                  ),
                                                 ),
-                                              )).toList(),
-                                    )
-                            ],
-                          ),
+                                              ),
+                                            ))
+                                        .toList(),
+                                  )),
+                            ),
+
+                            // Selected Tags
+                            Padding(
+                              padding: EdgeInsets.all(8.r),
+                              child: Obx(() => Wrap(
+                                    spacing: 8.r,
+                                    runSpacing: 8.r,
+                                    children: controller.selectedTags
+                                        .map((tag) => Chip(
+                                              backgroundColor:
+                                                  LightThemeColors.grayColor,
+                                              label: Text(
+                                                tag,
+                                                style: TextStyle(
+                                                    color: LightThemeColors
+                                                        .whiteColor),
+                                              ),
+                                              deleteIcon: Icon(
+                                                Icons.clear,
+                                                color:
+                                                    LightThemeColors.whiteColor,
+                                                size: 18.r,
+                                              ),
+                                              onDeleted: () =>
+                                                  controller.removeTag(tag),
+                                            ))
+                                        .toList(),
+                                  )),
+                            ),
+                          ],
                         ),
                       ),
                       divider,
@@ -328,55 +280,67 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
 
                       //********Select Service Category*********
 
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        decoration: BoxDecoration(
-                          color: LightThemeColors.secounderyColor,
-                          borderRadius: BorderRadius.circular(8.r),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15.0),
-                          child: Center(
-                            child: DropdownButton(
-                                alignment: Alignment.centerLeft,
-                                value: controller.selectedCategory.value.isEmpty
-                                    ? null
-                                    : controller.selectedCategory.value,
-                                isExpanded: true,
-                                underline: SizedBox(),
-                                hint: const Text("Choose you categories type"),
-                                items: (homeC.getCategoriesDataModel.value.data
-                                        ?.category)
-                                    ?.map((mapValue) {
-                                  return DropdownMenuItem(
-                                    value: mapValue.name.toString(),
-                                    child: Center(
-                                        child: Text(mapValue.name.toString())),
-                                  );
-                                }).toList(),
-                                onChanged: (newValue) {
-                                  final categories = (homeC
-                                              .getCategoriesDataModel
-                                              .value
-                                              .data
-                                              ?.category ??
-                                          [])
-                                      .firstWhere((category) =>
-                                          category.name == newValue);
+                      Obx(() => Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: LightThemeColors.secounderyColor,
+                              borderRadius: BorderRadius.circular(8.r),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: LightThemeColors.shadowColor,
+                                  offset: Offset(1, 1),
+                                  blurRadius: 5,
+                                )
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15.0),
+                              child: Center(
+                                child: DropdownButton(
+                                    dropdownColor: LightThemeColors.primaryColor
+                                        .withOpacity(.8),
+                                    alignment: Alignment.centerLeft,
+                                    value: controller.categoryyIds.value.isEmpty
+                                        ? null
+                                        : controller.categoryyIds.value,
+                                    isExpanded: true,
+                                    underline: SizedBox(),
+                                    hint: const Text("Choose Category"),
+                                    items:
+                                        (controller.categoryModel.value.data ??
+                                                [])
+                                            .map((mapValue) {
+                                      return DropdownMenuItem(
+                                        value: mapValue.name.toString(),
+                                        child: Text(
+                                          mapValue.name.toString(),
+                                          style: TextStyle(
+                                              color:
+                                                  LightThemeColors.whiteColor),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    onChanged: (newValue) {
+                                      final selectedZone = (controller
+                                                  .categoryModel.value.data ??
+                                              [])
+                                          .firstWhere((zone) =>
+                                              zone.name.toString() == newValue);
 
-                                  // Check if the selected zone is not null and has an ID
-                                  if (categories != null &&
-                                      categories.id != null) {
-                                    controller.selectedCategory.value =
-                                        newValue.toString();
-                                    print(controller.selectedCategory.value =
-                                        newValue.toString());
-                                  }
-                                }),
-                          ),
-                        ),
-                      ),
+                                      // Check if the selected zone is not null and has an ID
+                                      // ignore: unnecessary_null_comparison
+                                      if (selectedZone != null &&
+                                          selectedZone.id != null) {
+                                        controller.categoryyIds.value =
+                                            newValue.toString();
+                                        controller.categooryId = selectedZone
+                                            .id; // category id is now set
+                                      }
+                                    }),
+                              ),
+                            ),
+                          )),
                       //**********pricing**************** */
                       divider,
                       Row(
@@ -597,7 +561,7 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                         bgColor: LightThemeColors.primaryColor,
                         ontap: () {
                           controller.customerCreateService(
-                              catrgory.id!.toInt(),
+                              selectedCategory?.id ?? 0,
                               controller.selectedCurrency.value,
                               controller.selectedPriceType.value,
                               controller.selectedLevelList.value);

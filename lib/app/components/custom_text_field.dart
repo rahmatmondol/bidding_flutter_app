@@ -19,6 +19,7 @@ class CustomTextField extends StatelessWidget {
   final int? maxLength;
   final Color? fillColor;
   final int? maxLines;
+
   CustomTextField(
       {super.key,
       this.readOnly = true,
@@ -33,7 +34,9 @@ class CustomTextField extends StatelessWidget {
       this.validator,
       this.onTap,
       this.maxLength,
-      this.maxLines = 1, this.fillColor});
+      this.maxLines = 1,
+      this.fillColor,
+      TextInputType? keyboardType});
 
   @override
   Widget build(BuildContext context) {

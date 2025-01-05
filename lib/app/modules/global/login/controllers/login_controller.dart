@@ -5,11 +5,12 @@ import 'dart:ui';
 import 'package:dirham_uae/app/components/custom_loading_dialog_widget.dart';
 import 'package:dirham_uae/app/components/custom_snackbar.dart';
 import 'package:dirham_uae/app/data/user_service/user_service.dart';
-import 'package:dirham_uae/app/routes/app_pages.dart';
 import 'package:dirham_uae/app/services/base_client.dart';
 import 'package:dirham_uae/utils/urls.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../../../routes/app_pages.dart';
 
 class LoginController extends GetxController {
   final TextEditingController customerEmailController = TextEditingController();
@@ -25,10 +26,29 @@ class LoginController extends GetxController {
   var token = "".obs;
   var providerToken = "".obs;
 
+  @override
+  void onInit() {
+    super.onInit();
+    // checkExistingAuth();
+  }
+
+  // Future<void> checkExistingAuth() async {
+  //   var isUser = await userService.getBool();
+  //   var isProviderUser = await userService.getBoolProvider();
+  //
+  //   if (isUser == true) {
+  //     Get.offAllNamed(Routes.CUSTOMER_NAV_BAR);
+  //   } else if (isProviderUser == true) {
+  //     Get.offAllNamed(Routes.NAV_BAR);
+  //   }
+  //   // If neither true, stay on login screen
+  // }
+
 // ***************** Login Customer ********************
   Future CustomerLoginUser(BuildContext context) async {
     try {
       isLoading.value = true;
+      print("Starting Customer Login Process");
 
       showDialog(
         context: context,
@@ -52,16 +72,13 @@ class LoginController extends GetxController {
         RequestType.post,
         onSuccess: (response) async {
           if (response.statusCode == 200) {
+            await userService.removeSharedPreferenceData();
             token.value = response.data["token"];
 
             // Save user data
             await userService.saveBoolean(key: 'is-user', value: true);
             await userService.saveString(
                 key: 'token', value: response.data["token"]);
-            print('************************************');
-            print("Customer login successful - saved preferences");
-            print("is-user value after save: ${await userService.getBool()}");
-            print('************************************');
 
             // Dismiss loading dialog first
             if (context.mounted) {
@@ -72,7 +89,10 @@ class LoginController extends GetxController {
             CustomSnackBar.showCustomToast(message: response.data['message']);
 
             // Navigate after everything is done
-            Get.offAndToNamed(Routes.CUSTOMER_NAV_BAR);
+            await Get.offAllNamed(
+              Routes.CUSTOMER_NAV_BAR,
+              predicate: (route) => false, // Clear all previous routes
+            );
           }
           isLoading.value = false;
           update();
@@ -134,9 +154,8 @@ class LoginController extends GetxController {
         RequestType.post,
         onSuccess: (response) async {
           if (response.statusCode == 200) {
-            // providerToken.value = response.data["token"];
             await userService.removeSharedPreferenceData();
-
+            providerToken.value = response.data["token"];
             // Save provider data
             await userService.saveBooleanProvider(
                 key: 'is-user-provider', value: true);
@@ -153,7 +172,10 @@ class LoginController extends GetxController {
             CustomSnackBar.showCustomToast(message: response.data['message']);
 
             // Navigate after everything is done
-            Get.offAndToNamed(Routes.NAV_BAR);
+            await Get.offAllNamed(
+              Routes.NAV_BAR,
+              predicate: (route) => false, // Clear all previous routes
+            );
           }
           isProviderLoginLoading.value = false;
           update();
@@ -190,21 +212,4 @@ class LoginController extends GetxController {
     Text("Provider"),
   ];
   final count = 0.obs;
-
-  @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  void increment() => count.value++;
 }

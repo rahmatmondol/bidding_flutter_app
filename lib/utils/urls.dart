@@ -1,6 +1,6 @@
 class Constants {
   static const baseUrl = 'https://dirham365.com/api';
-  static const getCustomerInfo = "$baseUrl/customer";
+  static const getCustomerInfo = "$baseUrl/auth/get-user-info";
 
   static const customerSignUpUrl = "$baseUrl/auth/register";
   static const customerLoginUrl = "$baseUrl/auth/login";
@@ -12,7 +12,7 @@ class Constants {
   static const getServiceCustomer = "$baseUrl/auth/create-service";
   static const ServiceCustomerDetails =
       baseUrl + "api/v1/customer/service/details";
-  static const customerCreateService = baseUrl + "api/v1/customer/service/add";
+  static const customerCreateService = "$baseUrl/auth/create-service";
   static const custommerBettingList = baseUrl + "api/v1/betting_list";
   static const custommerBettingListDetails =
       baseUrl + "api/v1/provider_details";
@@ -28,6 +28,6 @@ class Constants {
   static const providerInfoUpdateUrl = "$baseUrl/auth/update-profile";
   static const getProviderInfo = baseUrl + "api/v1/auth/provider";
   static const getZoneId = "$baseUrl/get-categories";
-  static const getServiceUrl = baseUrl + "api/v1/provider/get-service";
-  static const getCategoriesUrl = baseUrl + "api/v1/categories";
+  static const getServiceUrl = "$baseUrl/get-service/5";
+  static const getCategoriesUrl = "$baseUrl/get-categories";
 }
