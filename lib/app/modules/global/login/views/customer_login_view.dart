@@ -64,8 +64,8 @@ class CustomerLoginView extends StatelessWidget {
             divider,
             CustomButton(
               bgColor: LightThemeColors.primaryColor,
-              ontap: () {
-                loginController.CustomerLoginUser(context);
+              ontap: () async {
+                await loginController.CustomerLoginUser(context);
               },
               widget: Text(
                 "Login",

@@ -2,9 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'dark_theme_colors.dart';
-import 'my_fonts.dart';
 import 'light_theme_colors.dart';
+import 'my_fonts.dart';
 
 // Text Style
 TextStyle kHeadingTextStyle = TextStyle(
@@ -15,6 +16,12 @@ TextStyle kHeadingTextStyle = TextStyle(
 
 TextStyle kTitleTextstyle = TextStyle(
   fontSize: 14,
+  color: LightThemeColors.whiteColor,
+  fontWeight: FontWeight.w400,
+);
+
+TextStyle kTitleTextstyleNew = TextStyle(
+  fontSize: 18,
   color: LightThemeColors.whiteColor,
   fontWeight: FontWeight.w400,
 );
@@ -41,6 +48,7 @@ LinearGradient buildCustomGradient() {
 // ignore: must_be_immutable, camel_case_types
 class gapHeight extends StatelessWidget {
   double size;
+
   gapHeight({
     required this.size,
     super.key,
@@ -55,6 +63,7 @@ class gapHeight extends StatelessWidget {
 // ignore: camel_case_types, must_be_immutable
 class gapWidth extends StatelessWidget {
   double size;
+
   gapWidth({
     required this.size,
     super.key,

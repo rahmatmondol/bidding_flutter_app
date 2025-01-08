@@ -1,70 +1,48 @@
-import 'package:dirham_uae/app/components/custom_snackbar.dart';
-import 'package:dirham_uae/app/data/local/my_shared_pref.dart';
-import 'package:dirham_uae/app/data/user_service/user_service.dart';
-import 'package:dirham_uae/app/routes/app_pages.dart';
-import 'package:dirham_uae/app/services/base_client.dart';
-import 'package:dirham_uae/utils/urls.dart';
 import 'package:get/get.dart';
+
+import '../../../../components/custom_snackbar.dart';
+import '../../../../data/user_service/user_service.dart';
+import '../../../../routes/app_pages.dart';
+import '../../customer_account_details/controllers/customer_account_details_controller.dart';
 
 class CustomerProfileController extends GetxController {
   RxBool isLogoutLoading = false.obs;
   UserService userService = UserService();
 
-  // *****************Customer login Called api Function *********************
-  Future<void> customerLogout() async {
-    isLogoutLoading.value = true;
-
+  Future<void> refreshProfileData() async {
     try {
-      await BaseClient.safeApiCall(
-        headers: {
-          'Authorization':
-              'Bearer ${MySharedPref.getToken("token".obs).toString()}',
-        },
-        Constants.customerlogOutUrl,
-        RequestType.post,
-        onSuccess: (response) {
-          print("success");
-          if (response.statusCode == 200) {
-            print(response.data);
-            userService.saveBoolean(key: 'is-user', value: false);
-            CustomSnackBar.showCustomToast(
-              message: response.data["message"].toString(),
-            );
-            Get.offAllNamed(Routes.LOGIN);
-          }
-          isLogoutLoading.value = false;
-          update();
-        },
-        onError: (error) {
-          if (error.response!.data["success"] == false) {
-            CustomSnackBar.showCustomErrorToast(
-              message: error.response!.data['message'].toString(),
-            );
-          }
-          update();
-        },
-      );
+      // Find and use CustomerAccountDetailsController to refresh data
+      final accountController = Get.find<CustomerAccountDetailsController>();
+      await accountController.getCustomerInfo();
+      update(); // Update UI
     } catch (e) {
-      print(e.toString());
+      print('Error refreshing profile data: $e');
+      Get.snackbar('Failed', 'Profile Update Failed');
     }
   }
 
-  final count = 0.obs;
+  Future<void> customerLogout() async {
+    try {
+      isLogoutLoading.value = true;
 
-  @override
-  void onInit() {
-    super.onInit();
+      // Clear all SharedPreferences data
+      await userService.removeSharedPreferenceData();
+
+      // Show success message
+      CustomSnackBar.showCustomToast(
+        message: "Logged out successfully",
+      );
+
+      // Navigate to login screen
+      Get.offAllNamed(Routes.LOGIN);
+    } catch (e) {
+      print('Logout error: ${e.toString()}');
+      CustomSnackBar.showCustomErrorToast(
+        message: "An error occurred during logout",
+      );
+    } finally {
+      isLogoutLoading.value = false;
+      update();
+    }
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  void increment() => count.value++;
 }

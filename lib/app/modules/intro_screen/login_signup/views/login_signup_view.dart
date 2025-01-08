@@ -1,18 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:dirham_uae/app/components/custom_button.dart';
+import 'package:dirham_uae/app/modules/global/login/controllers/login_controller.dart';
 import 'package:dirham_uae/app/routes/app_pages.dart';
 import 'package:dirham_uae/config/theme/light_theme_colors.dart';
 import 'package:dirham_uae/config/theme/my_images.dart';
 import 'package:dirham_uae/config/theme/my_styles.dart';
 import 'package:dirham_uae/utils/global_variable/divider.dart';
 import 'package:dirham_uae/utils/global_variable/my_scaffold_background.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
-import '../controllers/login_signup_controller.dart';
-
-class LoginSignupView extends GetView<LoginSignupController> {
+class LoginSignupView extends GetView<LoginController> {
   const LoginSignupView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);

@@ -10,8 +10,6 @@ import 'package:dirham_uae/app/modules/intro_screen/splash/bindings/splash_bindi
 import 'package:dirham_uae/app/modules/intro_screen/splash/views/splash_view.dart';
 import 'package:get/get.dart';
 
-import '../modules/change_password/bindings/change_password_binding.dart';
-import '../modules/change_password/views/change_password_view.dart';
 import '../modules/customer/customer_about_us/bindings/customer_about_us_binding.dart';
 import '../modules/customer/customer_about_us/views/customer_about_us_view.dart';
 import '../modules/customer/customer_account_details/bindings/customer_account_details_binding.dart';
@@ -72,6 +70,8 @@ import '../modules/provider/apply/bindings/apply_binding.dart';
 import '../modules/provider/apply/views/apply_view.dart';
 import '../modules/provider/booking/bindings/booking_binding.dart';
 import '../modules/provider/booking/views/booking_view.dart';
+import '../modules/provider/change_password/bindings/change_password_binding.dart';
+import '../modules/provider/change_password/views/change_password_view.dart';
 import '../modules/provider/chat/bindings/chat_binding.dart';
 import '../modules/provider/chat/views/chat_view.dart';
 import '../modules/provider/create_password/bindings/create_password_binding.dart';

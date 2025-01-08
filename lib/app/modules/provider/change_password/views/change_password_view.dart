@@ -1,15 +1,16 @@
 import 'package:dirham_uae/app/components/custom_button.dart';
-import 'package:dirham_uae/app/components/custom_snackbar.dart';
 import 'package:dirham_uae/app/components/custom_text_field.dart';
 import 'package:dirham_uae/config/theme/light_theme_colors.dart';
 import 'package:dirham_uae/config/theme/my_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
 import '../controllers/change_password_controller.dart';
 
 class ChangePasswordView extends GetView<ChangePasswordController> {
   const ChangePasswordView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +36,7 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
             //******************************************* Personal Information *******************************/
 
             Text(
-              "If you want to change your password, do it from here",
+              "If you want to change your password, Please input new password",
               style: kTitleTextstyle,
             ),
 
@@ -87,25 +88,49 @@ class ChangePasswordView extends GetView<ChangePasswordController> {
             CustomButton(
               bgColor: LightThemeColors.primaryColor,
               ontap: () {
-                if (controller.newPassController.value.text ==
-                    controller.confirmPassController.value.text) {
-                  controller.changedPasswordProvider(context);
-                } else {
-                  CustomSnackBar.showCustomToast(
-                    message: "New Password and Confirm Password Don't Match",
-                    color: LightThemeColors.redColor,
-                  );
-                }
+                print('Change password button tapped');
+                controller.changePassword(context);
               },
-              widget: Text(
-                "Confirm",
-                style: kTitleTextstyle.copyWith(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.bold,
-                  color: LightThemeColors.whiteColor,
-                ),
-              ),
+              widget: Obx(() {
+                print(
+                    'Button state: ${controller.isLoading.value ? 'Loading' : 'Ready'}');
+                return controller.isLoading.value
+                    ? const CircularProgressIndicator(
+                        color: LightThemeColors.whiteColor,
+                      )
+                    : Text(
+                        "Confirm",
+                        style: kTitleTextstyle.copyWith(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                          color: LightThemeColors.whiteColor,
+                        ),
+                      );
+              }),
             ),
+
+            // CustomButton(
+            //   bgColor: LightThemeColors.primaryColor,
+            //   ontap: () {
+            //     if (controller.newPassController.value.text ==
+            //         controller.confirmPassController.value.text) {
+            //       controller.changedPasswordProvider(context);
+            //     } else {
+            //       CustomSnackBar.showCustomToast(
+            //         message: "New Password and Confirm Password Don't Match",
+            //         color: LightThemeColors.redColor,
+            //       );
+            //     }
+            //   },
+            //   widget: Text(
+            //     "Confirm",
+            //     style: kTitleTextstyle.copyWith(
+            //       fontSize: 14.sp,
+            //       fontWeight: FontWeight.bold,
+            //       color: LightThemeColors.whiteColor,
+            //     ),
+            //   ),
+            // ),
             gapHeight(size: 20),
           ],
         ),

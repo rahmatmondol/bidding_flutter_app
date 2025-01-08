@@ -11,12 +11,12 @@ import '../controllers/login_controller.dart';
 import 'customer_login_view.dart';
 import 'provider_login_view.dart';
 
-class LoginView extends GetView<LoginController> {
+class LoginView extends GetView<LoginView> {
   const LoginView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // LoginController controller = Get.put(LoginController());
+    LoginController controller = Get.put(LoginController());
     Size size = MediaQuery.sizeOf(context);
     return Scaffold(
       body: DefaultTabController(
