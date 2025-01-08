@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../../config/translations/localization_service.dart';
 
 class MySharedPref {
   // prevent making instance
   MySharedPref._();
+
   SharedPreferences? prefs;
 
 // ignore: unused_element
@@ -79,10 +81,9 @@ class MySharedPref {
   static String? getToken(RxString token) =>
       _sharedPreferences.getString(_tokenKey);
 
-       /// get generated fcm token
+  /// get generated fcm token
   static String? getTokenProvider(RxString token) =>
       _sharedPreferences.getString(_tokenProviderKey);
-
 
   /// clear all data from shared pref
   static Future<void> clear() async => await _sharedPreferences.clear();

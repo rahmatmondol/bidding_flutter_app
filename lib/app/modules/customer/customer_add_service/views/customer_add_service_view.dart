@@ -61,7 +61,7 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomHeaderBar(title: 'Change Password'),
+                      CustomHeaderBar(title: 'Create a Service'),
                       Text("Service Name",
                           style: kTitleTextstyle.copyWith(
                             fontWeight: FontWeight.w600,
@@ -85,6 +85,7 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                                 .toList();
                             controller.customerCreateService(
                                 selectedCategory?.id ?? 0,
+                                controller.subCategoryId.toString(),
                                 controller.selectedCurrency.value,
                                 controller.selectedPriceType.value,
                                 controller.selectedLevelList.value);
@@ -329,15 +330,87 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                                               zone.name.toString() == newValue);
 
                                       // Check if the selected zone is not null and has an ID
-                                      // ignore: unnecessary_null_comparison
+
                                       if (selectedZone != null &&
                                           selectedZone.id != null) {
                                         controller.categoryyIds.value =
                                             newValue.toString();
-                                        controller.categooryId = selectedZone
-                                            .id; // category id is now set
+                                        controller.categooryId =
+                                            selectedZone.id;
+                                        controller
+                                            .getSubCategories(selectedZone.id!);
                                       }
                                     }),
+                              ),
+                            ),
+                          )),
+                      gapHeight(size: 3.0.h),
+                      Text(
+                        "Select Sub Category",
+                        style: kTitleTextstyle.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      gapHeight(size: 3.0.h),
+
+                      //********Select Sub Category*********
+
+                      Obx(() => Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: LightThemeColors.secounderyColor,
+                              borderRadius: BorderRadius.circular(8.r),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: LightThemeColors.shadowColor,
+                                  offset: Offset(1, 1),
+                                  blurRadius: 5,
+                                )
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15.0),
+                              child: Center(
+                                child: controller.isSubCategoryLoading.value
+                                    ? CircularProgressIndicator(
+                                        color: LightThemeColors.whiteColor,
+                                      )
+                                    : DropdownButton(
+                                        dropdownColor: LightThemeColors
+                                            .primaryColor
+                                            .withOpacity(.8),
+                                        alignment: Alignment.centerLeft,
+                                        value: controller.selectedSubCategoryId
+                                                .value.isEmpty
+                                            ? null
+                                            : controller
+                                                .selectedSubCategoryId.value,
+                                        isExpanded: true,
+                                        underline: SizedBox(),
+                                        hint: const Text("Choose Sub Category"),
+                                        items: (controller.subCategoryModel
+                                                    .value.data ??
+                                                [])
+                                            .map((mapValue) {
+                                          return DropdownMenuItem(
+                                            value: mapValue.id.toString(),
+                                            child: Text(
+                                              mapValue.name.toString(),
+                                              style: TextStyle(
+                                                  color: LightThemeColors
+                                                      .whiteColor),
+                                            ),
+                                          );
+                                        }).toList(),
+                                        onChanged: (newValue) {
+                                          controller.selectedSubCategoryId
+                                              .value = newValue.toString();
+                                          // No need to search for ID since we're using ID as value
+                                          controller.subCategoryId =
+                                              int.parse(newValue.toString());
+                                        },
+                                      ),
                               ),
                             ),
                           )),
@@ -562,6 +635,7 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                         ontap: () {
                           controller.customerCreateService(
                               selectedCategory?.id ?? 0,
+                              controller.selectedSubCategoryId.value,
                               controller.selectedCurrency.value,
                               controller.selectedPriceType.value,
                               controller.selectedLevelList.value);

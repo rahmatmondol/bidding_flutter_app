@@ -6,13 +6,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BookingCard extends StatelessWidget {
   final String name;
-  final String location;
-  final String description;
-  final String priceLevel;
-  final String price;
+  final String? location;
+  final String? description;
+  final String? priceLevel;
+  final String? price;
   final String? buttonText;
   final bool? isButton;
   final Function()? onTap;
+
   const BookingCard({
     super.key,
     required this.size,
@@ -20,9 +21,10 @@ class BookingCard extends StatelessWidget {
     required this.location,
     required this.description,
     required this.priceLevel,
-     this.buttonText,
+    this.buttonText,
     required this.price,
-    this.isButton = false,  this.onTap,
+    this.isButton = false,
+    this.onTap,
   });
 
   final Size size;
@@ -67,7 +69,7 @@ class BookingCard extends StatelessWidget {
                         ),
                         gapWidth(size: 5),
                         Text(
-                          location,
+                          location!,
                           style: kSubtitleStyle.copyWith(
                             color: LightThemeColors.whiteColor,
                           ),
@@ -85,7 +87,7 @@ class BookingCard extends StatelessWidget {
           ),
           gapHeight(size: 10),
           Text(
-            description,
+            description!,
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
             style: kSubtitleStyle.copyWith(
@@ -96,7 +98,7 @@ class BookingCard extends StatelessWidget {
           ),
           gapHeight(size: 10),
           Text(
-            priceLevel,
+            priceLevel!,
             style: kSubtitleStyle.copyWith(
               color: LightThemeColors.whiteColor,
             ),

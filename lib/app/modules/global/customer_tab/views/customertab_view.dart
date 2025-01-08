@@ -99,28 +99,6 @@ class _CustomertabViewState extends State<CustomertabView> {
                   controller: controller.emailController,
                 ),
                 divider,
-                //***************** */
-                // Text(
-                //   "Country",
-                //   style: kTitleTextstyle,
-                // ),
-                // gapHeight(size: 5),
-                // Container(
-                //   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                //   decoration: BoxDecoration(
-                //     color: LightThemeColors.secounderyColor,
-                //     borderRadius: BorderRadius.circular(8.r),
-                //   ),
-                //   child: CustomDropdown(
-                //     hintText:
-                //         'Select County', // Displayed when no option is selected
-                //     items: controller.county,
-                //     value: controller.selectedZoon,
-                //     onChanged: (newValue) {
-                //       // controller.updateZoon(newValue!);
-                //     },
-                //   ),
-                // ),
 
                 gapHeight(size: 10.0.h),
                 //*********************************** Phone Number Section ********************************** */

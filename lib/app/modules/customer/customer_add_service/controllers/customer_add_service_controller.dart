@@ -17,6 +17,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../../config/theme/light_theme_colors.dart';
 import '../../../global/customer_tab/model/category-model.dart';
 import '../../customer_nav_bar/views/customer_nav_bar_view.dart';
+import '../model/sub_category_model.dart';
 
 class CustomerAddServiceController extends GetxController {
   RxString enteredText = "".obs;
@@ -31,8 +32,6 @@ class CustomerAddServiceController extends GetxController {
 
   var lat;
   var lng;
-
-  final selectedCategory = ''.obs;
 
   RxList<String> currency = [
     "aed",
@@ -99,8 +98,8 @@ class CustomerAddServiceController extends GetxController {
     selectedLevelList.value = newValue;
   }
 
-  customerCreateService(
-      int categoryId, String currency, String priceType, String level) async {
+  customerCreateService(int categoryId, String subCategoryId, String currency,
+      String priceType, String level) async {
     lat = myBox.get("lat");
     lng = myBox.get("lng");
 
@@ -124,31 +123,25 @@ class CustomerAddServiceController extends GetxController {
 
         diox.FormData data = diox.FormData.fromMap({
           "title": name.value.text.trim(),
+          "description": description.value.text.trim(),
+          "price": price.value.text.trim(),
+          "priceType": priceType.toString(),
+          "currency": currency.toString(),
+          "level": level.toString(),
+          "skills": selectedTags.join(', '),
+          // "skills": tagController.value.text,
+          "category_id": categooryId.toString(),
           "images[]": [
             for (String path in thumbnailPaths)
               await diox.MultipartFile.fromFile(path,
                   filename: path.split('/').last,
                   contentType: new MediaType("image", "jpeg")),
           ],
-          "description": description,
-          "price": price.value.text.trim(),
-          "priceType": '$priceType',
-          "currency": '$currency',
-          "location": "lohagara", // need change
+          "location_name": "lohagara", // need change
           "latitude": "165165", // need change
           "longitude": "455162165", // need change
-          "postType": "Auction",
-          "category_id": '$categooryId',
-          "skills": null,
-          "skills_ids": selectedTags.join(', '),
-          "level": '$level',
-          "address": currentAddress, // this is from hive
-
-          "sub_category_id": 2,
-
-          // location_name
-          // subCategory_id
-          // postType
+          "postType": "Service",
+          "subCategory_id": subCategoryId.toString(),
         });
 
         await BaseClient.safeApiCall(
@@ -245,6 +238,7 @@ class CustomerAddServiceController extends GetxController {
   RxBool isCategoryLoading = false.obs;
   RxObjectMixin<CCatgoryModel> categoryModel = CCatgoryModel().obs;
   RxString categoryyIds = "".obs;
+  final selectedCategory = ''.obs;
 
   Future getCategoory() async {
     isCategoryLoading.value = true;
@@ -267,6 +261,39 @@ class CustomerAddServiceController extends GetxController {
         CustomSnackBar.showCustomErrorToast(
           message: error.response!.data['message'].toString(),
         );
+      },
+    );
+  }
+
+// In your CustomerAddServiceController class, update these variables:
+  RxBool isSubCategoryLoading = false.obs;
+  Rx<SubCategoryModel> subCategoryModel = SubCategoryModel().obs;
+  RxString selectedSubCategoryId = "".obs;
+  int? subCategoryId;
+
+// Update the getSubCategories method:
+  Future getSubCategories(int categoryId) async {
+    isSubCategoryLoading.value = true;
+    selectedSubCategoryId.value = "";
+
+    await BaseClient.safeApiCall(
+      Constants.getSubCategoryByID(categoryId),
+      RequestType.get,
+      onSuccess: (response) {
+        if (response.statusCode == 200) {
+          print("get SubCategory status code 200");
+          subCategoryModel.value = SubCategoryModel.fromJson(response.data);
+          print(subCategoryModel.value.data);
+        }
+        isSubCategoryLoading.value = false;
+        update();
+      },
+      onError: (error) {
+        print(error.toString());
+        CustomSnackBar.showCustomErrorToast(
+          message: error.response!.data['message'].toString(),
+        );
+        isSubCategoryLoading.value = false;
       },
     );
   }

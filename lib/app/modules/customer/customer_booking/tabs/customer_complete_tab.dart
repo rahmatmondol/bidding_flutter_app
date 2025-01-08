@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:dirham_uae/app/components/booking_card.dart';
 import 'package:dirham_uae/config/theme/my_styles.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomerCompleteServiceTab extends StatelessWidget {
   const CustomerCompleteServiceTab({super.key});
@@ -15,7 +15,7 @@ class CustomerCompleteServiceTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Complete Service (02)",
+            "Completed Service’s (04)",
             style: kSubtitleStyle.copyWith(fontWeight: FontWeight.bold),
           ),
           gapHeight(size: 10),
@@ -24,7 +24,7 @@ class CustomerCompleteServiceTab extends StatelessWidget {
               shrinkWrap: true,
               physics: BouncingScrollPhysics(),
               padding: EdgeInsets.zero,
-              itemCount: 2,
+              itemCount: 4,
               itemBuilder: (context, index) {
                 return Padding(
                   padding: EdgeInsets.only(bottom: 10.r),
@@ -37,6 +37,8 @@ class CustomerCompleteServiceTab extends StatelessWidget {
                     priceLevel: "Fixed Price- Entry level",
                     price: "200",
                     isButton: true,
+                    buttonText: 'Review Now',
+                    onTap: () {},
                   ),
                 );
               },

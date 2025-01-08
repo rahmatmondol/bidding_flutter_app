@@ -1,8 +1,5 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'dart:ui';
-
-import 'package:dirham_uae/app/components/custom_loading_dialog_widget.dart';
 import 'package:dirham_uae/app/components/custom_snackbar.dart';
 import 'package:dirham_uae/app/data/user_service/user_service.dart';
 import 'package:dirham_uae/app/services/base_client.dart';
@@ -21,7 +18,7 @@ class LoginController extends GetxController {
   final Rx<TextEditingController> providerPassController =
       Rx(TextEditingController());
   var isLoading = false.obs;
-  RxBool isProviderLoginLoading = false.obs;
+  var isProviderLoginLoading = false.obs;
   UserService userService = UserService();
   var token = "".obs;
   var providerToken = "".obs;
@@ -29,41 +26,31 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // checkExistingAuth();
+    checkExistingAuth();
   }
 
-  // Future<void> checkExistingAuth() async {
-  //   var isUser = await userService.getBool();
-  //   var isProviderUser = await userService.getBoolProvider();
-  //
-  //   if (isUser == true) {
-  //     Get.offAllNamed(Routes.CUSTOMER_NAV_BAR);
-  //   } else if (isProviderUser == true) {
-  //     Get.offAllNamed(Routes.NAV_BAR);
-  //   }
-  //   // If neither true, stay on login screen
-  // }
+  Future<void> checkExistingAuth() async {
+    var isUser = await userService.getBool();
+    var isProviderUser = await userService.getBoolProvider();
+
+    if (isUser == true) {
+      Get.offAllNamed(Routes.CUSTOMER_NAV_BAR);
+    } else if (isProviderUser == true) {
+      Get.offAllNamed(Routes.NAV_BAR);
+    } else {
+      return;
+    }
+    // If neither true, stay on login screen
+  }
 
 // ***************** Login Customer ********************
-  Future CustomerLoginUser(BuildContext context) async {
+
+  Future<void> CustomerLoginUser(BuildContext context) async {
     try {
       isLoading.value = true;
       print("Starting Customer Login Process");
 
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (c) {
-          return BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-            child: const CustomLoadingWidget(
-              message: "Checking",
-            ),
-          );
-        },
-      );
-
-      await BaseClient.safeApiCall(
+      final result = await BaseClient.safeApiCall(
         data: {
           "email": customerEmailController.text.trim(),
           "password": customerPassController.text.trim(),
@@ -75,50 +62,39 @@ class LoginController extends GetxController {
             await userService.removeSharedPreferenceData();
             token.value = response.data["token"];
 
-            // Save user data
             await userService.saveBoolean(key: 'is-user', value: true);
             await userService.saveString(
                 key: 'token', value: response.data["token"]);
 
-            // Dismiss loading dialog first
-            if (context.mounted) {
-              Navigator.pop(context);
-            }
-
-            // Show success message
             CustomSnackBar.showCustomToast(message: response.data['message']);
 
-            // Navigate after everything is done
             await Get.offAllNamed(
               Routes.CUSTOMER_NAV_BAR,
-              predicate: (route) => false, // Clear all previous routes
+              predicate: (route) => false,
             );
+          } else {
+            Get.snackbar('Unauthorized', 'Check Email or Password');
           }
-          isLoading.value = false;
-          update();
         },
         onError: (error) {
-          // Dismiss loading dialog
-          if (context.mounted) {
-            Navigator.pop(context);
-          }
-
-          if (error.response?.data["success"] == false) {
+          print("Error occurred during login: ${error.toString()}");
+          if (error.response?.statusCode == 401) {
+            Get.snackbar('Unauthorized', 'Check Email or Password');
+          } else if (error.response?.data?["success"] == false) {
             CustomSnackBar.showCustomErrorToast(
-                message: error.response?.data['errors'].toString() ??
+                message: error.response?.data['errors']?.toString() ??
                     "Login failed");
+          } else {
+            CustomSnackBar.showCustomErrorToast(
+                message: "Login failed. Please try again.");
           }
-          isLoading.value = false;
-          update();
         },
       );
     } catch (e) {
-      // Handle any unexpected errors
-      if (context.mounted) {
-        Navigator.pop(context);
-      }
+      print("Unexpected error during login: $e");
       CustomSnackBar.showCustomErrorToast(
           message: "An unexpected error occurred");
+    } finally {
       isLoading.value = false;
       update();
     }
@@ -126,29 +102,15 @@ class LoginController extends GetxController {
 
   // ************ Provider Login *****************
 
-  Future providerLoginUser(BuildContext context) async {
+  Future<void> providerLoginUser(BuildContext context) async {
     try {
       isProviderLoginLoading.value = true;
-      print("Email being sent: ${providerEmailController.value.text.trim()}");
-      print("Password being sent: ${providerPassController.value.text.trim()}");
+      print("Starting Provider Login Process");
 
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (c) {
-          return BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-            child: const CustomLoadingWidget(
-              message: "Checking",
-            ),
-          );
-        },
-      );
-
-      await BaseClient.safeApiCall(
+      final result = await BaseClient.safeApiCall(
         data: {
           "email": providerEmailController.value.text.trim(),
-          "password": providerPassController.value.text.trim(),
+          "password": providerPassController.value.text,
         },
         Constants.providerLoginUpUrl,
         RequestType.post,
@@ -156,52 +118,41 @@ class LoginController extends GetxController {
           if (response.statusCode == 200) {
             await userService.removeSharedPreferenceData();
             providerToken.value = response.data["token"];
-            // Save provider data
+
             await userService.saveBooleanProvider(
                 key: 'is-user-provider', value: true);
             await userService.saveStringProvider(
                 key: 'token-provider', value: response.data["token"]);
-            await Future.delayed(Duration(milliseconds: 100));
 
-            // Dismiss loading dialog first
-            if (context.mounted) {
-              Navigator.pop(context);
-            }
-
-            // Show success message
             CustomSnackBar.showCustomToast(message: response.data['message']);
 
-            // Navigate after everything is done
             await Get.offAllNamed(
               Routes.NAV_BAR,
-              predicate: (route) => false, // Clear all previous routes
+              predicate: (route) => false,
             );
+          } else {
+            Get.snackbar('Unauthorized', 'Check Email or Password');
           }
-          isProviderLoginLoading.value = false;
-          update();
         },
         onError: (error) {
-          // Dismiss loading dialog
-          if (context.mounted) {
-            Navigator.pop(context);
-          }
-
-          if (error.response?.data["success"] == false) {
+          print("Error occurred during provider login: ${error.toString()}");
+          if (error.response?.statusCode == 401) {
+            Get.snackbar('Unauthorized', 'Check Email or Password');
+          } else if (error.response?.data?["success"] == false) {
             CustomSnackBar.showCustomErrorToast(
-                message: error.response?.data['errors'].toString() ??
+                message: error.response?.data['errors']?.toString() ??
                     "Login failed");
+          } else {
+            CustomSnackBar.showCustomErrorToast(
+                message: "Login failed. Please try again.");
           }
-          isProviderLoginLoading.value = false;
-          update();
         },
       );
     } catch (e) {
-      // Handle any unexpected errors
-      if (context.mounted) {
-        Navigator.pop(context);
-      }
+      print("Unexpected error during provider login: $e");
       CustomSnackBar.showCustomErrorToast(
           message: "An unexpected error occurred");
+    } finally {
       isProviderLoginLoading.value = false;
       update();
     }

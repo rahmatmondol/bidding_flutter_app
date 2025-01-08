@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 
 import '../../../../components/custom_snackbar.dart';
+import '../../../../data/local/my_shared_pref.dart';
+import '../../../../data/local/token_manager.dart';
 import '../../../../data/user_service/user_service.dart';
 import '../../../../routes/app_pages.dart';
 import '../../customer_account_details/controllers/customer_account_details_controller.dart';
@@ -27,7 +29,12 @@ class CustomerProfileController extends GetxController {
 
       // Clear all SharedPreferences data
       await userService.removeSharedPreferenceData();
+      // Clear token data from MySharedPref
+      await MySharedPref.clear();
 
+      // Reset token timestamps in TokenRefreshService
+      await TokenRefreshService().resetTokenTimestamp(isProvider: false);
+      await TokenRefreshService().resetTokenTimestamp(isProvider: true);
       // Show success message
       CustomSnackBar.showCustomToast(
         message: "Logged out successfully",

@@ -5,13 +5,18 @@ class Constants {
   static const customerSignUpUrl = "$baseUrl/auth/register";
   static const customerLoginUrl = "$baseUrl/auth/login";
   static const customerChnagePasswordUrl = "$baseUrl/auth/change-password";
-  static const customerlogOutUrl = "$baseUrl/logout";
+
+  // static const customerlogOutUrl = "$baseUrl/logout";
   static const customerInfoUpdateUrl = "$baseUrl/auth/update-profile";
 
   static const getCategogy = "$baseUrl/get-categories";
-  static const getServiceCustomer = "$baseUrl/auth/create-service";
-  static const ServiceCustomerDetails =
-      baseUrl + "api/v1/customer/service/details";
+
+  // static const getSubCategory = "$baseUrl/get-subcategories";
+  static const getServiceCustomer = "$baseUrl/get-services";
+
+  // static String ServiceCustomerDetails = '$baseUrl/get-service';
+
+  static String ServiceCustomerDetails(int id) => '$baseUrl/get-service/$id';
   static const customerCreateService = "$baseUrl/auth/create-service";
   static const custommerBettingList = baseUrl + "api/v1/betting_list";
   static const custommerBettingListDetails =
@@ -19,6 +24,9 @@ class Constants {
   static const acceptBooking = baseUrl + "api/v1/betting-accept";
   static const String google_api_key =
       "AIzaSyCc9NIB-ScnkTvQZzrB53TfaCwo1XUegHM";
+
+  static String getSubCategoryByID(int categoryId) =>
+      '$baseUrl/get-subcategories?category_id=$categoryId';
 
   // *************Provider**************
   static const providerSignUpUrl = "$baseUrl/auth/register";
