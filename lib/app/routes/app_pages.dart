@@ -1,3 +1,13 @@
+import 'package:dirham_uae/app/modules/global/login/bindings/login_binding.dart';
+import 'package:dirham_uae/app/modules/global/login/views/login_view.dart';
+import 'package:dirham_uae/app/modules/global/signup/bindings/signup_binding.dart';
+import 'package:dirham_uae/app/modules/global/signup/views/signup_view.dart';
+import 'package:dirham_uae/app/modules/intro_screen/intro_one/bindings/intro_one_binding.dart';
+import 'package:dirham_uae/app/modules/intro_screen/intro_one/views/intro_one_view.dart';
+import 'package:dirham_uae/app/modules/intro_screen/login_signup/bindings/login_signup_binding.dart';
+import 'package:dirham_uae/app/modules/intro_screen/login_signup/views/login_signup_view.dart';
+import 'package:dirham_uae/app/modules/intro_screen/splash/bindings/splash_binding.dart';
+import 'package:dirham_uae/app/modules/intro_screen/splash/views/splash_view.dart';
 import 'package:get/get.dart';
 
 import '../modules/change_password/bindings/change_password_binding.dart';
@@ -24,6 +34,8 @@ import '../modules/customer/customer_language/bindings/customer_language_binding
 import '../modules/customer/customer_language/views/customer_language_view.dart';
 import '../modules/customer/customer_location/bindings/customer_location_binding.dart';
 import '../modules/customer/customer_location/views/customer_location_view.dart';
+import '../modules/customer/customer_nav_bar/bindings/customer_nav_bar_binding.dart';
+import '../modules/customer/customer_nav_bar/views/customer_nav_bar_view.dart';
 import '../modules/customer/customer_notification/bindings/customer_notification_binding.dart';
 import '../modules/customer/customer_notification/views/customer_notification_view.dart';
 import '../modules/customer/customer_otp/bindings/customer_otp_binding.dart';
@@ -38,18 +50,14 @@ import '../modules/customer/customer_reset/bindings/customer_reset_binding.dart'
 import '../modules/customer/customer_reset/views/customer_reset_view.dart';
 import '../modules/customer/customer_search/bindings/customer_search_binding.dart';
 import '../modules/customer/customer_search/views/customer_search_view.dart';
-import '../modules/customer/customer_tab/bindings/customertab_binding.dart';
-import '../modules/customer/customer_tab/views/customertab_view.dart';
 import '../modules/customer/customer_terms_and_condition/bindings/customer_terms_and_condition_binding.dart';
 import '../modules/customer/customer_terms_and_condition/views/customer_terms_and_condition_view.dart';
 import '../modules/customer/customer_update_details/bindings/customer_update_details_binding.dart';
 import '../modules/customer/customer_update_details/views/customer_update_details_view.dart';
-import '../modules/global/intro_one/bindings/intro_one_binding.dart';
-import '../modules/global/intro_one/views/intro_one_view.dart';
-import '../modules/global/login_signup/bindings/login_signup_binding.dart';
-import '../modules/global/login_signup/views/login_signup_view.dart';
-import '../modules/global/splash/bindings/splash_binding.dart';
-import '../modules/global/splash/views/splash_view.dart';
+import '../modules/global/customer_tab/bindings/customertab_binding.dart';
+import '../modules/global/customer_tab/views/customertab_view.dart';
+import '../modules/global/provider_tab/bindings/provider_tab_binding.dart';
+import '../modules/global/provider_tab/views/provider_tab_view.dart';
 import '../modules/provider/about_us/bindings/about_us_binding.dart';
 import '../modules/provider/about_us/views/about_us_view.dart';
 import '../modules/provider/account_details/bindings/account_details_binding.dart';
@@ -76,8 +84,6 @@ import '../modules/provider/inbox/bindings/inbox_binding.dart';
 import '../modules/provider/inbox/views/inbox_view.dart';
 import '../modules/provider/language/bindings/language_binding.dart';
 import '../modules/provider/language/views/language_view.dart';
-import '../modules/provider/login/bindings/login_binding.dart';
-import '../modules/provider/login/views/login_view.dart';
 import '../modules/provider/nav_bar/bindings/nav_bar_binding.dart';
 import '../modules/provider/nav_bar/views/nav_bar_view.dart';
 import '../modules/provider/notification/bindings/notification_binding.dart';
@@ -90,16 +96,12 @@ import '../modules/provider/profile/bindings/profile_binding.dart';
 import '../modules/provider/profile/views/profile_view.dart';
 import '../modules/provider/proposals/bindings/proposals_binding.dart';
 import '../modules/provider/proposals/views/proposals_view.dart';
-import '../modules/provider/provider_tab/bindings/provider_tab_binding.dart';
-import '../modules/provider/provider_tab/views/provider_tab_view.dart';
 import '../modules/provider/reset_password/bindings/reset_password_binding.dart';
 import '../modules/provider/reset_password/views/reset_password_view.dart';
 import '../modules/provider/review/bindings/review_binding.dart';
 import '../modules/provider/review/views/review_view.dart';
 import '../modules/provider/search/bindings/search_binding.dart';
 import '../modules/provider/search/views/search_view.dart';
-import '../modules/provider/signup/bindings/signup_binding.dart';
-import '../modules/provider/signup/views/signup_view.dart';
 import '../modules/provider/terms_and_condition/bindings/terms_and_condition_binding.dart';
 import '../modules/provider/terms_and_condition/views/terms_and_condition_view.dart';
 import '../modules/provider/thanks/bindings/thanks_binding.dart';
@@ -305,11 +307,11 @@ class AppPages {
       page: () => CustomerHomeView(),
       binding: CustomerHomeBinding(),
     ),
-    // GetPage(
-    //   name: _Paths.CUSTOMER_NAV_BAR,
-    //   page: () => const CustomerNavBarView(),
-    //   binding: CustomerNavBarBinding(),
-    // ),
+    GetPage(
+      name: _Paths.CUSTOMER_NAV_BAR,
+      page: () => const CustomerNavBarView(0),
+      binding: CustomerNavBarBinding(),
+    ),
     GetPage(
       name: _Paths.CUSTOMER_BOOKING,
       page: () => const CustomerBookingView(),

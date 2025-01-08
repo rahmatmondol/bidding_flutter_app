@@ -1,16 +1,18 @@
 // ignore_for_file: unnecessary_null_comparison
 import 'dart:io';
-import 'package:dio/dio.dart';
+
 import 'package:dio/dio.dart' as diox;
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:http_parser/http_parser.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:dio/dio.dart';
 import 'package:dirham_uae/app/data/local/my_shared_pref.dart';
 import 'package:dirham_uae/app/modules/provider/account_details/controllers/account_details_controller.dart';
 import 'package:dirham_uae/app/routes/app_pages.dart';
 import 'package:dirham_uae/app/services/base_client.dart';
-import 'package:dirham_uae/utils/constants.dart';
+import 'package:dirham_uae/utils/urls.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:image_picker/image_picker.dart';
+
 import '../../../../components/custom_snackbar.dart';
 
 class AccountUpdateDetailsController extends GetxController {
@@ -65,11 +67,10 @@ class AccountUpdateDetailsController extends GetxController {
             .toString(),
   ));
   RxBool isProviderUpdateLoading = false.obs;
+
   //************************** Image Pick ******************************* */
 
   Rx<XFile?> selectedImage = Rx<XFile?>(null);
-
-
 
   File? get imageFile =>
       selectedImage.value != null ? File(selectedImage.value!.path) : null;
@@ -114,7 +115,6 @@ class AccountUpdateDetailsController extends GetxController {
           data: data,
           Constants.providerInfoUpdateUrl,
           RequestType.post,
-
           onSuccess: (response) {
             print(" update api call success");
 
@@ -160,6 +160,7 @@ class AccountUpdateDetailsController extends GetxController {
   }
 
   final count = 0.obs;
+
   @override
   void onInit() {
     super.onInit();

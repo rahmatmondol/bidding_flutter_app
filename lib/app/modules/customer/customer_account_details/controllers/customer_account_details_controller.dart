@@ -2,15 +2,15 @@ import 'package:dirham_uae/app/components/custom_snackbar.dart';
 import 'package:dirham_uae/app/data/local/my_shared_pref.dart';
 import 'package:dirham_uae/app/modules/customer/customer_account_details/models/customer_info_models.dart';
 import 'package:dirham_uae/app/services/base_client.dart';
-import 'package:dirham_uae/utils/constants.dart';
+import 'package:dirham_uae/utils/urls.dart';
 import 'package:get/get.dart';
-
 
 class CustomerAccountDetailsController extends GetxController {
   final count = 0.obs;
   RxBool isCustomerInfoloading = false.obs;
   RxObjectMixin<GetCustomerInfoModel> getCutomerInfoModel =
       GetCustomerInfoModel().obs;
+
 // **************** Get Customer Info **************
   Future getCustomerInfo() async {
     isCustomerInfoloading.value = true;
@@ -22,7 +22,6 @@ class CustomerAccountDetailsController extends GetxController {
       },
       Constants.getCustomerInfo,
       RequestType.get,
-
       onSuccess: (response) {
         // if (response.staztusCode == 200) {
         //   print("get customer info status code 200");
@@ -47,21 +46,18 @@ class CustomerAccountDetailsController extends GetxController {
 
 // **************** Get Customer Info **************
   RxBool isCustomerInfoUpdateloading = false.obs;
+
   Future customerInfoUpdate() async {
     isCustomerInfoUpdateloading.value = true;
 
     await BaseClient.safeApiCall(
-      data: {
-        
-      },
+      data: {},
       headers: {
         'Authorization':
             'Bearer ${MySharedPref.getToken("token".obs).toString()}',
       },
-      
       Constants.customerInfoUpdateUrl,
       RequestType.post,
-
       onSuccess: (response) {
         // if (response.statusCode == 200) {
         //   print(

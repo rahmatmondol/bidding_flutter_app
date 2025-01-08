@@ -1,8 +1,8 @@
-import 'package:get/get.dart';
-import 'package:dirham_uae/app/modules/provider/provider_tab/views/provider_tab_view.dart';
 import 'package:dirham_uae/config/theme/my_images.dart';
+import 'package:get/get.dart';
 
-import '../../../customer/customer_tab/views/customertab_view.dart';
+import '../../customer_tab/views/customertab_view.dart';
+import '../../provider_tab/views/provider_tab_view.dart';
 
 class SignupController extends GetxController {
   RxBool isCustomerChecked = true.obs;
@@ -23,6 +23,7 @@ class SignupController extends GetxController {
   ].obs;
 
   final count = 0.obs;
+
   @override
   void onInit() {
     super.onInit();

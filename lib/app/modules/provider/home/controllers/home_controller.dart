@@ -1,9 +1,9 @@
-import 'package:get/get.dart';
 import 'package:dirham_uae/app/components/custom_snackbar.dart';
-import 'package:dirham_uae/app/modules/provider/home/models/provider_service_model.dart';
 import 'package:dirham_uae/app/modules/provider/home/models/get_categories_model.dart';
+import 'package:dirham_uae/app/modules/provider/home/models/provider_service_model.dart';
+import 'package:get/get.dart';
 
-import '../../../../../utils/constants.dart';
+import '../../../../../utils/urls.dart';
 import '../../../../data/local/my_shared_pref.dart';
 import '../../../../services/base_client.dart';
 
@@ -15,6 +15,7 @@ class HomeController extends GetxController {
   RxBool isGetCategoriesloading = false.obs;
   RxObjectMixin<GetCategoriesModel> getCategoriesDataModel =
       GetCategoriesModel().obs;
+
 // **************** Get Categories Info APi**************
   Future getCategoriesData() async {
     isGetCategoriesloading.value = true;
@@ -22,7 +23,6 @@ class HomeController extends GetxController {
     await BaseClient.safeApiCall(
       Constants.getCategoriesUrl,
       RequestType.get,
-
       onSuccess: (response) {
         if (response.statusCode == 200) {
           print("get customer info status code 200");
@@ -45,7 +45,8 @@ class HomeController extends GetxController {
     );
   }
 
-  RxObjectMixin<Providerservicemodel> getProviderServiceModel =Providerservicemodel().obs;
+  RxObjectMixin<Providerservicemodel> getProviderServiceModel =
+      Providerservicemodel().obs;
 
   Future getServiceProvider() async {
     await BaseClient.safeApiCall(
@@ -53,7 +54,7 @@ class HomeController extends GetxController {
       RequestType.get,
       headers: {
         'Authorization':
-        'Bearer ${MySharedPref.getTokenProvider("token-provider".obs).toString()}',
+            'Bearer ${MySharedPref.getTokenProvider("token-provider".obs).toString()}',
       },
       onSuccess: (response) {
         if (response.statusCode == 200) {

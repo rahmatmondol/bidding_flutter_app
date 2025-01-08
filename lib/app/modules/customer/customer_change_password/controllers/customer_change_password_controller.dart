@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:dirham_uae/app/components/custom_snackbar.dart';
 import 'package:dirham_uae/app/data/local/my_shared_pref.dart';
 import 'package:dirham_uae/app/data/user_service/user_service.dart';
 import 'package:dirham_uae/app/services/base_client.dart';
-import 'package:dirham_uae/utils/constants.dart';
-
+import 'package:dirham_uae/utils/urls.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class CustomerChangePasswordController extends GetxController {
   final TextEditingController oldPassController = TextEditingController();
@@ -31,7 +30,6 @@ class CustomerChangePasswordController extends GetxController {
         },
         Constants.customerChnagePasswordUrl,
         RequestType.post,
-
         onSuccess: (response) {
           print("success");
           if (response.statusCode == 202) {
@@ -61,6 +59,7 @@ class CustomerChangePasswordController extends GetxController {
   }
 
   final count = 0.obs;
+
   @override
   void onInit() {
     super.onInit();

@@ -1,6 +1,6 @@
-import 'package:get/get.dart';
 import 'package:dirham_uae/app/data/local/my_shared_pref.dart';
-import 'package:dirham_uae/utils/constants.dart';
+import 'package:dirham_uae/utils/urls.dart';
+import 'package:get/get.dart';
 
 import '../../../../components/custom_snackbar.dart';
 import '../../../../data/user_service/user_service.dart';
@@ -24,7 +24,6 @@ class ProfileController extends GetxController {
         },
         Constants.providerLogOutUpUrl,
         RequestType.post,
-
         onSuccess: (response) {
           print("success");
           if (response.statusCode == 200) {

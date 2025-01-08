@@ -1,13 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:dirham_uae/config/theme/light_theme_colors.dart';
 import 'package:dirham_uae/config/theme/my_styles.dart';
 import 'package:dirham_uae/utils/global_variable/divider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+
 import '../controllers/signup_controller.dart';
 
 class SignupView extends GetView<SignupController> {
   const SignupView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
@@ -113,7 +115,6 @@ class SignupView extends GetView<SignupController> {
                                               color: Colors.blueAccent),
                                         ),
                                       ),
-
                                 gapWidth(size: 6.0.w),
                                 Image.asset(
                                   controller.itemIcons[index].toString(),

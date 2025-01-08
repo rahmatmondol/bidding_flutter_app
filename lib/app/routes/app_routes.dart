@@ -75,6 +75,7 @@ abstract class Routes {
 
 abstract class _Paths {
   _Paths._();
+
   static const HOME = '/home';
   static const SPLASH = '/splash';
   static const INTRO_ONE = '/intro-one';
@@ -87,6 +88,7 @@ abstract class _Paths {
   static const RESET_PASSWORD = '/reset-password';
   static const CREATE_PASSWORD = '/create-password';
   static const OTP = '/otp';
+
   static const DESCRIPTION = '/description';
   static const APPLY = '/apply';
   static const LOCATION = '/location';
@@ -113,7 +115,7 @@ abstract class _Paths {
   static const REVIEW = '/review';
   static const CUSTOMER_HOME = '/provider-home';
   static const CUSTOMER_BOOKING = '/provider-booking';
-  static const CUSTOMER_NAV_BAR = '/provider-nav-bar';
+  static const CUSTOMER_NAV_BAR = '/customer-nav-bar';
   static const CUSTOMER_INBOX = '/provider-inbox';
   static const CUSTOMER_CHAT = '/provider-chat';
   static const CUSTOMER_NOTIFICATION = '/provider-notification';

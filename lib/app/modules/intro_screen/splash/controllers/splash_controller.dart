@@ -1,32 +1,38 @@
-import 'package:get/get.dart';
 import 'package:dirham_uae/app/data/user_service/user_service.dart';
-import 'package:dirham_uae/app/modules/customer/customer_nav_bar/views/customer_nav_bar_view.dart';
 import 'package:dirham_uae/app/routes/app_pages.dart';
+import 'package:get/get.dart';
 
 class SplashController extends GetxController {
   final count = 0.obs;
   UserService userService = UserService();
 
+  @override
+  void onInit() {
+    // Future.delayed(
+    //   const Duration(seconds: 3),
+    //   () => authCheck(),
+    // );
+    super.onInit();
+    authCheck();
+    update();
+  }
+
   Future<void> authCheck() async {
+    if (Get.currentRoute == Routes.NAV_BAR ||
+        Get.currentRoute == Routes.CUSTOMER_NAV_BAR) {
+      return;
+    }
     var isUser = await userService.getBool();
     var isProviderUser = await userService.getBoolProvider();
+    print("Auth Check - isUser: $isUser, isProviderUser: $isProviderUser");
+
     if (isUser == true) {
-      Get.offAll(CustomerNavBarView(1));
+      Get.offAllNamed(Routes.CUSTOMER_NAV_BAR);
     } else if (isProviderUser == true) {
       Get.offAllNamed(Routes.NAV_BAR);
     } else {
       Get.offAllNamed(Routes.INTRO_ONE);
     }
-  }
-
-  @override
-  void onInit() {
-    Future.delayed(
-      const Duration(seconds: 3),
-      () => authCheck(),
-    );
-    update();
-    super.onInit();
   }
 
   @override

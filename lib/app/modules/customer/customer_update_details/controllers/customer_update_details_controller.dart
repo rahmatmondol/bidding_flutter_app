@@ -1,16 +1,18 @@
 // ignore_for_file: unnecessary_null_comparison
 import 'dart:io';
+
 import 'package:dio/dio.dart' as diox;
 import 'package:dio/dio.dart';
-import 'package:flutter/widgets.dart';
-import 'package:http_parser/http_parser.dart';
-import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:dirham_uae/app/components/custom_snackbar.dart';
 import 'package:dirham_uae/app/data/local/my_shared_pref.dart';
 import 'package:dirham_uae/app/modules/customer/customer_account_details/controllers/customer_account_details_controller.dart';
 import 'package:dirham_uae/app/services/base_client.dart';
-import '../../../../../utils/constants.dart';
+import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../../../../../utils/urls.dart';
 
 class CustomerUpdateDetailsController extends GetxController {
   final Rx<TextEditingController> nameController = Rx(
@@ -49,6 +51,7 @@ class CustomerUpdateDetailsController extends GetxController {
   );
 
   RxBool isCustomerUpdateLoading = false.obs;
+
   //************************** Image Pick ******************************* */
 
   Rx<XFile?> selectedImage = Rx<XFile?>(null);
@@ -101,7 +104,6 @@ class CustomerUpdateDetailsController extends GetxController {
           data: data,
           Constants.customerInfoUpdateUrl,
           RequestType.post,
-
           onSuccess: (response) {
             print(" update api call success");
 
@@ -147,6 +149,7 @@ class CustomerUpdateDetailsController extends GetxController {
   }
 
   final count = 0.obs;
+
   @override
   void onInit() {
     super.onInit();

@@ -4,8 +4,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:dirham_uae/app/services/text_enum.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import 'api_exceptions.dart';
 
@@ -33,17 +33,17 @@ class BaseClient {
 
   /// perform safe api request
   static safeApiCall(
-      String url,
-      RequestType requestType, {
-        Map<String, dynamic>? headers,
-        Map<String, dynamic>? queryParameters,
-        required Function(Response response) onSuccess,
-        Function(ApiException)? onError,
-        Function(int value, int progress)? onReceiveProgress,
-        Function(int total, int progress)?
+    String url,
+    RequestType requestType, {
+    Map<String, dynamic>? headers,
+    Map<String, dynamic>? queryParameters,
+    required Function(Response response) onSuccess,
+    Function(ApiException)? onError,
+    Function(int value, int progress)? onReceiveProgress,
+    Function(int total, int progress)?
         onSendProgress, // while sending (uploading) progress
-        dynamic data,
-      }) async {
+    dynamic data,
+  }) async {
     try {
       // 1) indicate loading state
       // 2) try to perform http request
@@ -103,10 +103,10 @@ class BaseClient {
   /// download file
   static download(
       {required String url, // file url
-        required String savePath, // where to save file
-        Function(ApiException)? onError,
-        Function(int value, int progress)? onReceiveProgress,
-        required Function onSuccess}) async {
+      required String savePath, // where to save file
+      Function(ApiException)? onError,
+      Function(int value, int progress)? onReceiveProgress,
+      required Function onSuccess}) async {
     try {
       await _dio.download(
         url,
@@ -126,8 +126,8 @@ class BaseClient {
   /// handle unexpected error
   static _handleUnexpectedException(
       {Function(ApiException)? onError,
-        required String url,
-        required Object error}) {
+      required String url,
+      required Object error}) {
     if (onError != null) {
       onError(ApiException(
         message: error.toString(),
@@ -167,8 +167,11 @@ class BaseClient {
   /// handle Dio error
   static _handleDioError(
       {required DioError error,
-        Function(ApiException)? onError,
-        required String url}) {
+      Function(ApiException)? onError,
+      required String url}) {
+    // Log the error for debugging
+    print('DioError occurred: ${error.toString()}');
+    print('Error Response: ${error.response?.data}');
     // 404 error
     if (error.response?.statusCode == 404) {
       if (onError != null) {
@@ -208,10 +211,7 @@ class BaseClient {
         // return handleApiError(exception);
       }
     }
-
-
   }
-
 
   static _handleError(String msg) {
     // customToast(msg: msg,color: Colors.red);
