@@ -12,7 +12,7 @@ class CustomerWorkPeopleListController extends GetxController {
   getBettingList(int serviceId) async {
     isLoading.value = true;
     await BaseClient.safeApiCall(
-      Constants.custommerBettingList,
+      Constants.custommerBettingList(serviceId),
       RequestType.get,
       queryParameters: {"service_id": serviceId},
       headers: {

@@ -41,6 +41,9 @@ class CustomerServiceDetailsController extends GetxController {
               customerServiceDetailsModel.value =
                   CustomerServiceDetailsModel.fromJson(response.data);
               print("Service details loaded successfully");
+              print(
+                  "Skills data: ${customerServiceDetailsModel.value.data?.skills}");
+              print("Raw response data: ${response.data}");
             } catch (e) {
               print("Error parsing service details: $e");
               Get.snackbar(

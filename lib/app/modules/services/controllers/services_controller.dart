@@ -20,7 +20,7 @@ class ServicesController extends GetxController {
         'Authorization':
             'Bearer ${MySharedPref.getTokenProvider("token-provider".obs).toString()}',
       },
-      Constants.getServiceUrl,
+      Constants.getAllServiceUrl,
       RequestType.get,
       onSuccess: (response) {
         if (response.statusCode == 200) {

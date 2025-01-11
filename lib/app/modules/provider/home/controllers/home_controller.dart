@@ -29,8 +29,10 @@ class HomeController extends GetxController {
           getCategoriesDataModel.value =
               GetCategoriesModel.fromJson(response.data);
 
-          print(
-              getCategoriesDataModel.value.data!.category![0].name.toString());
+          // print(
+          //     getCategoriesDataModel.value.data!.category![0].name.toString());
+
+          print(getCategoriesDataModel.value.data![0].name.toString());
         }
         isGetCategoriesloading.value = false;
         update();
@@ -50,7 +52,7 @@ class HomeController extends GetxController {
 
   Future getServiceProvider() async {
     await BaseClient.safeApiCall(
-      Constants.getServiceUrl,
+      Constants.getAllServiceUrl,
       RequestType.get,
       headers: {
         'Authorization':
@@ -59,8 +61,8 @@ class HomeController extends GetxController {
       onSuccess: (response) {
         if (response.statusCode == 200) {
           print("get customer info status code 200");
-          getProviderServiceModel.value =
-              Providerservicemodel.fromJson(response.data);
+          final data = Providerservicemodel.fromJson(response.data);
+          getProviderServiceModel.value = data;
         }
         update();
       },

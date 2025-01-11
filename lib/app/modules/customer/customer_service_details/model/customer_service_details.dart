@@ -79,20 +79,20 @@ class ServiceData {
 
   factory ServiceData.fromJson(Map<String, dynamic> json) {
     // Parse skills from JSON string
-    List<String> parseSkills(dynamic skillsData) {
-      if (skillsData == null) return [];
-      try {
-        if (skillsData is String) {
-          final List<dynamic> decoded = jsonDecode(skillsData);
-          return List<String>.from(decoded);
-        } else if (skillsData is List) {
-          return List<String>.from(skillsData);
-        }
-      } catch (e) {
-        print("Error parsing skills: $e");
-      }
-      return [];
-    }
+    // List<String> parseSkills(dynamic skillsData) {
+    //   if (skillsData == null) return [];
+    //   try {
+    //     if (skillsData is String) {
+    //       final List<dynamic> decoded = jsonDecode(skillsData);
+    //       return List<String>.from(decoded);
+    //     } else if (skillsData is List) {
+    //       return List<String>.from(skillsData);
+    //     }
+    //   } catch (e) {
+    //     print("Error parsing skills: $e");
+    //   }
+    //   return [];
+    // }
 
     return ServiceData(
       id: json["id"],
@@ -109,7 +109,12 @@ class ServiceData {
       level: json["level"],
       postType: json["postType"],
       deadline: json["deadline"],
-      skills: parseSkills(json["skills"]),
+      // skills: parseSkills(json["skills"]),
+      skills: json["skills"] == null
+          ? []
+          : (json["skills"] is String
+              ? List<String>.from(jsonDecode(json["skills"]))
+              : List<String>.from(json["skills"])),
       commission: json["commission"],
       isFeatured: json["is_featured"],
       categoryId: json["category_id"],

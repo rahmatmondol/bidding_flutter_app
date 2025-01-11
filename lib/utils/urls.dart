@@ -18,7 +18,9 @@ class Constants {
 
   static String ServiceCustomerDetails(int id) => '$baseUrl/get-service/$id';
   static const customerCreateService = "$baseUrl/auth/create-service";
-  static const custommerBettingList = baseUrl + "api/v1/betting_list";
+
+  static custommerBettingList(int id) =>
+      '$baseUrl/auth/get-biddings?service_id=$id';
   static const custommerBettingListDetails =
       baseUrl + "api/v1/provider_details";
   static const acceptBooking = baseUrl + "api/v1/betting-accept";
@@ -36,6 +38,7 @@ class Constants {
   static const providerInfoUpdateUrl = "$baseUrl/auth/update-profile";
   static const getProviderInfo = baseUrl + "api/v1/auth/provider";
   static const getZoneId = "$baseUrl/get-categories";
-  static const getServiceUrl = "$baseUrl/get-service/5";
+  static const getAllServiceUrl = "$baseUrl/get-services";
   static const getCategoriesUrl = "$baseUrl/get-categories";
+  static const createBidding = "$baseUrl/auth/create-bidding";
 }

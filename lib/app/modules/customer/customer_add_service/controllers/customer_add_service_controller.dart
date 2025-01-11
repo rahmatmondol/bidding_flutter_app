@@ -1,8 +1,8 @@
 // ignore_for_file: invalid_use_of_protected_member, non_constant_identifier_names, unnecessary_brace_in_string_interps, unused_local_variable
 
-import 'package:dio/dio.dart' as diox;
+import 'dart:convert';
+
 import 'package:dirham_uae/app/components/custom_snackbar.dart';
-import 'package:dirham_uae/app/data/local/my_shared_pref.dart';
 import 'package:dirham_uae/app/modules/customer/customer_add_service/model/customer_add_service_model.dart';
 import 'package:dirham_uae/app/modules/customer/customer_payment/location_service/location_service.dart';
 import 'package:dirham_uae/app/services/base_client.dart';
@@ -11,10 +11,12 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../../config/theme/light_theme_colors.dart';
+import '../../../../data/user_service/user_service.dart';
 import '../../../global/customer_tab/model/category-model.dart';
 import '../../customer_nav_bar/views/customer_nav_bar_view.dart';
 import '../model/sub_category_model.dart';
@@ -34,8 +36,8 @@ class CustomerAddServiceController extends GetxController {
   var lng;
 
   RxList<String> currency = [
-    "aed",
-    "usd",
+    "UAED",
+    "USD",
   ].obs;
 
   var selectedCurrency = ''.obs;
@@ -45,8 +47,8 @@ class CustomerAddServiceController extends GetxController {
   }
 
   final priceTypeList = [
-    "fixed",
-    "negotiable",
+    "Fixed",
+    "Negotiable",
   ].obs;
 
   var selectedPriceType = ''.obs;
@@ -56,9 +58,9 @@ class CustomerAddServiceController extends GetxController {
   }
 
   final levelList = [
-    "entry",
-    "intermediate",
-    "expert",
+    "Entry",
+    "Intermediate",
+    "Expert",
   ].obs;
 
   var selectedLevelList = ''.obs;
@@ -90,7 +92,7 @@ class CustomerAddServiceController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchTags();
+    // fetchTags();
     getCategoory();
   }
 
@@ -98,93 +100,145 @@ class CustomerAddServiceController extends GetxController {
     selectedLevelList.value = newValue;
   }
 
-  customerCreateService(int categoryId, String subCategoryId, String currency,
-      String priceType, String level) async {
+  Future customerCreateService(int categoryId, String subCategoryId,
+      String currency, String priceType, String level) async {
     lat = myBox.get("lat");
     lng = myBox.get("lng");
-
-    var currentAddress;
-    currentAddress = myBox.get("address3");
-
-    // String htmlText = await description.value.getText();
+    var currentAddress = myBox.get("address3");
 
     isLoading.value = true;
     if (selectedthumbnail.value.isEmpty ||
         selectedthumbnail.any((element) => element == null)) {
       CustomSnackBar.showCustomErrorToast(
           message: "Please Select feature image");
-    } else {
-      List<String> thumbnailPaths =
-          selectedthumbnail.map((file) => file!.path).toList();
-      String tag = ListTags.join(", ");
+      isLoading.value = false;
+      return;
+    }
 
-      try {
-        print(' thumbnail path${thumbnailPaths}');
+    try {
+      // Get token using UserService
+      final userService = UserService();
+      final token = await userService.getToken();
 
-        diox.FormData data = diox.FormData.fromMap({
-          "title": name.value.text.trim(),
-          "description": description.value.text.trim(),
-          "price": price.value.text.trim(),
-          "priceType": priceType.toString(),
-          "currency": currency.toString(),
-          "level": level.toString(),
-          "skills": selectedTags.join(', '),
-          // "skills": tagController.value.text,
-          "category_id": categooryId.toString(),
-          "images[]": [
-            for (String path in thumbnailPaths)
-              await diox.MultipartFile.fromFile(path,
-                  filename: path.split('/').last,
-                  contentType: new MediaType("image", "jpeg")),
-          ],
-          "location_name": "lohagara", // need change
-          "latitude": "165165", // need change
-          "longitude": "455162165", // need change
-          "postType": "Service",
-          "subCategory_id": subCategoryId.toString(),
-        });
-
-        await BaseClient.safeApiCall(
-          data: data,
-          headers: {
-            'Authorization':
-                'Bearer ${MySharedPref.getToken("token".obs).toString()}',
-          },
-          Constants.customerCreateService,
-          RequestType.post,
-          onSuccess: (response) {
-            if (response.statusCode == 200) {
-              print("Data response ${response.data}");
-              customeAddService.value =
-                  CustomerAddServiceModel.fromJson(response.data);
-              print(customeAddService.value.data!.service);
-              CustomSnackBar.showCustomToast(
-                  message: response.data['message'],
-                  color: LightThemeColors.progressIndicatorColor);
-              Get.to(() => CustomerNavBarView(1));
-            }
-            isLoading.value = false;
-            update();
-          },
-          onError: (error) {
-            if (error.statusCode == 404) {
-              String errorMessage = "";
-
-              if (error.response!.data['data']['message'] != null) {
-                errorMessage +=
-                    error.response!.data['data']['message'][0] + "\n";
-              }
-            }
-            update();
-          },
-        );
-      } catch (e) {
-        print(e);
+      if (token == null) {
+        CustomSnackBar.showCustomErrorToast(message: "Authentication required");
+        isLoading.value = false;
+        return;
       }
+
+      var uri = Uri.parse(Constants.customerCreateService);
+      var request = http.MultipartRequest('POST', uri);
+
+      // Add headers with token from UserService
+      request.headers.addAll({
+        'Authorization': token, // Token already includes "Bearer "
+        'Accept': 'application/json',
+      });
+
+      // Add text fields
+      request.fields.addAll({
+        "title": name.value.text.trim(),
+        // "slug": name.value.text.trim().toLowerCase().replaceAll(" ", "-"),
+        "description": description.value.text.trim(),
+        "price": price.value.text.trim(),
+        "location_name": currentAddress ?? "lohagara",
+        "latitude": lat ?? "23.1824543",
+        "longitude": lng ?? "89.6509966",
+        "priceType": priceType.capitalize ?? "Fixed",
+        // Capitalize first letter
+        "currency": currency.toUpperCase(),
+        // Convert to uppercase
+        "status": "Active",
+        "level": level,
+        "postType": "Service",
+        // "deadline":
+        //     DateTime.now().add(Duration(days: 7)).toString().substring(0, 10),
+        "skills": jsonEncode(selectedTags.toList()),
+        // "commission": "0",
+        // "is_featured": "0",
+        "category_id": categooryId?.toString() ?? "0",
+        "subCategory_id": subCategoryId,
+      });
+
+      // Add images
+      for (int i = 0; i < selectedthumbnail.length; i++) {
+        if (selectedthumbnail[i] != null) {
+          var file = await http.MultipartFile.fromPath(
+            'images[]',
+            selectedthumbnail[i]!.path,
+            contentType: MediaType('image', 'jpeg'),
+          );
+          request.files.add(file);
+        }
+      }
+
+      print('Request URL: ${request.url}');
+      print('Request Headers: ${request.headers}');
+      print('Request Fields: ${request.fields}');
+
+      // Send request
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      print('Response Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        var jsonResponse = jsonDecode(response.body);
+        customeAddService.value =
+            CustomerAddServiceModel.fromJson(jsonResponse);
+
+        CustomSnackBar.showCustomToast(
+            message: jsonResponse['message'] ?? 'Service created successfully',
+            color: LightThemeColors.progressIndicatorColor);
+
+        Get.to(() => CustomerNavBarView(1));
+      } else if (response.statusCode == 302) {
+        // Handle redirect
+        String? redirectUrl = response.headers['location'];
+        if (redirectUrl != null) {
+          var redirectUri = Uri.parse(redirectUrl);
+          // Create new request for redirect
+          var redirectRequest = http.MultipartRequest('POST', redirectUri)
+            ..headers.addAll(request.headers)
+            ..fields.addAll(request.fields);
+
+          // Add files again
+          for (var file in request.files) {
+            redirectRequest.files.add(await http.MultipartFile.fromPath(
+                file.field, file.filename!,
+                contentType: file.contentType));
+          }
+
+          var redirectStreamResponse = await redirectRequest.send();
+          response = await http.Response.fromStream(redirectStreamResponse);
+
+          if (response.statusCode == 200 || response.statusCode == 201) {
+            var jsonResponse = jsonDecode(response.body);
+            customeAddService.value =
+                CustomerAddServiceModel.fromJson(jsonResponse);
+
+            CustomSnackBar.showCustomToast(
+                message:
+                    jsonResponse['message'] ?? 'Service created successfully',
+                color: LightThemeColors.progressIndicatorColor);
+
+            Get.to(() => CustomerNavBarView(1));
+          }
+        }
+      } else {
+        throw Exception('Failed to create service: ${response.statusCode}');
+      }
+
+      isLoading.value = false;
+    } catch (e) {
+      print('Error creating service: $e');
+      CustomSnackBar.showCustomErrorToast(
+          message: 'Error creating service: ${e.toString()}');
+      isLoading.value = false;
     }
   }
 
-  // For storing API tags
   RxList<String> apiTags = <String>[].obs;
 
   // For storing selected tags (both API and custom)
@@ -211,29 +265,29 @@ class CustomerAddServiceController extends GetxController {
   }
 
   // Method to fetch tags from API
-  Future<void> fetchTags() async {
-    try {
-      // Replace with your actual API call
-      await BaseClient.safeApiCall(
-        Constants.getCategogy,
-        RequestType.get,
-        headers: {
-          'Authorization':
-              'Bearer ${MySharedPref.getToken("token".obs).toString()}',
-        },
-        onSuccess: (response) {
-          if (response.statusCode == 200) {
-            apiTags.value = List<String>.from(response.data['data']);
-          }
-        },
-        onError: (error) {
-          print('Error fetching tags: $error');
-        },
-      );
-    } catch (e) {
-      print('Exception fetching tags: $e');
-    }
-  }
+  // Future<void> fetchTags() async {
+  //   try {
+  //     // Replace with your actual API call
+  //     await BaseClient.safeApiCall(
+  //       Constants.getCategogy,
+  //       RequestType.get,
+  //       headers: {
+  //         'Authorization':
+  //             'Bearer ${MySharedPref.getToken("token".obs).toString()}',
+  //       },
+  //       onSuccess: (response) {
+  //         if (response.statusCode == 200) {
+  //           apiTags.value = List<String>.from(response.data['data']);
+  //         }
+  //       },
+  //       onError: (error) {
+  //         print('Error fetching tags: $error');
+  //       },
+  //     );
+  //   } catch (e) {
+  //     print('Exception fetching tags: $e');
+  //   }
+  // }
 
   RxBool isCategoryLoading = false.obs;
   RxObjectMixin<CCatgoryModel> categoryModel = CCatgoryModel().obs;

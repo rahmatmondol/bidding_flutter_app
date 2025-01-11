@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dirham_uae/app/components/custom_appBar.dart';
 import 'package:dirham_uae/app/components/custom_button.dart';
 import 'package:dirham_uae/app/modules/customer/customer_work_people_list/views/customer_work_people_list_view.dart';
 import 'package:dirham_uae/config/theme/light_theme_colors.dart';
@@ -47,6 +48,8 @@ class CustomerServiceDetailsView
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  CustomHeaderBar(title: 'Post Details'),
+                  gapHeight(size: 20.0.h),
                   // Image Slider Section
                   if (serviceData.images != null &&
                       serviceData.images!.isNotEmpty)

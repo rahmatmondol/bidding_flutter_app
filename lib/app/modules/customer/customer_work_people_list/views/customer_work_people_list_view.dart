@@ -1,16 +1,19 @@
 // ignore_for_file: unused_local_variable
 
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
+import 'package:dirham_uae/app/components/custom_appBar.dart';
 import 'package:dirham_uae/app/modules/customer/customer_work_people_details/views/customer_work_people_details_view.dart';
 import 'package:dirham_uae/config/theme/light_theme_colors.dart';
 import 'package:dirham_uae/config/theme/my_styles.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+
 import '../controllers/customer_work_people_list_controller.dart';
 
 class CustomerWorkPeopleListView
     extends GetView<CustomerWorkPeopleListController> {
   final int serviceId;
+
   CustomerWorkPeopleListView(this.serviceId, {Key? key}) : super(key: key);
   final CustomerWorkPeopleListController customerWorkPeopleListController =
       Get.put(CustomerWorkPeopleListController());
@@ -30,14 +33,18 @@ class CustomerWorkPeopleListView
             controller.getBettingListModel.value.data!.betting != null &&
             controller.getBettingListModel.value.data!.betting!.isEmpty) {
           return Center(
-              child: Text('No bidding available',style: TextStyle(color: LightThemeColors.whiteColor, fontWeight: FontWeight.bold),
+              child: Text(
+            'No bidding available',
+            style: TextStyle(
+                color: LightThemeColors.whiteColor,
+                fontWeight: FontWeight.bold),
           ));
         } else {
           return Container(
             height: size.height,
             width: size.width,
             padding: EdgeInsets.only(
-              top: MediaQuery.paddingOf(context).top + 20.r,
+              top: 0,
               left: 15.r,
               right: 15.r,
             ),
@@ -45,16 +52,10 @@ class CustomerWorkPeopleListView
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Center(
-                  child: Text(
-                    'Willing to work',
-                    style: kTitleTextstyle.copyWith(
-                        fontWeight: FontWeight.bold, fontSize: 16.sp),
-                  ),
-                ),
+                CustomHeaderBar(title: 'Willing To Work'),
                 gapHeight(size: 20),
                 Text(
-                  "(${controller.getBettingListModel.value.data?.betting?.length??0}) Service providers want to do this job",
+                  "(${controller.getBettingListModel.value.data?.betting?.length ?? 0}) Service providers want to do this job",
                   style: kSubtitleStyle,
                 ),
                 gapHeight(size: 20),
@@ -71,7 +72,9 @@ class CustomerWorkPeopleListView
                           margin: EdgeInsets.only(bottom: 20.r),
                           child: InkWell(
                             onTap: () {
-                              Get.to(CustomerWorkPeopleDetailsView(betting.provider!.id!.toInt(),betting.id!.toInt()));
+                              Get.to(CustomerWorkPeopleDetailsView(
+                                  betting.provider!.id!.toInt(),
+                                  betting.id!.toInt()));
                             },
                             child: Row(
                               children: [
@@ -178,19 +181,22 @@ class CustomerWorkPeopleListView
                                                           width: 120,
                                                           decoration:
                                                               BoxDecoration(
-                                                            color:
-                                                                Color(0xff5A5D63),
+                                                            color: Color(
+                                                                0xff5A5D63),
                                                             borderRadius:
                                                                 BorderRadius
-                                                                    .circular(15),
+                                                                    .circular(
+                                                                        15),
                                                           ),
                                                           child: Center(
                                                               child: Text(
                                                             "Cancle",
-                                                            style: kTitleTextstyle
-                                                                .copyWith(
+                                                            style:
+                                                                kTitleTextstyle
+                                                                    .copyWith(
                                                               fontWeight:
-                                                                  FontWeight.bold,
+                                                                  FontWeight
+                                                                      .bold,
                                                             ),
                                                           )),
                                                         ),
@@ -203,8 +209,8 @@ class CustomerWorkPeopleListView
                                                                 .bettingBooking(
                                                                     betting.id!
                                                                         .toInt());
-                                                          } else{
-                                                            //handle api error 
+                                                          } else {
+                                                            //handle api error
                                                           }
                                                           Get.back();
                                                         },

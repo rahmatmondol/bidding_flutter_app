@@ -72,6 +72,7 @@ class LoginController extends GetxController {
               Routes.CUSTOMER_NAV_BAR,
               predicate: (route) => false,
             );
+            update();
           } else {
             Get.snackbar('Unauthorized', 'Check Email or Password');
           }
@@ -85,8 +86,8 @@ class LoginController extends GetxController {
                 message: error.response?.data['errors']?.toString() ??
                     "Login failed");
           } else {
-            CustomSnackBar.showCustomErrorToast(
-                message: "Login failed. Please try again.");
+            CustomSnackBar.showCustomSnackBar(
+                message: "Login failed. Please try again.", title: 'Success');
           }
         },
       );
@@ -130,6 +131,7 @@ class LoginController extends GetxController {
               Routes.NAV_BAR,
               predicate: (route) => false,
             );
+            update();
           } else {
             Get.snackbar('Unauthorized', 'Check Email or Password');
           }
@@ -143,8 +145,8 @@ class LoginController extends GetxController {
                 message: error.response?.data['errors']?.toString() ??
                     "Login failed");
           } else {
-            CustomSnackBar.showCustomErrorToast(
-                message: "Login failed. Please try again.");
+            CustomSnackBar.showCustomSnackBar(
+                message: " Please wait.", title: 'Login Success');
           }
         },
       );

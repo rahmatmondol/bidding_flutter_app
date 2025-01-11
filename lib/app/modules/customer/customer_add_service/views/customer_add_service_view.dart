@@ -38,11 +38,10 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
       body: MyScaffoldBackground(
         size: size,
         child: Obx(() {
-          // final catrgory =
-          //     (homeC.getCategoriesDataModel.value.data?.category ?? [])
-          //         .firstWhere((c) => c.id == c.id); // Ch
-          final categories =
-              homeC.getCategoriesDataModel.value.data?.category ?? [];
+          // final categories =
+          //     homeC.getCategoriesDataModel.value.data?.category ?? [];
+
+          final categories = homeC.getCategoriesDataModel.value.data ?? [];
 
           // Find the selected category safely
           Category? selectedCategory;
