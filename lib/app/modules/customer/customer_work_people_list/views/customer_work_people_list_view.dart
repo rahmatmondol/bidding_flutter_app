@@ -497,6 +497,7 @@ class CustomerWorkPeopleListView
           height: 300.0,
           width: 300.0,
           decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
             gradient: LinearGradient(
               colors: [
                 Color(0xff4C5B7D),
@@ -557,12 +558,11 @@ class CustomerWorkPeopleListView
                     ),
                     GestureDetector(
                       onTap: () {
-                        // if (isAccept) {
-                        //   controller.acceptBidding(bettingId);
-                        // } else {
-                        //   controller.rejectBidding(bettingId);
-                        // }
-                        // Get.back();
+                        if (isAccept) {
+                          controller.acceptBidding(bettingId);
+                        } else {
+                          Get.back();
+                        }
                       },
                       child: Container(
                         height: 50,

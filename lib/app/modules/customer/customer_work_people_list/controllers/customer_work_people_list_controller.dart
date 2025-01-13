@@ -56,12 +56,15 @@
 // }
 // }
 
+import 'dart:convert';
+
 import 'package:dirham_uae/app/components/custom_snackbar.dart';
 import 'package:dirham_uae/app/data/local/my_shared_pref.dart';
 import 'package:dirham_uae/app/modules/customer/customer_work_people_list/model/get_betting_list_model.dart';
 import 'package:dirham_uae/app/services/base_client.dart';
 import 'package:dirham_uae/utils/urls.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
 class CustomerWorkPeopleListController extends GetxController {
   final getBettingListModel = GetBettingListModel().obs;
@@ -100,53 +103,33 @@ class CustomerWorkPeopleListController extends GetxController {
     }
   }
 
-// Future<void> acceptBidding(int biddingId) async {
-//   try {
-//     await BaseClient.safeApiCall(
-//       "${Constants.acceptBooking}/$biddingId",
-//       RequestType.post,
-//       headers: {
-//         'Authorization': 'Bearer ${MySharedPref.getToken("token".obs).toString()}',
-//       },
-//       onSuccess: (response) {
-//         if (response.statusCode == 200) {
-//           CustomSnackBar.showCustomToast(message: response.data["message"]);
-//           // Refresh the list after accepting
-//           getBettingList(getBettingListModel.value.data?.first.serviceId ?? 0);
-//         }
-//       },
-//       onError: (error) {
-//         CustomSnackBar.showCustomErrorToast(
-//             message: error.response?.data["message"] ?? "An error occurred");
-//       },
-//     );
-//   } catch (e) {
-//     CustomSnackBar.showCustomErrorToast(message: "An unexpected error occurred");
-//   }
-// }
-//
-// Future<void> rejectBidding(int biddingId) async {
-//   try {
-//     await BaseClient.safeApiCall(
-//       "${Constants.rejectBooking}/$biddingId",
-//       RequestType.post,
-//       headers: {
-//         'Authorization': 'Bearer ${MySharedPref.getToken("token".obs).toString()}',
-//       },
-//       onSuccess: (response) {
-//         if (response.statusCode == 200) {
-//           CustomSnackBar.showCustomToast(message: response.data["message"]);
-//           // Refresh the list after rejecting
-//           getBettingList(getBettingListModel.value.data?.first.serviceId ?? 0);
-//         }
-//       },
-//       onError: (error) {
-//         CustomSnackBar.showCustomErrorToast(
-//             message: error.response?.data["message"] ?? "An error occurred");
-//       },
-//     );
-//   } catch (e) {
-//     CustomSnackBar.showCustomErrorToast(message: "An unexpected error occurred");
-//   }
-// }
+  Future<void> acceptBidding(int biddingId) async {
+    try {
+      final response = await http.post(
+        Uri.parse(Constants.acceptBooking),
+        headers: {
+          'Authorization':
+              'Bearer ${MySharedPref.getToken("token".obs).toString()}',
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: {
+          'bid_id': biddingId.toString(),
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = json.decode(response.body);
+        CustomSnackBar.showCustomToast(message: responseData["message"]);
+        // Refresh the list after accepting
+        getBettingList(getBettingListModel.value.data?.first.serviceId ?? 0);
+      } else {
+        final errorData = json.decode(response.body);
+        CustomSnackBar.showCustomErrorToast(
+            message: errorData["message"] ?? "An error occurred");
+      }
+    } catch (e) {
+      CustomSnackBar.showCustomErrorToast(
+          message: "An unexpected error occurred");
+    }
+  }
 }

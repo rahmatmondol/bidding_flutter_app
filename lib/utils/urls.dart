@@ -24,7 +24,7 @@ class Constants {
 
   static const custommerBettingListDetails =
       baseUrl + "api/v1/provider_details";
-  static const acceptBooking = baseUrl + "api/v1/betting-accept";
+  static const acceptBooking = "$baseUrl/auth/create-booking";
   static const String google_api_key =
       "AIzaSyCc9NIB-ScnkTvQZzrB53TfaCwo1XUegHM";
 
