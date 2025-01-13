@@ -66,8 +66,6 @@ class LoginController extends GetxController {
             await userService.saveString(
                 key: 'token', value: response.data["token"]);
 
-            CustomSnackBar.showCustomToast(message: response.data['message']);
-
             await Get.offAllNamed(
               Routes.CUSTOMER_NAV_BAR,
               predicate: (route) => false,
@@ -125,12 +123,16 @@ class LoginController extends GetxController {
             await userService.saveStringProvider(
                 key: 'token-provider', value: response.data["token"]);
 
-            CustomSnackBar.showCustomToast(message: response.data['message']);
-
-            await Get.offAllNamed(
-              Routes.NAV_BAR,
-              predicate: (route) => false,
-            );
+            CustomSnackBar.showCustomToast(message: "Login successful");
+            try {
+              await Get.offAllNamed(
+                Routes.NAV_BAR,
+                predicate: (route) => false,
+              );
+              print("Navigation successful");
+            } catch (e) {
+              print("Navigation failed: $e");
+            }
             update();
           } else {
             Get.snackbar('Unauthorized', 'Check Email or Password');
@@ -145,8 +147,8 @@ class LoginController extends GetxController {
                 message: error.response?.data['errors']?.toString() ??
                     "Login failed");
           } else {
-            CustomSnackBar.showCustomSnackBar(
-                message: " Please wait.", title: 'Login Success');
+            CustomSnackBar.showCustomErrorSnackBar(
+                message: " Something Went wrong", title: 'Login Failed');
           }
         },
       );

@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:dirham_uae/app/components/profile_card.dart';
 import 'package:dirham_uae/app/components/small_custom_button.dart';
-import 'package:dirham_uae/app/modules/customer/customer_account_details/controllers/customer_account_details_controller.dart';
 import 'package:dirham_uae/config/theme/light_theme_colors.dart';
 import 'package:dirham_uae/config/theme/my_images.dart';
 import 'package:dirham_uae/config/theme/my_styles.dart';
@@ -10,8 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../../../routes/app_pages.dart';
-import '../controllers/customer_profile_controller.dart';
+import '../../../../../routes/app_pages.dart';
+import '../../account_details/controllers/account_details_controller.dart';
+import '../controllers/profile_data_controller.dart';
 
 class CustomerProfileView extends GetView<CustomerProfileController> {
   const CustomerProfileView({Key? key}) : super(key: key);
@@ -128,6 +128,23 @@ class CustomerProfileView extends GetView<CustomerProfileController> {
             Get.toNamed(Routes.CUSTOMER_ABOUT_US);
           },
         ),
+        gapHeight(size: 30),
+        Obx(() {
+          if (controller.isProvider.value) {
+            return Column(
+              children: [
+                ProfileCard(
+                  iconName: Img.proposalIcon,
+                  name: "My proposals",
+                  ontap: () {
+                    Get.toNamed(Routes.PROPOSALS);
+                  },
+                ),
+              ],
+            );
+          }
+          return const SizedBox.shrink();
+        }),
         gapHeight(size: 30),
         ProfileCard(
           iconName: Img.termsIcon,

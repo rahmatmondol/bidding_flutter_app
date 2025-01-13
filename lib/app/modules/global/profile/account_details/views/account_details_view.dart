@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../../../components/custom_button.dart';
-import '../controllers/customer_account_details_controller.dart';
+import '../../../../../components/custom_button.dart';
+import '../controllers/account_details_controller.dart';
 
 class CustomerAccountDetailsView
     extends GetView<CustomerAccountDetailsController> {
@@ -26,6 +26,9 @@ class CustomerAccountDetailsView
 
   Widget _buildContent(BuildContext context) {
     final customerInfo = controller.customerInfo.value;
+    print('===============');
+    print(customerInfo.toString());
+    print('===============');
 
     if (customerInfo == null) {
       return const Center(child: Text('No data available'));
@@ -46,13 +49,23 @@ class CustomerAccountDetailsView
 
           // Profile Image
 
+          // CircleAvatar(
+          //   radius: 60.r,
+          //   backgroundImage: customerInfo.profile?.image != null
+          //       ? NetworkImage(customerInfo.profile!.image!)
+          //       : const AssetImage('assets/images/profile.jpg'),
+          // ),
           CircleAvatar(
             radius: 60.r,
             backgroundImage: customerInfo.profile?.image != null
-                ? NetworkImage(customerInfo.profile!.image!)
-                : const AssetImage('assets/images/profile.jpg'),
+                ? NetworkImage(customerInfo.profile!.image!) as ImageProvider
+                : const AssetImage('assets/images/profile.jpg')
+                    as ImageProvider,
+            onBackgroundImageError: (e, stackTrace) {
+              print('Error loading image: $e');
+              // Fallback to asset image
+            },
           ),
-
           gapHeight(size: 30),
 
           // User Details

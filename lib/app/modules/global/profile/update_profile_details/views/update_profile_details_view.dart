@@ -1,7 +1,5 @@
 import 'package:dirham_uae/app/components/custom_button.dart';
 import 'package:dirham_uae/app/components/custom_text_field.dart';
-import 'package:dirham_uae/app/modules/customer/customer_account_details/controllers/customer_account_details_controller.dart';
-import 'package:dirham_uae/app/modules/customer/customer_update_details/components/show_bottom_sheet.dart';
 import 'package:dirham_uae/app/routes/app_pages.dart';
 import 'package:dirham_uae/config/theme/light_theme_colors.dart';
 import 'package:dirham_uae/config/theme/my_styles.dart';
@@ -9,9 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../../../components/custom_appBar.dart';
-import '../../../../components/custom_snackbar.dart';
-import '../controllers/customer_update_details_controller.dart';
+import '../../../../../components/custom_appBar.dart';
+import '../../../../../components/custom_snackbar.dart';
+import '../../account_details/controllers/account_details_controller.dart';
+import '../components/show_bottom_sheet.dart';
+import '../controllers/update_profile_details_controller.dart';
 
 class CustomerUpdateDetailsView
     extends GetView<CustomerUpdateDetailsController> {

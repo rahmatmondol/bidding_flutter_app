@@ -19,8 +19,9 @@ class Constants {
   static String ServiceCustomerDetails(int id) => '$baseUrl/get-service/$id';
   static const customerCreateService = "$baseUrl/auth/create-service";
 
-  static custommerBettingList(int id) =>
+  static custommerBeddingList(int id) =>
       '$baseUrl/auth/get-biddings?service_id=$id';
+
   static const custommerBettingListDetails =
       baseUrl + "api/v1/provider_details";
   static const acceptBooking = baseUrl + "api/v1/betting-accept";

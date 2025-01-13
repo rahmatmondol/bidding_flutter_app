@@ -12,7 +12,7 @@ class TokenRefreshService {
   TokenRefreshService._internal();
 
   Timer? _refreshTimer;
-  static const int TOKEN_EXPIRATION = 24 * 60 * 60 * 1000; // 24 hours
+  static const int TOKEN_EXPIRATION = 7 * 24 * 60 * 60 * 1000; // 24 hours
   static const String TOKEN_TIMESTAMP_KEY = 'token_timestamp';
   static const String PROVIDER_TOKEN_TIMESTAMP_KEY = 'provider_token_timestamp';
 

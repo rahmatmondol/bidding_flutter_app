@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 
-import '../controllers/customer_profile_controller.dart';
+import '../controllers/profile_data_controller.dart';
 
 class CustomerProfileBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut <CustomerProfileController>(
+    Get.lazyPut<CustomerProfileController>(
       () => CustomerProfileController(),
     );
   }

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import '../controllers/customer_update_details_controller.dart';
+import '../controllers/update_profile_details_controller.dart';
 
 class CustomerUpdateDetailsBinding extends Bindings {
   @override

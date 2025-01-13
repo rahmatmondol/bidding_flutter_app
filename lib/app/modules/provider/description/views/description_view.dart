@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dirham_uae/app/components/custom_appBar.dart';
 import 'package:dirham_uae/app/modules/provider/home/models/provider_service_model.dart';
 import 'package:dirham_uae/config/theme/light_theme_colors.dart';
 import 'package:dirham_uae/utils/global_variable/my_scaffold_background.dart';
@@ -19,9 +20,7 @@ import '../controllers/description_controller.dart';
 class DescriptionView extends GetView<DescriptionController> {
   final Service data;
 
-  // DescriptionView(this.data, {Key? key}) : super(key: key);
   DescriptionView(this.data, {Key? key}) : super(key: key) {
-    // Initialize controller and set images in constructor
     final controller = Get.put(DescriptionController());
     controller.setImages(data);
   }
@@ -41,8 +40,8 @@ class DescriptionView extends GetView<DescriptionController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                CustomHeaderBar(title: 'Detail info'),
                 gapHeight(size: 20.0.h),
-
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0.w),
                   child: Text(
@@ -50,6 +49,7 @@ class DescriptionView extends GetView<DescriptionController> {
                     style: kTitleTextstyle.copyWith(fontSize: 22.0.sp),
                   ),
                 ),
+                gapHeight(size: 20.0.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0.w),
                   child: Row(
@@ -70,7 +70,7 @@ class DescriptionView extends GetView<DescriptionController> {
                 gapHeight(size: 10.0.h),
 
                 Container(
-                  height: 180.0,
+                  height: 280.0,
                   color: LightThemeColors.secounderyColor,
                   width: size.width,
                   child: Stack(
@@ -80,7 +80,7 @@ class DescriptionView extends GetView<DescriptionController> {
                         print('Images length: ${controller.images.length}');
                         return SizedBox(
                           width: size.width,
-                          height: 180.0,
+                          height: 280.0,
                           child: controller.images.isNotEmpty
                               ? Image.network(
                                   controller
@@ -95,7 +95,7 @@ class DescriptionView extends GetView<DescriptionController> {
                         );
                       }),
                       Positioned(
-                        top: 90,
+                        top: 190,
                         left: 150.0,
                         child: SizedBox(
                           height: 80.0,
@@ -467,6 +467,7 @@ class DescriptionView extends GetView<DescriptionController> {
                                 'serviceId': data.id,
                                 'title': data.title,
                                 'description': data.description,
+                                'createdAt': data.createdAt,
                                 'skills': data.skills is String
                                     ? List<String>.from(
                                         json.decode(data.skills!))
@@ -478,20 +479,11 @@ class DescriptionView extends GetView<DescriptionController> {
                               style: kTitleTextstyle,
                             ),
                           ),
-                          // CustomButton(
-                          //   bgColor: LightThemeColors.primaryColor,
-                          //   ontap: () => Get.toNamed(Routes.APPLY),
-                          //   widget: Text(
-                          //     "Bid now",
-                          //     style: kTitleTextstyle,
-                          //   ),
-                          // ),
                         ),
                       ],
                     ),
                   ),
                 ),
-                divider,
               ],
             ),
           ),

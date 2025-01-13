@@ -51,7 +51,7 @@ class UserService {
     return prefs!.getInt(key!);
   }
 
-  loginCheck() async {
+  isUser() async {
     prefs = await SharedPreferences.getInstance();
     print(prefs!.getBool('is-user'));
     if (prefs!.getBool('is-user') != null) {
@@ -61,7 +61,7 @@ class UserService {
     }
   }
 
-  loginCheck2() async {
+  isProvider() async {
     prefs = await SharedPreferences.getInstance();
     print(prefs!.getBool('is-user-provider'));
     if (prefs!.getBool('is-user-provider') != null) {

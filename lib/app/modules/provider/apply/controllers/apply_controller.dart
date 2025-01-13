@@ -1,3 +1,4 @@
+import 'package:dirham_uae/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -12,6 +13,7 @@ class ApplyController extends GetxController {
   late String title;
   late String description;
   late List<String> skills;
+  late DateTime createdAt;
 
   @override
   void onInit() {
@@ -21,6 +23,7 @@ class ApplyController extends GetxController {
       serviceId = args['serviceId'];
       title = args['title'];
       description = args['description'];
+      createdAt = args['createdAt'];
       skills = List<String>.from(args['skills']);
     }
   }
@@ -33,7 +36,7 @@ class ApplyController extends GetxController {
         'message': message.value.toString(),
       };
 
-      print('Sending bid data: $data'); // Print data being sent
+      print('Sending bid data: $data');
 
       await BaseClient.safeApiCall(
         Constants.createBidding,
@@ -44,17 +47,16 @@ class ApplyController extends GetxController {
               'Bearer ${MySharedPref.getTokenProvider("token-provider".obs).toString()}',
         },
         onSuccess: (response) {
-          print(
-              'Bid submitted successfully: ${response.data}'); // Print success response
+          print('Bid submitted successfully: ${response.data}');
 
           Get.snackbar(
-            'Success',
-            'Your bid has been submitted successfully',
+            '${response.data['message']}',
+            '${response.data['status']}',
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.green,
             colorText: Colors.white,
           );
-          Get.back();
+          Get.toNamed(Routes.NAV_BAR);
         },
         onError: (error) {
           print(

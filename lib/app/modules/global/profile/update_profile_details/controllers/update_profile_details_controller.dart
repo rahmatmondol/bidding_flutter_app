@@ -3,18 +3,19 @@ import 'dart:io';
 
 import 'package:dio/dio.dart' as diox;
 import 'package:dirham_uae/app/components/custom_snackbar.dart';
-import 'package:dirham_uae/app/data/local/my_shared_pref.dart';
-import 'package:dirham_uae/app/modules/customer/customer_account_details/controllers/customer_account_details_controller.dart';
 import 'package:dirham_uae/app/services/base_client.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../../utils/urls.dart';
+import '../../../../../../utils/urls.dart';
+import '../../../../../data/user_service/user_service.dart';
+import '../../account_details/controllers/account_details_controller.dart';
 
 class CustomerUpdateDetailsController extends GetxController {
   final customerDetailsController =
       Get.find<CustomerAccountDetailsController>();
+  final UserService _userService = UserService();
 
   late final Rx<TextEditingController> nameController;
   late final Rx<TextEditingController> emailController;
@@ -67,122 +68,21 @@ class CustomerUpdateDetailsController extends GetxController {
   File? get imageFile =>
       selectedImage.value != null ? File(selectedImage.value!.path) : null;
 
-  // Future<void> customerUpdateProfile(BuildContext context) async {
-  //   try {
-  //     isCustomerUpdateLoading.value = true;
-  //
-  //     // Validate input fields
-  //     if (nameController.value.text.trim().isEmpty ||
-  //         emailController.value.text.trim().isEmpty ||
-  //         phoneController.value.text.trim().isEmpty) {
-  //       throw Exception('Please fill all required fields');
-  //     }
-  //
-  //     final formData = diox.FormData();
-  //
-  //     // Add text fields to form data
-  //     formData.fields.addAll([
-  //       MapEntry('name', nameController.value.text.trim()),
-  //       MapEntry('mobile', phoneController.value.text.trim()),
-  //       MapEntry('email', emailController.value.text.trim()),
-  //       MapEntry('bio', bioController.value.text.trim()),
-  //     ]);
-  //
-  //     // Handle image upload if selected
-  //     if (selectedImage.value != null) {
-  //       try {
-  //         final file = File(selectedImage.value!.path);
-  //         if (await file.exists()) {
-  //           print('File exists at path: ${file.path}');
-  //           print('File size: ${await file.length()} bytes');
-  //
-  //           // Get file extension
-  //           final String extension = file.path.split('.').last.toLowerCase();
-  //           final String mimeType = extension == 'png' ? 'png' : 'jpeg';
-  //
-  //           formData.files.add(MapEntry(
-  //             'image', // Using 'image' as field name to match API expectation
-  //             await diox.MultipartFile.fromFile(
-  //               file.path,
-  //               filename: file.path.split('/').last,
-  //               contentType: MediaType('image', mimeType),
-  //             ),
-  //           ));
-  //
-  //           print('Image added to form data successfully');
-  //         } else {
-  //           print('Selected file does not exist at path: ${file.path}');
-  //         }
-  //       } catch (fileError) {
-  //         print('Error handling file: $fileError');
-  //         throw Exception('Failed to process selected image');
-  //       }
-  //     }
-  //
-  //     // Log form data contents
-  //     print('Form data fields: ${formData.fields}');
-  //     print('Form data files count: ${formData.files.length}');
-  //
-  //     // Make API call
-  //     await BaseClient.safeApiCall(
-  //       headers: {
-  //         "Authorization":
-  //             "Bearer ${MySharedPref.getToken("token".obs).toString()}",
-  //         "Accept": "application/json",
-  //       },
-  //       data: formData,
-  //       Constants.customerInfoUpdateUrl,
-  //       RequestType.post,
-  //       onSuccess: (response) async {
-  //         print('API Response: ${response.data}');
-  //
-  //         if (response.statusCode == 200) {
-  //           // Log success details
-  //           final imageUrl = response.data['data']['profile']['image'];
-  //           print('Profile updated successfully. New image URL: $imageUrl');
-  //
-  //           // Refresh customer info
-  //           await customerDetailsController.getCustomerInfo();
-  //
-  //           // Show success message
-  //           CustomSnackBar.showCustomToast(
-  //             message: response.data['message']?.toString() ??
-  //                 'Profile updated successfully',
-  //           );
-  //
-  //           // Navigate back
-  //           Get.back();
-  //         }
-  //       },
-  //       onError: (error) {
-  //         print('Error Type: ${error.runtimeType}');
-  //         print('Status Code: ${error.response?.statusCode}');
-  //         print('Error Message: ${error.message}');
-  //         print('Response Data: ${error.response?.data}');
-  //
-  //         String errorMessage = error.response?.data?['message']?.toString() ??
-  //             'Failed to update profile';
-  //
-  //         CustomSnackBar.showCustomErrorToast(message: errorMessage);
-  //       },
-  //     );
-  //   } catch (e, stackTrace) {
-  //     print('Exception occurred: $e');
-  //     print('Stack trace: $stackTrace');
-  //
-  //     CustomSnackBar.showCustomErrorToast(
-  //       message: e.toString().contains('Exception:')
-  //           ? e.toString().split('Exception: ')[1]
-  //           : 'An error occurred while updating profile',
-  //     );
-  //   } finally {
-  //     isCustomerUpdateLoading.value = false;
-  //   }
-  // }
-
   Future<void> customerUpdateProfile(BuildContext context) async {
     try {
       isCustomerUpdateLoading.value = true;
+
+      String? token;
+      if (await _userService.isUser()) {
+        token = await _userService.getToken();
+      } else if (await _userService.isProvider()) {
+        token = await _userService.getTokenProvider();
+      }
+
+      if (token == null) {
+        CustomSnackBar.showCustomErrorToast(message: 'Authentication error');
+        return;
+      }
 
       // Create FormData
       final formData = diox.FormData();
@@ -204,15 +104,29 @@ class CustomerUpdateDetailsController extends GetxController {
             print('File exists at: ${file.path}');
             print('File size: ${fileSize} bytes');
 
+            // Add proper MIME type detection
+            String mimeType = 'image/jpeg'; // default
+            if (file.path.toLowerCase().endsWith('.png')) {
+              mimeType = 'image/png';
+            } else if (file.path.toLowerCase().endsWith('.jpg') ||
+                file.path.toLowerCase().endsWith('.jpeg')) {
+              mimeType = 'image/jpeg';
+            }
+
             // Add file with correct field name 'image' instead of 'file'
-            formData.files.add(MapEntry(
-              'image', // Changed from 'file' to 'image'
-              await diox.MultipartFile.fromFile(
-                file.path,
-                filename: file.path.split('/').last,
-                // Let server determine content type
+            formData.files.add(
+              MapEntry(
+                'image', // Changed from 'file' to 'image'
+                await diox.MultipartFile.fromFile(
+                  file.path,
+                  filename: file.path.split('/').last,
+                  // Let server determine content type
+                  // contentType: mimeType == 'image/png'
+                  //     ? diox.MediaType.parse('image/png')
+                  //     : diox.MediaType.parse('image/jpeg'),
+                ),
               ),
-            ));
+            );
           } else {
             throw Exception('Selected file does not exist at ${file.path}');
           }
@@ -229,9 +143,9 @@ class CustomerUpdateDetailsController extends GetxController {
       // Set up Dio options for better timeout handling
       final options = diox.Options(
         headers: {
-          "Authorization":
-              "Bearer ${MySharedPref.getToken("token".obs).toString()}",
+          "Authorization": token,
           "Accept": "application/json",
+          "Content-Type": "multipart/form-data",
         },
         sendTimeout: const Duration(seconds: 30),
         receiveTimeout: const Duration(seconds: 30),
@@ -286,6 +200,7 @@ class CustomerUpdateDetailsController extends GetxController {
       );
     } finally {
       isCustomerUpdateLoading.value = false;
+      update();
     }
   }
 

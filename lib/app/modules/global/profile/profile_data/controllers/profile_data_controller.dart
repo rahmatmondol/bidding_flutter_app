@@ -1,15 +1,34 @@
 import 'package:get/get.dart';
 
-import '../../../../components/custom_snackbar.dart';
-import '../../../../data/local/my_shared_pref.dart';
-import '../../../../data/local/token_manager.dart';
-import '../../../../data/user_service/user_service.dart';
-import '../../../../routes/app_pages.dart';
-import '../../customer_account_details/controllers/customer_account_details_controller.dart';
+import '../../../../../components/custom_snackbar.dart';
+import '../../../../../data/local/my_shared_pref.dart';
+import '../../../../../data/local/token_manager.dart';
+import '../../../../../data/user_service/user_service.dart';
+import '../../../../../routes/app_pages.dart';
+import '../../account_details/controllers/account_details_controller.dart';
 
 class CustomerProfileController extends GetxController {
+  final accountController = Get.put(CustomerAccountDetailsController());
   RxBool isLogoutLoading = false.obs;
+  final RxBool isProvider = false.obs;
   UserService userService = UserService();
+
+  @override
+  void onInit() {
+    super.onInit();
+    checkIfProvider();
+    accountController.customerInfo();
+  }
+
+  Future<void> checkIfProvider() async {
+    try {
+      final isProviderUser = await userService.getBoolProvider();
+      isProvider.value = isProviderUser ?? false;
+    } catch (e) {
+      print("Error checking provider status: $e");
+      isProvider.value = false;
+    }
+  }
 
   Future<void> refreshProfileData() async {
     try {

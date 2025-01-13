@@ -1,3 +1,4 @@
+import 'package:dirham_uae/app/components/custom_appBar.dart';
 import 'package:dirham_uae/app/components/custom_button.dart';
 import 'package:dirham_uae/app/modules/provider/apply/controllers/apply_controller.dart';
 import 'package:dirham_uae/config/theme/light_theme_colors.dart';
@@ -7,6 +8,7 @@ import 'package:dirham_uae/utils/global_variable/my_scaffold_background.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
 
 class ApplyView extends GetView<ApplyController> {
@@ -27,23 +29,7 @@ class ApplyView extends GetView<ApplyController> {
                 children: [
                   divider,
                   //**********Appbar*************
-                  Row(
-                    children: [
-                      InkWell(
-                        onTap: () {},
-                        child: Icon(
-                          Icons.arrow_back_ios_new,
-                          color: LightThemeColors.whiteColor,
-                          size: 20.0,
-                        ),
-                      ),
-                      gapWidth(size: 18.0.h),
-                      Text(
-                        "Job details",
-                        style: kTitleTextstyle,
-                      ),
-                    ],
-                  ),
+                  CustomHeaderBar(title: 'Job Details'),
                   gapHeight(size: 20.0.h),
                   //***********title : Water Tap Servicing************** */
                   Text(
@@ -64,10 +50,11 @@ class ApplyView extends GetView<ApplyController> {
                           color: LightThemeColors.grayColor,
                           borderRadius: BorderRadius.circular(10.0.r),
                         ),
-                        child: Text("Fixed Car Panting"),
+                        child: Text(controller.skills?.join(', ') ?? ''),
                       ),
                       gapWidth(size: 10.0),
-                      Text("Post by 9-7- 23"),
+                      Text(
+                          'Posted on ${DateFormat('MMM dd, yyyy').format(controller.createdAt)}')
                     ],
                   ),
                   divider,
@@ -91,7 +78,7 @@ class ApplyView extends GetView<ApplyController> {
                   ),
                   divider,
                   Text(
-                    "Skill and Expertice",
+                    "Skill and Expertise",
                     style: kTitleTextstyle.copyWith(fontSize: 15.0.sp),
                   ),
 
@@ -101,7 +88,7 @@ class ApplyView extends GetView<ApplyController> {
                     padding: EdgeInsets.only(
                         left: 8.0.w, right: 8.0.w, top: 3.0.h, bottom: 3.0.h),
                     decoration: BoxDecoration(
-                      color: LightThemeColors.grayColor,
+                      color: LightThemeColors.transparentColor,
                       borderRadius: BorderRadius.circular(10.0.r),
                     ),
                     child: Wrap(
@@ -137,7 +124,7 @@ class ApplyView extends GetView<ApplyController> {
                     children: [
                       Expanded(
                         child: Text(
-                          "Total amount the client will seen on your proposal",
+                          "Total amount the client will see on your proposal",
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
                         ),
@@ -150,15 +137,36 @@ class ApplyView extends GetView<ApplyController> {
                           borderRadius: BorderRadius.circular(5.0.r),
                         ),
                         child: Center(
-                          child: TextField(
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              labelText: 'Bid Amount',
-                              border: OutlineInputBorder(),
-                              prefixIcon: Icon(Icons.attach_money),
-                            ),
-                            onChanged: (value) =>
-                                controller.amount.value = value,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  '\$',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: TextField(
+                                  keyboardType: TextInputType.number,
+                                  style: TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    contentPadding:
+                                        EdgeInsets.symmetric(horizontal: 2),
+                                    hintText: 'Enter Amount',
+                                    hintStyle: TextStyle(
+                                        color: Colors.white.withOpacity(0.7)),
+                                  ),
+                                  onChanged: (value) =>
+                                      controller.amount.value = value,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -200,18 +208,56 @@ class ApplyView extends GetView<ApplyController> {
                           borderRadius: BorderRadius.circular(5.0.r),
                         ),
                         child: Center(
-                          child: TextField(
-                            maxLines: 4,
-                            decoration: InputDecoration(
-                              labelText: 'Message',
-                              border: OutlineInputBorder(),
-                              hintText: 'Write your proposal...',
-                            ),
-                            onChanged: (value) =>
-                                controller.message.value = value,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '\$',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Expanded(
+                                child: TextField(
+                                  keyboardType: TextInputType.number,
+                                  style: TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    contentPadding:
+                                        EdgeInsets.symmetric(horizontal: 8),
+                                    hintText: 'Bid Amount',
+                                    hintStyle: TextStyle(
+                                        color: Colors.white.withOpacity(0.7)),
+                                  ),
+                                  onChanged: (value) =>
+                                      controller.amount.value = value,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
+                      // Container(
+                      //   height: size.height / 15,
+                      //   width: size.width / 2.7,
+                      //   decoration: BoxDecoration(
+                      //     color: LightThemeColors.secounderyColor,
+                      //     borderRadius: BorderRadius.circular(5.0.r),
+                      //   ),
+                      //   child: Center(
+                      //     child: TextField(
+                      //       maxLines: 4,
+                      //       decoration: InputDecoration(
+                      //         labelText: 'Message',
+                      //         border: OutlineInputBorder(),
+                      //         hintText: 'Write your proposal...',
+                      //       ),
+                      //       onChanged: (value) =>
+                      //           controller.message.value = value,
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                   divider,
@@ -234,33 +280,31 @@ class ApplyView extends GetView<ApplyController> {
 
                   gapHeight(size: 7.0.h),
 
-                  // Container(
-                  //   height: size.height / 7,
-                  //   //height: 200.0,
-                  //   decoration: BoxDecoration(
-                  //     color: LightThemeColors.secounderyColor,
-                  //     borderRadius: BorderRadius.circular(10.0.r),
-                  //   ),
-                  //   child: Padding(
-                  //     padding: EdgeInsets.symmetric(horizontal: 10.0.w),
-                  //     child: TextField(
-                  //       maxLength: 500,
-                  //       maxLines: 8,
-                  //       style: TextStyle(color: LightThemeColors.whiteColor),
-                  //       onChanged: (newValue) {
-                  //         controller.enteredText.value = newValue;
-                  //       },
-                  //       decoration: InputDecoration(
-                  //         hintText: "Type here...",
-                  //         hintStyle: kSubtitleStyle,
-                  //         border: InputBorder.none,
-                  //         counterText:
-                  //             '${controller.enteredText.value.length.toString()}/500  ',
-                  //         counterStyle: kSubtitleStyle,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
+                  Container(
+                    height: size.height / 4,
+                    decoration: BoxDecoration(
+                      color: LightThemeColors.secounderyColor,
+                      borderRadius: BorderRadius.circular(10.0.r),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10.0.w),
+                      child: TextField(
+                        maxLength: 500,
+                        maxLines: 20,
+                        style: TextStyle(color: LightThemeColors.whiteColor),
+                        onChanged: (value) => controller.message.value = value,
+                        decoration: InputDecoration(
+                          hintText: "Type here...",
+                          hintStyle: kSubtitleStyle,
+                          border: InputBorder.none,
+                          counterText:
+                              '${controller.message.value.length.toString()}/500  ',
+                          counterStyle: kSubtitleStyle,
+                        ),
+                      ),
+                    ),
+                  ),
+                  gapHeight(size: 20.0.h),
                   CustomButton(
                     bgColor: LightThemeColors.primaryColor,
                     ontap: () => controller.submitBid(),
