@@ -17,19 +17,27 @@ class Constants {
   // static String ServiceCustomerDetails = '$baseUrl/get-service';
 
   static String ServiceCustomerDetails(int id) => '$baseUrl/get-service/$id';
+
+  static String updatePostStatus(int id) => '$baseUrl/auth/update-booking/$id';
   static const customerCreateService = "$baseUrl/auth/create-service";
 
   static custommerBeddingList(int id) =>
       '$baseUrl/auth/get-biddings?service_id=$id';
 
-  static const custommerBettingListDetails =
-      baseUrl + "api/v1/provider_details";
+  // static const custommerBettingListDetails = '$baseUrl/auth/get-bidding-info';
+
+  static custommerBettingListDetails(int id) =>
+      '$baseUrl/auth/get-bidding-info?bid_id=$id';
+
   static const acceptBooking = "$baseUrl/auth/create-booking";
   static const String google_api_key =
       "AIzaSyCc9NIB-ScnkTvQZzrB53TfaCwo1XUegHM";
 
   static String getSubCategoryByID(int categoryId) =>
       '$baseUrl/get-subcategories?category_id=$categoryId';
+
+  static const getBookings = "$baseUrl/auth/get-bookings";
+  static const createReview = "$baseUrl/auth/create-review";
 
   // *************Provider**************
   static const providerSignUpUrl = "$baseUrl/auth/register";

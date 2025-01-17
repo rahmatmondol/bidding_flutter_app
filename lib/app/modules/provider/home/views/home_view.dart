@@ -3,7 +3,6 @@
 import 'dart:math';
 
 import 'package:dirham_uae/app/components/row_text.dart';
-import 'package:dirham_uae/app/components/search_button.dart';
 import 'package:dirham_uae/app/components/small_custom_button.dart';
 import 'package:dirham_uae/app/components/small_service_card.dart';
 import 'package:dirham_uae/app/modules/provider/description/views/description_view.dart';
@@ -16,6 +15,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../controllers/home_controller.dart';
+import '../widgets/search_bar.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
@@ -118,36 +118,9 @@ class HomeView extends GetView<HomeController> {
 
                               //****************************************** Search section ****************************** */
 
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: SearchButton(
-                                      hintsText: "Search Your Service",
-                                      ontap: () {
-                                        Get.toNamed(Routes.SEARCH);
-                                      },
-                                    ),
-                                  ),
-                                  gapWidth(size: 10),
-                                  // Container(
-                                  //   padding: EdgeInsets.all(16.r),
-                                  //   decoration: BoxDecoration(
-                                  //     borderRadius: BorderRadius.circular(8.r),
-                                  //     gradient: LinearGradient(
-                                  //       colors: [
-                                  //         Color(0xff3BAAF3),
-                                  //         Color(0xff2481F4),
-                                  //       ],
-                                  //       begin: Alignment.topLeft,
-                                  //       end: Alignment.bottomRight,
-                                  //     ),
-                                  //   ),
-                                  //   child: Image.asset(
-                                  //     Images.filterIcon,
-                                  //     scale: 1.5,
-                                  //   ),
-                                  // )
-                                ],
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 16.r),
+                                child: ServiceSearchWidget(),
                               ),
                             ],
                           ),
@@ -407,4 +380,247 @@ class HomeView extends GetView<HomeController> {
       ),
     );
   }
+
+// Widget _buildSearchSection() {
+//   return Column(
+//     children: [
+//       // Search bar with filter button
+//       Row(
+//         children: [
+//           Expanded(
+//             child: Container(
+//               decoration: BoxDecoration(
+//                 color: Colors.grey[800],
+//                 borderRadius: BorderRadius.circular(8.r),
+//               ),
+//               child: Row(
+//                 children: [
+//                   Expanded(
+//                     child: TextField(
+//                       controller: controller.searchController,
+//                       style: TextStyle(color: Colors.white),
+//                       decoration: InputDecoration(
+//                         hintText: "Search Your Service",
+//                         hintStyle: TextStyle(color: Colors.grey[400]),
+//                         prefixIcon:
+//                             Icon(Icons.search, color: Colors.grey[400]),
+//                         border: InputBorder.none,
+//                         contentPadding: EdgeInsets.symmetric(
+//                             horizontal: 16.r, vertical: 12.r),
+//                       ),
+//                     ),
+//                   ),
+//                   // Container(
+//                   //   decoration: BoxDecoration(
+//                   //     color: LightThemeColors.primaryColor,
+//                   //     borderRadius: BorderRadius.horizontal(
+//                   //         right: Radius.circular(8.r)),
+//                   //   ),
+//                   //   child: IconButton(
+//                   //     icon: Icon(Icons.filter_list, color: Colors.white),
+//                   //     onPressed: () {
+//                   //       controller.toggleFilterOptions();
+//                   //     },
+//                   //   ),
+//                   // ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//
+//       // Filter options dropdown
+//       Obx(() => controller.showFilterOptions.value
+//           ? Container(
+//               margin: EdgeInsets.only(top: 8.r),
+//               padding: EdgeInsets.all(16.r),
+//               decoration: BoxDecoration(
+//                 color: Colors.grey[800],
+//                 borderRadius: BorderRadius.circular(8.r),
+//               ),
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Row(
+//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                     children: [
+//                       Text(
+//                         'Filters:',
+//                         style: TextStyle(
+//                             color: Colors.white, fontWeight: FontWeight.bold),
+//                       ),
+//                       TextButton(
+//                         onPressed: () => controller.clearFilters(),
+//                         child: Text(
+//                           'Clear All',
+//                           style: TextStyle(color: Colors.blue),
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                   SizedBox(height: 8.r),
+//
+//                   // Status Filters
+//                   Text('Status:', style: TextStyle(color: Colors.white)),
+//                   SizedBox(height: 8.r),
+//                   Wrap(
+//                     spacing: 8.r,
+//                     children: controller.availableStatuses
+//                         .map((status) => Obx(() => FilterChip(
+//                               label: Text(status),
+//                               selected: controller.selectedStatuses
+//                                   .contains(status),
+//                               onSelected: (bool selected) {
+//                                 controller.toggleFilter(
+//                                     status, controller.selectedStatuses);
+//                               },
+//                             )))
+//                         .toList(),
+//                   ),
+//
+//                   SizedBox(height: 16.r),
+//
+//                   // Currency Filters
+//                   Text('Currency:', style: TextStyle(color: Colors.white)),
+//                   SizedBox(height: 8.r),
+//                   Wrap(
+//                     spacing: 8.r,
+//                     children: controller.availableCurrencies
+//                         .map((currency) => Obx(() => FilterChip(
+//                               label: Text(currency),
+//                               selected: controller.selectedCurrencies
+//                                   .contains(currency),
+//                               onSelected: (bool selected) {
+//                                 controller.toggleFilter(
+//                                     currency, controller.selectedCurrencies);
+//                               },
+//                             )))
+//                         .toList(),
+//                   ),
+//
+//                   SizedBox(height: 16.r),
+//
+//                   // Level Filters
+//                   Text('Level:', style: TextStyle(color: Colors.white)),
+//                   SizedBox(height: 8.r),
+//                   Wrap(
+//                     spacing: 8.r,
+//                     children: controller.availableLevels
+//                         .map((level) => Obx(() => FilterChip(
+//                               label: Text(level),
+//                               selected:
+//                                   controller.selectedLevels.contains(level),
+//                               onSelected: (bool selected) {
+//                                 controller.toggleFilter(
+//                                     level, controller.selectedLevels);
+//                               },
+//                             )))
+//                         .toList(),
+//                   ),
+//
+//                   SizedBox(height: 16.r),
+//
+//                   // Price Type Filters
+//                   Text('Price Type:', style: TextStyle(color: Colors.white)),
+//                   SizedBox(height: 8.r),
+//                   Wrap(
+//                     spacing: 8.r,
+//                     children: controller.availablePriceTypes
+//                         .map((priceType) => Obx(() => FilterChip(
+//                               label: Text(priceType),
+//                               selected: controller.selectedPriceTypes
+//                                   .contains(priceType),
+//                               onSelected: (bool selected) {
+//                                 controller.toggleFilter(
+//                                     priceType, controller.selectedPriceTypes);
+//                               },
+//                             )))
+//                         .toList(),
+//                   ),
+//                 ],
+//               ),
+//             )
+//           : SizedBox.shrink()),
+//
+//       // Search results - only show when search text exists
+//       Obx(() => controller.searchController.text.isNotEmpty
+//               ? Column(
+//                   children: [
+//                     // Loading indicator
+//                     if (controller.isSearching.value)
+//                       Padding(
+//                         padding: EdgeInsets.all(8.r),
+//                         child: CircularProgressIndicator(),
+//                       ),
+//
+//                     // No results message
+//                     if (!controller.isSearching.value &&
+//                         controller.searchResults.isEmpty)
+//                       Container(
+//                         margin: EdgeInsets.only(top: 8.r),
+//                         padding: EdgeInsets.all(16.r),
+//                         decoration: BoxDecoration(
+//                           color: Colors.grey[800],
+//                           borderRadius: BorderRadius.circular(8.r),
+//                         ),
+//                         child: Center(
+//                           child: Text(
+//                             'No results found',
+//                             style: TextStyle(color: Colors.white),
+//                           ),
+//                         ),
+//                       ),
+//
+//                     // Search results list
+//                     if (!controller.isSearching.value &&
+//                         controller.searchResults.isNotEmpty)
+//                       Container(
+//                         margin: EdgeInsets.only(top: 8.r),
+//                         constraints: BoxConstraints(maxHeight: 300.h),
+//                         decoration: BoxDecoration(
+//                           color: Colors.grey[800],
+//                           borderRadius: BorderRadius.circular(8.r),
+//                         ),
+//                         child: ListView.builder(
+//                           shrinkWrap: true,
+//                           itemCount: controller.searchResults.length,
+//                           itemBuilder: (context, index) {
+//                             final service = controller.searchResults[index];
+//                             return ListTile(
+//                               title: Text(
+//                                 service.title ?? 'N/A',
+//                                 style: TextStyle(color: Colors.white),
+//                               ),
+//                               subtitle: Column(
+//                                 crossAxisAlignment: CrossAxisAlignment.start,
+//                                 children: [
+//                                   Text(
+//                                     service.description ?? 'N/A',
+//                                     style: TextStyle(color: Colors.grey[400]),
+//                                     maxLines: 1,
+//                                     overflow: TextOverflow.ellipsis,
+//                                   ),
+//                                   Text(
+//                                     '${service.location ?? 'N/A'} | ${service.currency ?? ''} ${service.price?.toString() ?? 'N/A'}',
+//                                     style: TextStyle(
+//                                         color: Colors.grey[400],
+//                                         fontSize: 12),
+//                                   ),
+//                                 ],
+//                               ),
+//                               onTap: () {
+//                                 Get.to(() => DescriptionView(service));
+//                               },
+//                             );
+//                           },
+//                         ),
+//                       ),
+//                   ],
+//                 )
+//               : SizedBox.shrink() // Show nothing when search is empty
+//           ),
+//     ],
+//   );
+// }
 }

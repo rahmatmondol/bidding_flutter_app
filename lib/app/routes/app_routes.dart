@@ -71,6 +71,7 @@ abstract class Routes {
   static const ACCOUNT_UPDATE_DETAILS = _Paths.ACCOUNT_UPDATE_DETAILS;
   static const CHANGE_PASSWORD = _Paths.CHANGE_PASSWORD;
   static const SERVICES = _Paths.SERVICES;
+  static const SERVICE_DESCRIPTION = _Paths.SERVICE_DESCRIPTION;
 }
 
 abstract class _Paths {
@@ -114,7 +115,8 @@ abstract class _Paths {
   static const THANKS = '/thanks';
   static const REVIEW = '/review';
   static const CUSTOMER_HOME = '/provider-home';
-  static const CUSTOMER_BOOKING = '/provider-booking';
+  static const CUSTOMER_BOOKING = '/customer-booking';
+  static const SERVICE_DESCRIPTION = '/service-description';
   static const CUSTOMER_NAV_BAR = '/customer-nav-bar';
   static const CUSTOMER_INBOX = '/provider-inbox';
   static const CUSTOMER_CHAT = '/provider-chat';

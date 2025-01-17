@@ -56,6 +56,8 @@ import '../modules/global/profile/update_profile_details/bindings/update_profile
 import '../modules/global/profile/update_profile_details/views/update_profile_details_view.dart';
 import '../modules/global/provider_tab/bindings/provider_tab_binding.dart';
 import '../modules/global/provider_tab/views/provider_tab_view.dart';
+import '../modules/global/review/bindings/review_binding.dart';
+import '../modules/global/review/views/review_view.dart';
 import '../modules/provider/about_us/bindings/about_us_binding.dart';
 import '../modules/provider/about_us/views/about_us_view.dart';
 import '../modules/provider/account_details/bindings/account_details_binding.dart';
@@ -98,10 +100,10 @@ import '../modules/provider/proposals/bindings/proposals_binding.dart';
 import '../modules/provider/proposals/views/proposals_view.dart';
 import '../modules/provider/reset_password/bindings/reset_password_binding.dart';
 import '../modules/provider/reset_password/views/reset_password_view.dart';
-import '../modules/provider/review/bindings/review_binding.dart';
-import '../modules/provider/review/views/review_view.dart';
 import '../modules/provider/search/bindings/search_binding.dart';
 import '../modules/provider/search/views/search_view.dart';
+import '../modules/provider/service_display/bindings/service_details_bindings.dart';
+import '../modules/provider/service_display/view/service_details_view.dart';
 import '../modules/provider/terms_and_condition/bindings/terms_and_condition_binding.dart';
 import '../modules/provider/terms_and_condition/views/terms_and_condition_view.dart';
 import '../modules/provider/thanks/bindings/thanks_binding.dart';
@@ -179,11 +181,15 @@ class AppPages {
       page: () => const OtpView(),
       binding: OtpBinding(),
     ),
-    // GetPage(
-    //   name: _Paths.DESCRIPTION,
-    //   page: () => const DescriptionView(),
-    //   binding: DescriptionBinding(),
-    // ),
+    GetPage(
+      name: _Paths.SERVICE_DESCRIPTION,
+      page: () {
+        // Get the arguments passed through navigation
+        final args = Get.arguments;
+        return ServiceDetailsView(args['service']);
+      },
+      binding: ServiceDetailsBinding(),
+    ),
     GetPage(
       name: _Paths.APPLY,
       page: () => const ApplyView(),

@@ -36,7 +36,7 @@ class CustomerAddServiceController extends GetxController {
   var lng;
 
   RxList<String> currency = [
-    "UAED",
+    "AED",
     "USD",
   ].obs;
 

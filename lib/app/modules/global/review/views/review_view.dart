@@ -1,22 +1,24 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'package:get/get.dart';
+import 'package:dirham_uae/app/components/custom_appBar.dart';
 import 'package:dirham_uae/app/components/custom_button.dart';
 import 'package:dirham_uae/config/theme/light_theme_colors.dart';
 import 'package:dirham_uae/config/theme/my_images.dart';
 import 'package:dirham_uae/config/theme/my_styles.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+
 import '../controllers/review_controller.dart';
 
 class ReviewView extends GetView<ReviewController> {
   const ReviewView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         height: MediaQuery.sizeOf(context).height,
         padding: EdgeInsets.only(
-          top: MediaQuery.paddingOf(context).top + 20.r,
+          top: 0,
           left: 15.r,
           right: 15.r,
         ),
@@ -24,13 +26,7 @@ class ReviewView extends GetView<ReviewController> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Center(
-                child: Text(
-                  'Review',
-                  style: kTitleTextstyle.copyWith(
-                      fontWeight: FontWeight.bold, fontSize: 16.sp),
-                ),
-              ),
+              CustomHeaderBar(title: 'Review'),
               gapHeight(size: 20),
               CircleAvatar(
                 radius: 60.r,
@@ -56,10 +52,15 @@ class ReviewView extends GetView<ReviewController> {
                     scrollDirection: Axis.horizontal,
                     itemCount: 5,
                     itemBuilder: (context, index) {
-                      return Icon(
-                        Icons.star,
-                        color: LightThemeColors.primaryColor,
-                      );
+                      return Obx(() => IconButton(
+                            onPressed: () => controller.updateRating(index + 1),
+                            icon: Icon(
+                              Icons.star,
+                              color: controller.rating.value > index
+                                  ? LightThemeColors.primaryColor
+                                  : Colors.grey,
+                            ),
+                          ));
                     },
                   ),
                 ),
@@ -98,16 +99,18 @@ class ReviewView extends GetView<ReviewController> {
                             // color: Colors.red,
                             //height: 100,
                             child: TextFormField(
-                              maxLength:
-                                  100, // Set the maximum character count here
+                              maxLength: 100,
+                              // Set the maximum character count here
 
                               scrollPadding: EdgeInsets.zero,
-                              maxLines:
-                                  null, // Set maxLines to null to make it expandable
+                              maxLines: null,
+                              // Set maxLines to null to make it expandable
+                              onChanged: controller.updateComment,
 
                               decoration: InputDecoration(
                                   hintText:
                                       "Tell us same things about this service",
+                                  hintStyle: TextStyle(color: Colors.white),
                                   border: InputBorder.none),
                             ),
                           ),
@@ -118,11 +121,21 @@ class ReviewView extends GetView<ReviewController> {
                 ),
               ),
               gapHeight(size: 30),
-              CustomButton(
-                bgColor: LightThemeColors.primaryColor,
-                ontap: () {},
-                widget: Text("Submit Review"),
-              )
+              // Modified Submit Button
+              Obx(() => CustomButton(
+                    bgColor: controller.isLoading.value
+                        ? LightThemeColors.primaryColor
+                            .withOpacity(0.5) // Dim the button when loading
+                        : LightThemeColors.primaryColor,
+                    ontap: () {
+                      if (!controller.isLoading.value) {
+                        controller.submitReview();
+                      }
+                    },
+                    widget: controller.isLoading.value
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text("Submit Review"),
+                  )),
             ],
           ),
         ),

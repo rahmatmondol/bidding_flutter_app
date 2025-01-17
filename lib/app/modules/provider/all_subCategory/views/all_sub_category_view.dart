@@ -55,7 +55,15 @@ class AllSubCategoryView extends GetView<AllSubCategoryController> {
                           child: CustomButton(
                             bgColor: LightThemeColors.secounderyColor,
                             ontap: () {
-                              Get.toNamed(Routes.SERVICES);
+                              print('🔘 Subcategory button tapped');
+                              print('📌 Subcategory ID: ${subcategory.id}');
+
+                              // Pass the subcategory ID when navigating to services
+                              Get.toNamed(
+                                Routes.SERVICES,
+                                arguments: subcategory.id,
+                              );
+                              print('🚀 Navigation completed');
                             },
                             widget: Row(
                               children: [
