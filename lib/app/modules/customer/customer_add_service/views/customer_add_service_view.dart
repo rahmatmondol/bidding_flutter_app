@@ -613,8 +613,7 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                               .locationService
                               .getCurrentLocation();
                           if (controller.currentPosition != null) {
-                            Get.to(CustomerPickLocationView(
-                                currentPosition: controller.currentPosition!));
+                            Get.to(CustomerPickLocationView());
                           } else {
                             print("please_get_current_loaction");
                           }

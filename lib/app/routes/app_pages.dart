@@ -38,6 +38,8 @@ import '../modules/customer/customer_otp/bindings/customer_otp_binding.dart';
 import '../modules/customer/customer_otp/views/customer_otp_view.dart';
 import '../modules/customer/customer_payment/bindings/customer_payment_binding.dart';
 import '../modules/customer/customer_payment/views/customer_payment_view.dart';
+import '../modules/customer/customer_pick_location/bindings/customer_pick_location_binding.dart';
+import '../modules/customer/customer_pick_location/views/customer_pick_location_view.dart';
 import '../modules/customer/customer_privacy_and_policy/bindings/customer_privacy_and_policy_binding.dart';
 import '../modules/customer/customer_privacy_and_policy/views/customer_privacy_and_policy_view.dart';
 import '../modules/customer/customer_reset/bindings/customer_reset_binding.dart';
@@ -385,14 +387,14 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.CUSTOMER_LOCATION,
-      page: () => const CustomerLocationView(),
+      page: () => CustomerLocationView(),
       binding: CustomerLocationBinding(),
     ),
-    // GetPage(
-    //   name: _Paths.CUSTOMER_PICK_LOCATION,
-    //   page: () => const CustomerPickLocationView(),
-    //   binding: CustomerPickLocationBinding(),
-    // ),
+    GetPage(
+      name: _Paths.CUSTOMER_PICK_LOCATION,
+      page: () => CustomerPickLocationView(),
+      binding: CustomerPickLocationBinding(),
+    ),
     GetPage(
       name: _Paths.CUSTOMER_SEARCH,
       page: () => const CustomerSearchView(),
