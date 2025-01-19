@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dirham_uae/app/data/local/my_shared_pref.dart';
 import 'package:dirham_uae/app/modules/customer/customer_home/model/get_customer_service_model.dart';
@@ -6,15 +7,54 @@ import 'package:dirham_uae/app/services/base_client.dart';
 import 'package:dirham_uae/utils/urls.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../customer_pick_location/model/location_model.dart';
 
 class CustomerHomeController extends GetxController {
   Rx<GetCustomerServiceModel> getCustomerModel = GetCustomerServiceModel().obs;
+  final Rx<LocationModel?> currentLocation = Rx<LocationModel?>(null);
+
   RxBool isLoading = false.obs;
 
   @override
   void onInit() {
     super.onInit();
     getCustomeService();
+    loadSavedLocation();
+  }
+
+  Future<void> updateLocation(LocationModel location) async {
+    try {
+      // Update the reactive state
+      currentLocation.value = location;
+
+      // Save to SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      final locationJson = json.encode(location.toJson());
+      await prefs.setString('address1', locationJson);
+
+      print('Location updated successfully in service');
+      print('New location: ${location.locality}, ${location.country}');
+    } catch (e) {
+      print('Error updating location in service: $e');
+    }
+  }
+
+  Future<void> loadSavedLocation() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      String? address1Str = prefs.getString('address1');
+
+      if (address1Str != null) {
+        Map<String, dynamic> json = jsonDecode(address1Str);
+        currentLocation.value = LocationModel.fromJson(json);
+        print(
+            'Loaded saved location: ${currentLocation.value?.locality}, ${currentLocation.value?.country}');
+      }
+    } catch (e) {
+      print("Error loading saved location: $e");
+    }
   }
 
   Future<void> getCustomeService() async {

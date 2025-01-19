@@ -70,6 +70,7 @@ class LoginController extends GetxController {
               Routes.CUSTOMER_NAV_BAR,
               predicate: (route) => false,
             );
+            // await Get.to(() => CustomerLocationView());
             update();
           } else {
             Get.snackbar('Unauthorized', 'Check Email or Password');

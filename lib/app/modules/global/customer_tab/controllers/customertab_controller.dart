@@ -66,30 +66,37 @@ class CustomertabController extends GetxController {
         Constants.customerSignUpUrl,
         RequestType.post,
         onSuccess: (response) async {
-          if (response.statusCode == 200) {
-            print(response.data);
+          print('This is response: $response');
+          if (response.statusCode == 200 && response.data['success'] == true) {
+            try {
+              // Save necessary data
+              await userService.saveBoolean(key: 'is-user', value: true);
 
-            await userService.saveBoolean(key: 'is-user', value: true);
+              // Optional: Save user ID or other data you might need
+              await userService.saveString(
+                  key: 'user-id',
+                  value: response.data['data']['id'].toString());
 
-            // First dismiss the loading dialog
-            Navigator.pop(context);
+              // Dismiss loading dialog
+              Navigator.pop(context);
 
-            // Show success message
-            CustomSnackBar.showCustomToast(
-                message: response.data['message'],
-                color: LightThemeColors.progressIndicatorColor);
+              // Show success message
+              CustomSnackBar.showCustomToast(
+                  message: response.data['message'],
+                  color: LightThemeColors.progressIndicatorColor);
 
-            // Then navigate
-            Get.offAllNamed(Routes.CUSTOMER_LOCATION);
+              // Navigate to next screen
+              Get.offAllNamed(Routes.CUSTOMER_LOCATION);
+            } catch (e) {
+              Navigator.pop(context);
+              CustomSnackBar.showCustomErrorToast(
+                  message: "Error saving user data");
+            }
           } else {
-            // Handle non-201 success cases
-            Navigator.pop(context); // Dismiss loading dialog
+            Navigator.pop(context);
             CustomSnackBar.showCustomErrorToast(
-                message: "Unexpected response: ${response.statusCode}");
+                message: "Signup failed: ${response.data['message']}");
           }
-
-          isLoading.value = false;
-          update();
         },
         onError: (error) {
           // Always dismiss loading dialog first

@@ -15,7 +15,6 @@ class LocationModel {
     required this.country,
   });
 
-  // Convert to Map for SharedPreferences
   Map<String, dynamic> toJson() => {
         'latitude': latitude,
         'longitude': longitude,
@@ -25,7 +24,6 @@ class LocationModel {
         'country': country,
       };
 
-  // Create from Map from SharedPreferences
   factory LocationModel.fromJson(Map<String, dynamic> json) => LocationModel(
         latitude: json['latitude'],
         longitude: json['longitude'],

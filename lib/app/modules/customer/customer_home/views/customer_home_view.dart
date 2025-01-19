@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../../global/profile/account_details/controllers/account_details_controller.dart';
 import '../../customer_service_details/bindings/customer_service_details_binding.dart';
 import '../controllers/customer_home_controller.dart';
 
@@ -20,6 +21,9 @@ class CustomerHomeView extends GetView<CustomerHomeController> {
 
   final CustomerHomeController customerHomeController =
       Get.put(CustomerHomeController());
+
+  final CustomerAccountDetailsController customerAccountDetailsController =
+      Get.put(CustomerAccountDetailsController());
 
   @override
   Widget build(BuildContext context) {
@@ -135,40 +139,42 @@ class CustomerHomeView extends GetView<CustomerHomeController> {
                   color: Colors.grey[800],
                   borderRadius: BorderRadius.circular(8.r),
                 ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: controller.searchController,
-                        style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          hintText: "Search Your Service",
-                          hintStyle: TextStyle(color: Colors.grey[400]),
-                          prefixIcon:
-                              Icon(Icons.search, color: Colors.grey[400]),
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: 16.r, vertical: 12.r),
-                        ),
-                        onChanged: (value) {
-                          controller.filterServices(value);
-                        },
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: LightThemeColors.primaryColor,
-                        borderRadius: BorderRadius.horizontal(
-                            right: Radius.circular(8.r)),
-                      ),
-                      child: IconButton(
-                        icon: Icon(Icons.filter_list, color: Colors.white),
-                        onPressed: () {
-                          controller.toggleFilterOptions();
-                        },
-                      ),
-                    ),
-                  ],
+                child: TextField(
+                  controller: controller.searchController,
+                  style: TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: "Search Your Service",
+                    hintStyle: TextStyle(color: Colors.grey[400]),
+                    prefixIcon: Icon(Icons.search, color: Colors.grey[400]),
+                    border: InputBorder.none,
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 16.r, vertical: 12.r),
+                  ),
+                  onChanged: (value) {
+                    controller.filterServices(value);
+                  },
+                ),
+              ),
+            ),
+            SizedBox(width: 8.r), // Gap between search field and filter button
+            Container(
+              width: 46.r, // Fixed width for square button
+              height: 46.r, // Same height as search field
+              decoration: BoxDecoration(
+                color: Colors.blue, // Using blue color as shown in UI
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: InkWell(
+                onTap: () {
+                  controller.toggleFilterOptions();
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(12.r),
+                  child: Image.asset(
+                    Img.filterIcon,
+                    // Make sure to add this image to your assets
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
@@ -335,6 +341,7 @@ class CustomerHomeView extends GetView<CustomerHomeController> {
   }
 
   Row _buildHeaderRow() {
+    final customerInfo = customerAccountDetailsController.customerInfo.value;
     return Row(
       children: [
         Expanded(
@@ -349,7 +356,7 @@ class CustomerHomeView extends GetView<CustomerHomeController> {
                 ),
               ),
               Text(
-                "User 1234",
+                customerInfo?.profile?.lastName ?? 'User',
                 style: kSubtitleStyle,
               )
             ],
@@ -357,8 +364,9 @@ class CustomerHomeView extends GetView<CustomerHomeController> {
         ),
         SmallCustomButton(
           color: LightThemeColors.secounderyColor,
-          ontap: () {
-            Get.toNamed(Routes.CUSTOMER_PICK_LOCATION);
+          ontap: () async {
+            await Get.toNamed(Routes.CUSTOMER_PICK_LOCATION);
+            customerHomeController.currentLocation;
           },
           widget: Padding(
             padding: EdgeInsets.symmetric(horizontal: 5.r),
@@ -366,10 +374,15 @@ class CustomerHomeView extends GetView<CustomerHomeController> {
               children: [
                 Image.asset(Img.locationIcon),
                 gapWidth(size: 4),
-                Text(
-                  "UAE, Dubai",
-                  style: kSubtitleStyle,
-                ),
+                Obx(() {
+                  final location = customerHomeController.currentLocation.value;
+                  return Text(
+                    location != null
+                        ? "${location.locality}, ${location.country}"
+                        : "UAE, Dubai",
+                    style: kSubtitleStyle,
+                  );
+                }),
                 Icon(
                   Icons.arrow_drop_down,
                   color: LightThemeColors.whiteColor,
