@@ -3,7 +3,6 @@
 import 'package:dirham_uae/app/components/custom_appBar.dart';
 import 'package:dirham_uae/app/components/custom_button.dart';
 import 'package:dirham_uae/app/components/custom_text_field.dart';
-import 'package:dirham_uae/app/modules/customer/customer_pick_location/views/customer_pick_location_view.dart';
 import 'package:dirham_uae/app/modules/provider/home/controllers/home_controller.dart';
 import 'package:dirham_uae/config/theme/light_theme_colors.dart';
 import 'package:dirham_uae/config/theme/my_styles.dart';
@@ -16,7 +15,9 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../../config/theme/my_images.dart';
 import '../../../../../utils/global_variable/divider.dart';
+import '../../../../routes/app_pages.dart';
 import '../../../provider/home/models/get_categories_model.dart';
+import '../../customer_home/controllers/customer_home_controller.dart';
 import '../controllers/customer_add_service_controller.dart';
 
 class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
@@ -26,6 +27,9 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
   Widget build(BuildContext context) {
     final CustomerAddServiceController customerAddServiceController =
         Get.put(CustomerAddServiceController());
+
+    final CustomerHomeController customerHomeController =
+        Get.put(CustomerHomeController());
     final HomeController homeC = Get.put(HomeController());
     Size size = MediaQuery.sizeOf(context);
 
@@ -83,11 +87,13 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                                 .map((pickedFile) => XFile(pickedFile.path))
                                 .toList();
                             controller.customerCreateService(
-                                selectedCategory?.id ?? 0,
+                                controller.categooryId ?? 0,
+                                // Use this instead of selectedCategory?.id
                                 controller.subCategoryId.toString(),
                                 controller.selectedCurrency.value,
                                 controller.selectedPriceType.value,
                                 controller.selectedLevelList.value);
+                            print(controller.customerCreateService.toString());
                           } else {
                             print('Image picked successfully');
                           }
@@ -590,53 +596,168 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                       ),
                       divider,
                       divider,
-                      Row(
+                      // Column(
+                      //   children: [
+                      //     Row(
+                      //       children: [
+                      //         Text('Location',
+                      //             style: kTitleTextstyle.copyWith(
+                      //               fontWeight: FontWeight.w500,
+                      //             )),
+                      //         gapWidth(size: 4.0.w),
+                      //         Image.asset(
+                      //           Img.locationIcon,
+                      //           width: 16.r,
+                      //           height: 16.r,
+                      //         ),
+                      //         gapWidth(size: 4.0.w),
+                      //       ],
+                      //     ),
+                      //     gapHeight(size: 8.0.w),
+                      //     // Modified TextField to show same location data
+                      //     Obx(() {
+                      //       final location =
+                      //           customerHomeController.currentLocation.value;
+                      //       return TextField(
+                      //         readOnly: true,
+                      //         decoration: InputDecoration(
+                      //           filled: true,
+                      //           fillColor: LightThemeColors.secounderyColor,
+                      //           hintText: "Search Here",
+                      //           prefixIcon: Icon(
+                      //             Icons.search,
+                      //             color: Colors.white,
+                      //           ),
+                      //           border: OutlineInputBorder(
+                      //             borderRadius: BorderRadius.circular(8),
+                      //             borderSide: BorderSide(color: Colors.white),
+                      //           ),
+                      //           enabledBorder: OutlineInputBorder(
+                      //             borderRadius: BorderRadius.circular(8),
+                      //             borderSide: BorderSide(color: Colors.white),
+                      //           ),
+                      //           focusedBorder: OutlineInputBorder(
+                      //             borderRadius: BorderRadius.circular(8),
+                      //             borderSide:
+                      //                 BorderSide(color: Colors.transparent),
+                      //           ),
+                      //           contentPadding: EdgeInsets.symmetric(
+                      //               horizontal: 12, vertical: 14),
+                      //         ),
+                      //         controller: TextEditingController(
+                      //             text: location != null
+                      //                 ? "${location.locality}, ${location.country}"
+                      //                 : "UAE, Dubai"),
+                      //         onTap: () async {
+                      //           controller.currentPosition = await controller
+                      //               .locationService
+                      //               .getCurrentLocation();
+                      //           if (controller.currentPosition != null) {
+                      //             await Get.toNamed(
+                      //                 Routes.CUSTOMER_PICK_LOCATION);
+                      //             customerHomeController.currentLocation;
+                      //           } else {
+                      //             print("please_get_current_loaction");
+                      //           }
+                      //         },
+                      //       );
+                      //     }),
+                      //   ],
+                      // ),
+                      Column(
                         children: [
-                          Text(
-                            "Location",
-                            style: kTitleTextstyle.copyWith(
-                              fontWeight: FontWeight.w500,
-                            ),
+                          Row(
+                            children: [
+                              Text('Location',
+                                  style: kTitleTextstyle.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  )),
+                              gapWidth(size: 4.0.w),
+                              Image.asset(
+                                Img.locationIcon,
+                                width: 16.r,
+                                height: 16.r,
+                              ),
+                              gapWidth(size: 4.0.w),
+                            ],
                           ),
-                          gapWidth(size: 4.0.w),
-                          Icon(
-                            Icons.location_on,
-                            size: 16.0,
-                            color: LightThemeColors.grayColor,
-                          )
+                          gapHeight(size: 8.0.w),
+                          Obx(() {
+                            final location =
+                                customerHomeController.currentLocation.value;
+                            return TextField(
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: LightThemeColors.secounderyColor,
+                                hintText: "Search Here",
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  color: Colors.white,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(color: Colors.white),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(color: Colors.white),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(color: Colors.white),
+                                ),
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 14),
+                              ),
+                              controller: TextEditingController(
+                                  text: location?.fullAddress ?? "UAE, Dubai"),
+                              onTap: () async {
+                                controller.currentPosition = await controller
+                                    .locationService
+                                    .getCurrentLocation();
+                                if (controller.currentPosition != null) {
+                                  await Get.toNamed(
+                                      Routes.CUSTOMER_PICK_LOCATION);
+                                  if (customerHomeController
+                                          .currentLocation.value !=
+                                      null) {
+                                    // Here we get the values needed for API
+                                    final lat = customerHomeController
+                                        .currentLocation.value?.latitude
+                                        .toString();
+                                    final lng = customerHomeController
+                                        .currentLocation.value?.longitude
+                                        .toString();
+                                    final fullAddress = customerHomeController
+                                        .currentLocation.value?.fullAddress;
+
+                                    // Now you can use these values in your controller
+                                    controller.lat = lat;
+                                    controller.lng = lng;
+                                    controller.address.value.text =
+                                        fullAddress ?? "";
+                                  }
+                                } else {
+                                  print("please_get_current_loaction");
+                                }
+                              },
+                            );
+                          }),
                         ],
-                      ),
-                      gapHeight(size: 3.0.h),
-                      InkWell(
-                        onTap: () async {
-                          controller.currentPosition = await controller
-                              .locationService
-                              .getCurrentLocation();
-                          if (controller.currentPosition != null) {
-                            Get.to(CustomerPickLocationView());
-                          } else {
-                            print("please_get_current_loaction");
-                          }
-                        },
-                        child: CustomTextField(
-                          fillColor: LightThemeColors.whiteColor,
-                          hintText: currentAddress ?? "Search Here",
-                          controller: null,
-                          readOnly: false,
-                          isIcon: true,
-                          icon: Img.searchIcon,
-                        ),
                       ),
                       divider,
                       CustomButton(
                         bgColor: LightThemeColors.primaryColor,
                         ontap: () {
                           controller.customerCreateService(
-                              selectedCategory?.id ?? 0,
-                              controller.selectedSubCategoryId.value,
-                              controller.selectedCurrency.value,
-                              controller.selectedPriceType.value,
-                              controller.selectedLevelList.value);
+                            controller.categooryId ?? 0,
+                            // Use this instead of selectedCategory?.id
+                            controller.selectedSubCategoryId.value,
+                            controller.selectedCurrency.value,
+                            controller.selectedPriceType.value,
+                            controller.selectedLevelList.value,
+                          );
                         },
                         widget: Text(
                           "Create",

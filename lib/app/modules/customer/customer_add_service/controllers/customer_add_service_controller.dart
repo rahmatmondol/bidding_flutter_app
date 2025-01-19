@@ -27,11 +27,12 @@ class CustomerAddServiceController extends GetxController {
   Rx<TextEditingController> name = TextEditingController().obs;
   Rx<TextEditingController> skill = TextEditingController().obs;
   Rx<TextEditingController> price = TextEditingController().obs;
-  Rx<TextEditingController> address = TextEditingController().obs;
+
+  // Rx<TextEditingController> address = TextEditingController().obs;
   Rx<TextEditingController> description = TextEditingController().obs;
 
   // Rx<QuillEditorController> description = QuillEditorController().obs;
-
+  var address = Rx<TextEditingController>(TextEditingController());
   var lat;
   var lng;
 
@@ -102,15 +103,10 @@ class CustomerAddServiceController extends GetxController {
 
   Future customerCreateService(int categoryId, String subCategoryId,
       String currency, String priceType, String level) async {
-    lat = myBox.get("lat");
-    lng = myBox.get("lng");
-    var currentAddress = myBox.get("address3");
-
     isLoading.value = true;
-    if (selectedthumbnail.value.isEmpty ||
-        selectedthumbnail.any((element) => element == null)) {
-      CustomSnackBar.showCustomErrorToast(
-          message: "Please Select feature image");
+
+    if (categooryId == null) {
+      CustomSnackBar.showCustomErrorToast(message: "Please select a category");
       isLoading.value = false;
       return;
     }
@@ -135,15 +131,28 @@ class CustomerAddServiceController extends GetxController {
         'Accept': 'application/json',
       });
 
+      // Add images
+      for (int i = 0; i < selectedthumbnail.length; i++) {
+        if (selectedthumbnail[i] != null) {
+          var file = await http.MultipartFile.fromPath(
+            'images[]',
+            selectedthumbnail[i]!.path,
+            contentType: MediaType('image', 'jpeg'),
+          );
+          request.files.add(file);
+        }
+      }
+
       // Add text fields
       request.fields.addAll({
         "title": name.value.text.trim(),
         // "slug": name.value.text.trim().toLowerCase().replaceAll(" ", "-"),
         "description": description.value.text.trim(),
         "price": price.value.text.trim(),
-        "location_name": currentAddress ?? "lohagara",
-        "latitude": lat ?? "23.1824543",
-        "longitude": lng ?? "89.6509966",
+
+        "location_name": address.value.text,
+        "latitude": lat ?? 0,
+        "longitude": lng ?? 0,
         "priceType": priceType.capitalize ?? "Fixed",
         // Capitalize first letter
         "currency": currency.toUpperCase(),
@@ -157,20 +166,8 @@ class CustomerAddServiceController extends GetxController {
         // "commission": "0",
         // "is_featured": "0",
         "category_id": categooryId?.toString() ?? "0",
-        "subCategory_id": subCategoryId,
+        "subCategory_id": subCategoryId.toString(),
       });
-
-      // Add images
-      for (int i = 0; i < selectedthumbnail.length; i++) {
-        if (selectedthumbnail[i] != null) {
-          var file = await http.MultipartFile.fromPath(
-            'images[]',
-            selectedthumbnail[i]!.path,
-            contentType: MediaType('image', 'jpeg'),
-          );
-          request.files.add(file);
-        }
-      }
 
       print('Request URL: ${request.url}');
       print('Request Headers: ${request.headers}');
