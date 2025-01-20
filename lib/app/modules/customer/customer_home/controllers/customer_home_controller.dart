@@ -16,6 +16,7 @@ class CustomerHomeController extends GetxController {
   final Rx<LocationModel?> currentLocation = Rx<LocationModel?>(null);
 
   RxBool isLoading = false.obs;
+  RxBool isRefreshing = false.obs;
 
   @override
   void onInit() {
@@ -58,7 +59,10 @@ class CustomerHomeController extends GetxController {
   }
 
   Future<void> getCustomeService() async {
-    isLoading.value = true;
+    if (!isRefreshing.value) {
+      isLoading.value = true;
+    }
+    // isLoading.value = true;
     try {
       final result = await BaseClient.safeApiCall(
         Constants.getServiceCustomer,
@@ -71,6 +75,7 @@ class CustomerHomeController extends GetxController {
           if (response.statusCode == 200) {
             getCustomerModel.value =
                 GetCustomerServiceModel.fromJson(response.data);
+            filterServices(searchController.text);
             print(
                 "Data loaded: ${getCustomerModel.value.data?.length} services found");
           } else {

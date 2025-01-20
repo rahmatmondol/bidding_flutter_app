@@ -4,7 +4,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../../../config/theme/light_theme_colors.dart';
 import '../../../../components/custom_button.dart';
-import '../../../../routes/app_pages.dart';
 import '../controllers/customer_pick_location_controller.dart';
 
 class CustomerPickLocationView extends GetView<CustomerPickLocationController> {
@@ -167,13 +166,32 @@ class CustomerPickLocationView extends GetView<CustomerPickLocationController> {
                   widget: Text("Confirm Location"),
                   bgColor: LightThemeColors.primaryColor,
                   ontap: () {
-                    if (controller.getCurrentActiveAddress() != null) {
-                      Get.toNamed(Routes.CUSTOMER_NAV_BAR);
+                    final selectedLocation =
+                        controller.getCurrentActiveAddress();
+                    if (selectedLocation != null) {
+                      print("Selected location to return:");
+                      print("Latitude: ${selectedLocation.latitude}");
+                      print("Longitude: ${selectedLocation.longitude}");
+                      print("Address: ${selectedLocation.fullAddress}");
+
+                      // Return to previous page with location data
+                      Get.back(result: selectedLocation);
                     } else {
                       Get.snackbar('Error', 'Please select a location first');
                     }
                   },
                 ),
+                // CustomButton(
+                //   widget: Text("Confirm Location"),
+                //   bgColor: LightThemeColors.primaryColor,
+                //   ontap: () {
+                //     if (controller.getCurrentActiveAddress() != null) {
+                //       Get.toNamed(Routes.CUSTOMER_NAV_BAR);
+                //     } else {
+                //       Get.snackbar('Error', 'Please select a location first');
+                //     }
+                //   },
+                // ),
                 SizedBox(height: 8),
                 CustomButton(
                   widget: Text("Use Current Location"),

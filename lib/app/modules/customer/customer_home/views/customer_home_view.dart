@@ -28,99 +28,107 @@ class CustomerHomeView extends GetView<CustomerHomeController> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    return Scaffold(
-      body: Container(
-        height: size.height,
-        width: size.width,
-        decoration: BoxDecoration(gradient: buildCustomGradient()),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.r)
-                      .copyWith(top: 30.r),
-                  child: Column(
-                    children: [
-                      _buildHeaderRow(),
-                      gapHeight(size: 20),
-                      _buildSearchSection(),
-                      gapHeight(size: 20),
-                    ],
+    return RefreshIndicator(
+      onRefresh: () async {
+        controller.isRefreshing.value = true;
+        await controller.getCustomeService();
+        await controller.loadSavedLocation();
+        controller.isRefreshing.value = false;
+      },
+      child: Scaffold(
+        body: Container(
+          height: size.height,
+          width: size.width,
+          decoration: BoxDecoration(gradient: buildCustomGradient()),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.r)
+                        .copyWith(top: 30.r),
+                    child: Column(
+                      children: [
+                        _buildHeaderRow(),
+                        gapHeight(size: 20),
+                        _buildSearchSection(),
+                        gapHeight(size: 20),
+                      ],
+                    ),
                   ),
-                ),
-                gapHeight(size: 20),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.r),
-                  child: RowText(
-                    title: "My posted service",
-                    buttonName: "",
-                    ontap: () {},
+                  gapHeight(size: 20),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.r),
+                    child: RowText(
+                      title: "My posted service",
+                      buttonName: "",
+                      ontap: () {},
+                    ),
                   ),
-                ),
-                gapHeight(size: 20),
-                Obx(() {
-                  if (controller.isLoading.value) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
+                  gapHeight(size: 20),
+                  Obx(() {
+                    if (controller.isLoading.value) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
 
-                  final services = controller.getCustomerModel.value.data;
+                    final services = controller.getCustomerModel.value.data;
 
-                  if (services == null || services.isEmpty) {
-                    return Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(16.r),
-                        child: Text(
-                          'No services found',
-                          style: kSubtitleStyle,
-                        ),
-                      ),
-                    );
-                  }
-
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: services.length,
-                    itemBuilder: (context, index) {
-                      final serviceData = services[index];
-                      print(
-                          "Building item $index with id: ${serviceData.id}"); // Debug print
-
-                      return Container(
-                        margin: EdgeInsets.symmetric(horizontal: 16.r)
-                            .copyWith(bottom: 10.r),
-                        height: size.height * 0.24,
-                        child: PopularServiceCard(
-                          size: size,
-                          name: serviceData.title ?? 'N/A',
-                          location: serviceData.location ?? 'N/A',
-                          description: serviceData.description ?? 'N/A',
-                          priceLevel:
-                              "${serviceData.priceType ?? 'Standard'} Price - ${serviceData.level ?? 'Basic'} level",
-                          price:
-                              "${serviceData.price.toStringAsFixed(2)} ${serviceData.currency?.toUpperCase() ?? 'AED'}",
-                          skill: serviceData.skills?.join(", "),
-                          onTap: () {
-                            final id = serviceData.id;
-                            if (id != null) {
-                              Get.to(
-                                () => CustomerServiceDetailsView(id),
-                                binding: CustomerServiceDetailsBinding(id),
-                                preventDuplicates: false,
-                              );
-                            } else {
-                              Get.snackbar('Error', 'Invalid service ID');
-                            }
-                          },
+                    if (services == null || services.isEmpty) {
+                      return Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.r),
+                          child: Text(
+                            'No services found',
+                            style: kSubtitleStyle,
+                          ),
                         ),
                       );
-                    },
-                  );
-                }),
-              ],
+                    }
+
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: services.length,
+                      itemBuilder: (context, index) {
+                        final serviceData = services[index];
+                        print(
+                            "Building item $index with id: ${serviceData.id}"); // Debug print
+
+                        return Container(
+                          margin: EdgeInsets.symmetric(horizontal: 16.r)
+                              .copyWith(bottom: 10.r),
+                          height: size.height * 0.24,
+                          child: PopularServiceCard(
+                            size: size,
+                            name: serviceData.title ?? 'N/A',
+                            location: serviceData.location ?? 'N/A',
+                            description: serviceData.description ?? 'N/A',
+                            priceLevel:
+                                "${serviceData.priceType ?? 'Standard'} Price - ${serviceData.level ?? 'Basic'} level",
+                            price:
+                                "${serviceData.price.toStringAsFixed(2)} ${serviceData.currency?.toUpperCase() ?? 'AED'}",
+                            skill: serviceData.skills?.join(", "),
+                            onTap: () {
+                              final id = serviceData.id;
+                              if (id != null) {
+                                Get.to(
+                                  () => CustomerServiceDetailsView(id),
+                                  binding: CustomerServiceDetailsBinding(id),
+                                  preventDuplicates: false,
+                                );
+                              } else {
+                                Get.snackbar('Error', 'Invalid service ID');
+                              }
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  }),
+                ],
+              ),
             ),
           ),
         ),
