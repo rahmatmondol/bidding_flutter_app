@@ -12,16 +12,18 @@ class PopularServiceCard extends StatelessWidget {
   final int? itemCount;
   final String? skill;
   final Function()? onTap;
+
   const PopularServiceCard(
       {super.key,
       required this.size,
       required this.name,
       required this.location,
-       this.description,
+      this.description,
       required this.priceLevel,
       required this.price,
       required this.onTap,
-      this.itemCount, this.skill});
+      this.itemCount,
+      this.skill});
 
   final Size size;
 
@@ -102,7 +104,9 @@ class PopularServiceCard extends StatelessWidget {
                 color: LightThemeColors.whiteColor,
               ),
             ),
-            SizedBox(height: 15,),
+            SizedBox(
+              height: 15,
+            ),
             Expanded(
               child: Row(
                 children: [
@@ -133,25 +137,27 @@ class PopularServiceCard extends StatelessWidget {
                   //     ),
                   //   ),
                   // ),
-                  Expanded(child: Container(
-                  height: size.height *0.03,
-                  child:Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10.r),
-                            margin: EdgeInsets.only(right: 5.r),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25.r),
-                              color: LightThemeColors.keywordBoxColor,
-                            ),
-                            child: Center(
-                              child: Text(
-                                skill.toString(),
-                                style: kSubtitleStyle.copyWith(
-                                    color: LightThemeColors.whiteColor),
-                              ),
-                            ),
+                  Expanded(
+                    child: Container(
+                      height: size.height * 0.03,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10.r),
+                        margin: EdgeInsets.only(right: 5.r),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25.r),
+                          color: LightThemeColors.keywordBoxColor,
+                        ),
+                        child: Center(
+                          child: Text(
+                            skill.toString(),
+                            style: kSubtitleStyle.copyWith(
+                                color: LightThemeColors.whiteColor),
                           ),
-                  ),),
-                  
+                        ),
+                      ),
+                    ),
+                  ),
+
                   Text(
                     price,
                     style: kTitleTextstyle.copyWith(

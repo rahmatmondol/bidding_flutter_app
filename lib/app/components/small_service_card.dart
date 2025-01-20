@@ -5,23 +5,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../config/theme/my_styles.dart';
 
 class ServiceCard extends StatelessWidget {
-  const  ServiceCard({
+  const ServiceCard({
     super.key,
     required this.price,
     required this.imgPath,
-    required this.countryName,
     required this.placeName,
+    required this.title,
     required this.reviewsPoint,
     required this.reviewsText,
     required this.size,
     this.onTap,
   });
+
   final Function()? onTap;
   final Size size;
   final String imgPath;
   final String price;
-  final String countryName;
   final String placeName;
+  final String title;
   final String reviewsPoint;
   final String reviewsText;
 
@@ -58,7 +59,7 @@ class ServiceCard extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(left: 6.0.w),
                 child: Text(
-                  placeName,
+                  title,
                   maxLines: 2,
                   style: kTitleTextstyle,
                 ),
@@ -74,7 +75,7 @@ class ServiceCard extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        countryName,
+                        placeName,
                         maxLines: 1,
                         style: kSubtitleStyle.copyWith(
                           color: LightThemeColors.grayColor,

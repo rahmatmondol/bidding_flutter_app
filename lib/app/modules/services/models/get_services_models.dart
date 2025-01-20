@@ -1,20 +1,10 @@
-// To parse this JSON data, do
-//
-//     final getServiceDataModel = getServiceDataModelFromJson(jsonString);
-
 import 'dart:convert';
-
-GetServiceDataModel getServiceDataModelFromJson(String str) =>
-    GetServiceDataModel.fromJson(json.decode(str));
-
-String getServiceDataModelToJson(GetServiceDataModel data) =>
-    json.encode(data.toJson());
 
 class GetServiceDataModel {
   bool? success;
   int? status;
   String? message;
-  Data? data;
+  List<ServiceModel>? data;
 
   GetServiceDataModel({
     this.success,
@@ -28,216 +18,233 @@ class GetServiceDataModel {
         success: json["success"],
         status: json["status"],
         message: json["message"],
-        data: json["data"] == null ? null : Data.fromJson(json["data"]),
+        data: json["data"] == null
+            ? []
+            : List<ServiceModel>.from(
+                json["data"].map((x) => ServiceModel.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "success": success,
         "status": status,
         "message": message,
-        "data": data?.toJson(),
+        "data": data == null
+            ? []
+            : List<dynamic>.from(data!.map((x) => x.toJson())),
       };
 }
 
-class Data {
-  List<Service>? service;
-
-  Data({
-    this.service,
-  });
-
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
-        service: json["service"] == null
-            ? []
-            : List<Service>.from(
-                json["service"]!.map((x) => Service.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "service": service == null
-            ? []
-            : List<dynamic>.from(service!.map((x) => x.toJson())),
-      };
-}
-
-class Service {
+class ServiceModel {
   int? id;
-  String? name;
-  int? parentId;
-  int? categoryId;
-  int? customerId;
-  List<Zone>? zone;
-  String? price;
-  String? priceType;
-  String? level;
-  String? currency;
-  String? skill;
-  double? commotion;
-  double? providerAmount;
-  String? address;
-  String? status;
+  String? title;
+  String? slug;
   String? description;
+  dynamic price;
   String? location;
+  String? latitude;
+  String? longitude;
+  String? priceType;
+  String? currency;
+  String? status;
+  String? level;
+  String? postType;
+  dynamic deadline;
+  String? skills;
+  int? commission;
+  int? is_featured;
+  int? category_id;
+  int? sub_category_id;
+  int? user_id;
+  String? created_at;
+  String? updated_at;
+  List<ServiceImage>? images;
   Customer? customer;
-  List<Image>? images;
 
-  Service({
+  ServiceModel({
     this.id,
-    this.name,
-    this.parentId,
-    this.categoryId,
-    this.customerId,
-    this.zone,
-    this.price,
-    this.priceType,
-    this.level,
-    this.currency,
-    this.skill,
-    this.commotion,
-    this.providerAmount,
-    this.address,
-    this.status,
+    this.title,
+    this.slug,
     this.description,
+    this.price,
     this.location,
-    this.customer,
+    this.latitude,
+    this.longitude,
+    this.priceType,
+    this.currency,
+    this.status,
+    this.level,
+    this.postType,
+    this.deadline,
+    this.skills,
+    this.commission,
+    this.is_featured,
+    this.category_id,
+    this.sub_category_id,
+    this.user_id,
+    this.created_at,
+    this.updated_at,
     this.images,
+    this.customer,
   });
 
-  factory Service.fromJson(Map<String, dynamic> json) => Service(
+  // Add this method to get skills as a List
+  List<String> getSkillsList() {
+    if (skills == null || skills!.isEmpty) return [];
+    try {
+      // Remove any extra quotes if present
+      final cleanedSkills = skills!.replaceAll('\\', '');
+      final decodedSkills = jsonDecode(cleanedSkills);
+      if (decodedSkills is List) {
+        return decodedSkills.map((e) => e.toString()).toList();
+      }
+      return [];
+    } catch (e) {
+      print('Error decoding skills: $e');
+      print('Original skills string: $skills');
+      return [];
+    }
+  }
+
+  // Add this method to get skills as a comma-separated string
+  String getSkillsString() {
+    final skillsList = getSkillsList();
+    return skillsList.isEmpty ? 'No skills specified' : skillsList.join(', ');
+  }
+
+  factory ServiceModel.fromJson(Map<String, dynamic> json) => ServiceModel(
         id: json["id"],
-        name: json["name"],
-        parentId: json["parent_id"],
-        categoryId: json["category_id"],
-        customerId: json["customer_id"],
-        zone: json["zone"] == null
-            ? []
-            : List<Zone>.from(json["zone"]!.map((x) => Zone.fromJson(x))),
-        price: json["price"],
-        priceType: json["price_type"],
-        level: json["level"],
-        currency: json["currency"],
-        skill: json["skill"],
-        commotion: json["commotion"]?.toDouble(),
-        providerAmount: json["provider_amount"]?.toDouble(),
-        address: json["address"],
-        status: json["status"],
+        title: json["title"],
+        slug: json["slug"],
         description: json["description"],
+        price: json["price"],
         location: json["location"],
+        latitude: json["latitude"],
+        longitude: json["longitude"],
+        priceType: json["priceType"],
+        currency: json["currency"],
+        status: json["status"],
+        level: json["level"],
+        postType: json["postType"],
+        deadline: json["deadline"],
+        skills: json["skills"],
+        commission: json["commission"],
+        is_featured: json["is_featured"],
+        category_id: json["category_id"],
+        sub_category_id: json["sub_category_id"],
+        user_id: json["user_id"],
+        created_at: json["created_at"],
+        updated_at: json["updated_at"],
+        images: json["images"] == null
+            ? []
+            : List<ServiceImage>.from(
+                json["images"].map((x) => ServiceImage.fromJson(x))),
         customer: json["customer"] == null
             ? null
             : Customer.fromJson(json["customer"]),
-        images: json["images"] == null
+      );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "title": title,
+        "slug": slug,
+        "description": description,
+        "price": price,
+        "location": location,
+        "latitude": latitude,
+        "longitude": longitude,
+        "priceType": priceType,
+        "currency": currency,
+        "status": status,
+        "level": level,
+        "postType": postType,
+        "deadline": deadline,
+        "skills": skills,
+        "commission": commission,
+        "is_featured": is_featured,
+        "category_id": category_id,
+        "sub_category_id": sub_category_id,
+        "user_id": user_id,
+        "created_at": created_at,
+        "updated_at": updated_at,
+        "images": images == null
             ? []
-            : List<Image>.from(json["images"]!.map((x) => Image.fromJson(x))),
+            : List<dynamic>.from(images!.map((x) => x.toJson())),
+        "customer": customer?.toJson(),
+      };
+}
+
+class ServiceImage {
+  int? id;
+  String? name;
+  String? path;
+  int? service_id;
+  String? created_at;
+  String? updated_at;
+
+  ServiceImage({
+    this.id,
+    this.name,
+    this.path,
+    this.service_id,
+    this.created_at,
+    this.updated_at,
+  });
+
+  factory ServiceImage.fromJson(Map<String, dynamic> json) => ServiceImage(
+        id: json["id"],
+        name: json["name"],
+        path: json["path"],
+        service_id: json["service_id"],
+        created_at: json["created_at"],
+        updated_at: json["updated_at"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
-        "parent_id": parentId,
-        "category_id": categoryId,
-        "customer_id": customerId,
-        "zone": zone == null
-            ? []
-            : List<dynamic>.from(zone!.map((x) => x.toJson())),
-        "price": price,
-        "price_type": priceType,
-        "level": level,
-        "currency": currency,
-        "skill": skill,
-        "commotion": commotion,
-        "provider_amount": providerAmount,
-        "address": address,
-        "status": status,
-        "description": description,
-        "location": location,
-        "customer": customer?.toJson(),
-        "images": images == null
-            ? []
-            : List<dynamic>.from(images!.map((x) => x.toJson())),
+        "path": path,
+        "service_id": service_id,
+        "created_at": created_at,
+        "updated_at": updated_at,
       };
 }
 
 class Customer {
   int? id;
   String? name;
+  String? mobile;
   String? email;
-  String? phone;
-  int? emailVerify;
-  String? image;
-  String? status;
+  String? email_verified_at;
+  String? created_at;
+  String? updated_at;
 
   Customer({
     this.id,
     this.name,
+    this.mobile,
     this.email,
-    this.phone,
-    this.emailVerify,
-    this.image,
-    this.status,
+    this.email_verified_at,
+    this.created_at,
+    this.updated_at,
   });
 
   factory Customer.fromJson(Map<String, dynamic> json) => Customer(
         id: json["id"],
         name: json["name"],
+        mobile: json["mobile"],
         email: json["email"],
-        phone: json["phone"],
-        emailVerify: json["email_verify"],
-        image: json["image"],
-        status: json["status"],
+        email_verified_at: json["email_verified_at"],
+        created_at: json["created_at"],
+        updated_at: json["updated_at"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
+        "mobile": mobile,
         "email": email,
-        "phone": phone,
-        "email_verify": emailVerify,
-        "image": image,
-        "status": status,
-      };
-}
-
-class Image {
-  int? id;
-  int? serviceId;
-  String? path;
-
-  Image({
-    this.id,
-    this.serviceId,
-    this.path,
-  });
-
-  factory Image.fromJson(Map<String, dynamic> json) => Image(
-        id: json["id"],
-        serviceId: json["service_id"],
-        path: json["path"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "service_id": serviceId,
-        "path": path,
-      };
-}
-
-class Zone {
-  int? id;
-  String? name;
-
-  Zone({
-    this.id,
-    this.name,
-  });
-
-  factory Zone.fromJson(Map<String, dynamic> json) => Zone(
-        id: json["id"],
-        name: json["name"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
+        "email_verified_at": email_verified_at,
+        "created_at": created_at,
+        "updated_at": updated_at,
       };
 }

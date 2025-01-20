@@ -1,225 +1,233 @@
-// ignore_for_file: unused_field
-
-import 'dart:async';
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:dirham_uae/app/components/custom_button.dart';
-import 'package:dirham_uae/app/components/custom_loading_dialog_widget.dart';
-import 'package:dirham_uae/app/data/user_service/user_service.dart';
-import 'package:dirham_uae/config/theme/light_theme_colors.dart';
-import 'package:dirham_uae/config/theme/my_images.dart';
 
-class CustomerPickLocationView extends StatefulWidget {
-  final Position currentPosition;
-  const CustomerPickLocationView({Key? key, required this.currentPosition})
-      : super(key: key);
-  @override
-  State<CustomerPickLocationView> createState() =>
-      _CustomerPickLocationViewState();
-}
+import '../../../../../config/theme/light_theme_colors.dart';
+import '../../../../components/custom_button.dart';
+import '../controllers/customer_pick_location_controller.dart';
 
-class _CustomerPickLocationViewState extends State<CustomerPickLocationView> {
-  final Completer<GoogleMapController> _controller = Completer();
+class CustomerPickLocationView extends GetView<CustomerPickLocationController> {
+  CustomerPickLocationView({Key? key}) : super(key: key);
 
-  final TextEditingController _searchController = TextEditingController();
-  UserService userService = UserService();
-
-  GoogleMapController? googleMapController;
-  final Set<Marker> _markers = {};
-  String? _currentAddress;
-  String? _currentAddress2;
-  String? _currentAddress3;
-  final myBox = Hive.box('mapBox');
-  CameraPosition? _cameraPosition;
-
-  @override
-  void initState() {
-    super.initState();
-    _markers.add(Marker(
-      markerId: const MarkerId('current_location'),
-      position: LatLng(
-        widget.currentPosition.latitude,
-        widget.currentPosition.longitude,
-      ),
-    ));
-    _getCurrentAddress();
-    print("Gained lat========>>>>>${widget.currentPosition.latitude}");
-    print("Gained lng========>>>>>${widget.currentPosition.longitude}");
-  }
-
-  Future<void> _getCurrentAddress() async {
-    final List<Placemark> placemarks = await placemarkFromCoordinates(
-      widget.currentPosition.latitude,
-      widget.currentPosition.longitude,
-    );
-    setState(() {
-      _currentAddress =
-          "${placemarks.first.locality!.toUpperCase()}, ${placemarks.first.country!.toUpperCase()}";
-      _currentAddress2 =
-          "${placemarks.first.street!}, ${placemarks.first.locality!}";
-      _currentAddress3 =
-          "${placemarks.first.street!}, ${placemarks.first.locality!}, ${placemarks.first.country!}";
-      myBox.put('address3', _currentAddress3);
-    });
-  }
-
-  void _onCameraMove(CameraPosition position) {
-    _cameraPosition = position;
-    // Update the marker position
-    setState(() {
-      _markers.add(Marker(
-        markerId: const MarkerId('current_location'),
-        position: _cameraPosition!.target,
-      ));
-    });
-  }
-
-  void _updatePosition() async {
-    // Update the marker position
-    setState(() {
-      _markers.clear();
-      if (_cameraPosition != null) {
-        _markers.add(Marker(
-          markerId: const MarkerId('current_location'),
-          position: _cameraPosition!.target,
-        ));
-      }
-    });
-    // Update the current address variables
-    if (_cameraPosition != null) {
-      final List<Placemark> placemarks = await placemarkFromCoordinates(
-        _cameraPosition!.target.latitude,
-        _cameraPosition!.target.longitude,
-      );
-      setState(() {
-        _currentAddress =
-            "${placemarks.first.locality!.toUpperCase()}, ${placemarks.first.country!.toUpperCase()}";
-        _currentAddress2 =
-            "${placemarks.first.street!}, ${placemarks.first.locality!}";
-        _currentAddress3 =
-            "${placemarks.first.street!}, ${placemarks.first.locality!}, ${placemarks.first.country!}, ${placemarks.first.name!}";
-        myBox.put('address3', _currentAddress3);
-      });
-      // Update the stored latitude and longitude values
-      myBox.put("lat", _cameraPosition!.target.latitude);
-      myBox.put("lng", _cameraPosition!.target.longitude);
-    }
-  }
+  final TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
     return Scaffold(
-        body: Stack(
-      children: [
-        GoogleMap(
-          myLocationButtonEnabled: true,
-          mapType: MapType.normal,
-          zoomControlsEnabled: false,
-          initialCameraPosition: CameraPosition(
-            target: LatLng(
-              widget.currentPosition.latitude,
-              widget.currentPosition.longitude,
-            ),
-            zoom: 12,
-          ),
-          onMapCreated: (GoogleMapController controller) {
-            googleMapController = controller;
-            _controller.complete(controller);
-          },
-          scrollGesturesEnabled: !Get.isDialogOpen!,
-          onCameraMove: _onCameraMove,
-          markers: _markers,
-          onCameraIdle: _updatePosition,
-        ),
+      body: Stack(
+        children: [
+          Obx(() {
+            final currentLocation = controller.getCurrentActiveAddress();
+            return GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: LatLng(
+                  currentLocation?.latitude ?? 25.2048,
+                  currentLocation?.longitude ?? 55.2708,
+                ),
+                zoom: 14.0,
+              ),
+              onMapCreated: (GoogleMapController controller) {
+                // Use the setMapController method here
+                this.controller.setMapController(controller);
+              },
+              markers: {
+                Marker(
+                  markerId: const MarkerId('selected_location'),
+                  position: LatLng(
+                    currentLocation?.latitude ?? 25.2048,
+                    currentLocation?.longitude ?? 55.2708,
+                  ),
+                )
+              },
+              onCameraMove: (position) {
+                controller.pickLocationFromMap(position.target);
+              },
+              myLocationEnabled: true,
+              myLocationButtonEnabled: false,
+            );
+          }),
 
-        //*************************** */
-
-        SafeArea(
-          child: Container(
-            height: size.height,
-            width: size.width,
-            // decoration: BoxDecoration(
-            //   image: DecorationImage(
-            //     image: AssetImage(Images.mapImg),
-            //     fit: BoxFit.cover,
-            //   ),
-            //),
+          // Search Box with Results
+          SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  //*************************************** Search Location Section *************************** */
-                  TextFormField(
-                    scrollPadding: EdgeInsets.zero,
-                    cursorColor: LightThemeColors.primaryColor,
-                    decoration: InputDecoration(
-                      filled: true,
-                      focusColor: LightThemeColors.secounderyBackgroundColor,
-                      fillColor: LightThemeColors.secounderyBackgroundColor,
-                      hintText: "Search Location",
-                      prefixIconColor: Colors.black,
-                      prefixIcon: ImageIcon(AssetImage(Img.locationIcon)),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.r),
-                        borderSide: const BorderSide(
-                            color: LightThemeColors.secounderyBackgroundColor,
-                            width: 2),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: TextField(
+                      controller: searchController,
+                      style: TextStyle(
+                        // Add explicit text style
+                        color: Colors.black,
+                        fontSize: 16,
+                        decoration: TextDecoration.none,
                       ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.r),
-                        borderSide: const BorderSide(
-                            color: LightThemeColors.secounderyBackgroundColor,
-                            width: 2),
+                      decoration: InputDecoration(
+                        hintText: 'Search location',
+                        hintStyle: TextStyle(
+                          // Add hint text style
+                          color: Colors.grey,
+                          fontSize: 16,
+                        ),
+                        prefixIcon: Icon(Icons.search, color: Colors.grey),
+                        border: InputBorder.none,
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        fillColor: Colors.white,
+                        // Ensure the fill color is white
+                        filled: true,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide.none,
+                        ),
                       ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.r),
-                        borderSide: const BorderSide(
-                            color: LightThemeColors.secounderyBackgroundColor,
-                            width: 2),
-                      ),
+                      onChanged: (value) {
+                        print("Search text: $value");
+                        controller.searchLocation(value);
+                      },
                     ),
                   ),
-                  Spacer(),
 
-                  //*************************************** Button Section *************************** */
-                  CustomButton(
-                    widget: Text("Pick Location"),
-                    bgColor: LightThemeColors.primaryColor,
-                    ontap: () async {
-                      //********************* Search Location Section ****************** */
-                      Get.back();
-                      showDialog(
-                          context: context,
-                          builder: (c) {
-                            return BackdropFilter(
-                              filter:
-                                  ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                              child: const CustomLoadingWidget(
-                                message: "Set Location",
-                              ),
+                  // Search Results
+                  Obx(() {
+                    if (controller.searchResults.isNotEmpty) {
+                      return Container(
+                        margin: EdgeInsets.only(top: 8),
+                        constraints: BoxConstraints(maxHeight: 200),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: controller.searchResults.length,
+                          itemBuilder: (context, index) {
+                            final location = controller.searchResults[index];
+                            return ListTile(
+                              title: Text(location.streetAddress),
+                              subtitle: Text(location.locality),
+                              onTap: () async {
+                                // Update location
+                                await controller.updateLocation(
+                                  controller.selectedAddressIndex.value,
+                                  location,
+                                );
+
+                                // Move map to selected location using controller's method
+                                controller.moveMapToLocation(LatLng(
+                                    location.latitude, location.longitude));
+
+                                // Clear search
+                                searchController.clear();
+                                controller.searchResults.clear();
+                              },
                             );
-                          });
-
-                      var lat = myBox.get("lat");
-                      var lng = myBox.get("lng");
-                      print("Changed lat====>$lat");
-                      print("Changed lng====>$lng");
-                      Get.back();
-                    },
-                  ),
+                          },
+                        ),
+                      );
+                    }
+                    return SizedBox.shrink();
+                  }),
                 ],
               ),
             ),
           ),
-        ),
-      ],
-    ));
+
+          // Bottom Buttons
+          Positioned(
+            bottom: 16,
+            left: 16,
+            right: 16,
+            child: Column(
+              children: [
+                CustomButton(
+                  widget: Text("Confirm Location"),
+                  bgColor: LightThemeColors.primaryColor,
+                  ontap: () {
+                    final selectedLocation =
+                        controller.getCurrentActiveAddress();
+                    if (selectedLocation != null) {
+                      print("Selected location to return:");
+                      print("Latitude: ${selectedLocation.latitude}");
+                      print("Longitude: ${selectedLocation.longitude}");
+                      print("Address: ${selectedLocation.fullAddress}");
+
+                      // Return to previous page with location data
+                      Get.back(result: selectedLocation);
+                    } else {
+                      Get.snackbar('Error', 'Please select a location first');
+                    }
+                  },
+                ),
+                // CustomButton(
+                //   widget: Text("Confirm Location"),
+                //   bgColor: LightThemeColors.primaryColor,
+                //   ontap: () {
+                //     if (controller.getCurrentActiveAddress() != null) {
+                //       Get.toNamed(Routes.CUSTOMER_NAV_BAR);
+                //     } else {
+                //       Get.snackbar('Error', 'Please select a location first');
+                //     }
+                //   },
+                // ),
+                SizedBox(height: 8),
+                CustomButton(
+                  widget: Text("Use Current Location"),
+                  bgColor: LightThemeColors.secounderyButtonColor,
+                  ontap: () async {
+                    final success = await controller.getCurrentLocation();
+                    if (success) {
+                      // Move map to current location if successful
+                      final currentLocation =
+                          controller.getCurrentActiveAddress();
+                      if (currentLocation != null) {
+                        controller.moveMapToLocation(LatLng(
+                            currentLocation.latitude,
+                            currentLocation.longitude));
+                      }
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+
+          // Loading Indicator
+          Obx(() {
+            if (controller.isLoading.value) {
+              return Container(
+                color: Colors.black.withOpacity(0.3),
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
+            return SizedBox.shrink();
+          }),
+        ],
+      ),
+    );
   }
 }

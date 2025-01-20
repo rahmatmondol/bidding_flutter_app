@@ -1,16 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:dirham_uae/config/theme/light_theme_colors.dart';
 import 'package:dirham_uae/config/theme/my_images.dart';
 import 'package:dirham_uae/config/theme/my_styles.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+
 import '../../../../routes/app_pages.dart';
 import '../controllers/customer_nav_bar_controller.dart';
 
 class CustomerNavBarView extends GetView<CustomerNavBarController> {
-    final int initialindex;
+  final int initialindex;
 
   const CustomerNavBarView(this.initialindex, {Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.sizeOf(context);
@@ -30,7 +32,7 @@ class CustomerNavBarView extends GetView<CustomerNavBarController> {
       ),
       floatingActionButton: InkWell(
         onTap: () {
-          controller.setCurrentTab(2);
+          // controller.setCurrentTab(2);
           Get.toNamed(Routes.CUSTOMER_ADD_SERVICE);
         },
         child: Padding(
