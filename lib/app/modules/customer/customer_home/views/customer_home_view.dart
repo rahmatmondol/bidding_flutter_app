@@ -364,7 +364,8 @@ class CustomerHomeView extends GetView<CustomerHomeController> {
                 ),
               ),
               Text(
-                customerInfo?.profile?.lastName ?? 'User',
+                // customerInfo?.profile?.lastName ?? 'User',
+                customerInfo?.name ?? 'User',
                 style: kSubtitleStyle,
               )
             ],
