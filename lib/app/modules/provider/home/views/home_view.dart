@@ -15,6 +15,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../../global/profile/account_details/controllers/account_details_controller.dart';
+import '../../favorite_service/controllers/favorite_service_controller.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -26,6 +27,8 @@ class HomeView extends GetView<HomeController> {
     final HomeController homeController = Get.put(HomeController());
     final CustomerAccountDetailsController accountDetailsController =
         Get.put(CustomerAccountDetailsController());
+    final FavoriteServiceController favoriteController =
+        Get.put(FavoriteServiceController());
 
     final accountDetails = accountDetailsController.customerInfo.value;
 
@@ -369,12 +372,27 @@ class HomeView extends GetView<HomeController> {
                                           .data?[index];
                                       if (service == null) return SizedBox();
 
+                                      print(
+                                          'Building ServiceCard for service ${service.id}');
+                                      print(
+                                          'Current wishlist state for service: ${favoriteController.wishlistedItems[service.id.toString()]}');
                                       return ServiceCard(
                                         onTap: () {
                                           Get.to(
                                               () => DescriptionView(service));
                                         },
-                                        // imgPath: Img.message,
+                                        serviceId: service.id.toString(),
+                                        // Add this
+                                        onWishlistTap: () {
+                                          if (service.id != null) {
+                                            print(
+                                                'Attempting to toggle wishlist');
+                                            favoriteController.toggleWishlist(
+                                              service.id.toString(),
+                                              3, // Your provider ID
+                                            );
+                                          }
+                                        },
                                         imgPath:
                                             service.images?.isNotEmpty == true
                                                 ? service.images!.first.path

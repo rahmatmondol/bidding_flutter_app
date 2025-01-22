@@ -15,6 +15,7 @@ class CustomerAccountDetailsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    print('CustomerAccountDetailsController initialized');
     getCustomerInfo();
   }
 
