@@ -277,7 +277,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.FAVORITE_SERVICE,
-      page: () => const FavoriteServiceView(),
+      page: () => FavoriteServiceView(),
       binding: FavoriteServiceBinding(),
     ),
     GetPage(
