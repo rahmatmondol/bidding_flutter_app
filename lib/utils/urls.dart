@@ -50,4 +50,5 @@ class Constants {
   static const getAllServiceUrl = "$baseUrl/get-services";
   static const getCategoriesUrl = "$baseUrl/get-categories";
   static const createBidding = "$baseUrl/auth/create-bidding";
+  static const getBidding = "$baseUrl/auth/get-biddings";
 }

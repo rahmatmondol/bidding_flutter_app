@@ -1,14 +1,17 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dirham_uae/app/components/custom_snackbar.dart';
 import 'package:dirham_uae/app/modules/provider/home/models/get_categories_model.dart';
 import 'package:dirham_uae/app/modules/provider/home/models/provider_service_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../../utils/urls.dart';
 import '../../../../data/local/my_shared_pref.dart';
 import '../../../../services/base_client.dart';
+import '../../../global/customer_pick_location/model/location_model.dart';
 
 class HomeController extends GetxController {
   final selectedCategory = ''.obs;
@@ -43,12 +46,61 @@ class HomeController extends GetxController {
   final availableLevels = ['Basic', 'Standard', 'Premium'].obs;
   final availablePriceTypes = ['Fixed', 'Hourly', 'Project'].obs;
 
+  final Rx<LocationModel?> currentLocation = Rx<LocationModel?>(null);
+
   @override
   void onInit() {
     super.onInit();
     getCategoriesData();
     getServiceProvider();
     setupSearchListener();
+    loadSavedLocation();
+  }
+
+  Future<void> refreshData() async {
+    try {
+      await Future.wait([
+        getCategoriesData(),
+        getServiceProvider(),
+      ]);
+    } catch (e) {
+      CustomSnackBar.showCustomErrorToast(
+        message: 'Error refreshing data',
+      );
+    }
+  }
+
+  Future<void> updateLocation(LocationModel location) async {
+    try {
+      // Update the reactive state
+      currentLocation.value = location;
+
+      // Save to SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      final locationJson = json.encode(location.toJson());
+      await prefs.setString('address1', locationJson);
+
+      print('Location updated successfully in service');
+      print('New location: ${location.locality}, ${location.country}');
+    } catch (e) {
+      print('Error updating location in service: $e');
+    }
+  }
+
+  Future<void> loadSavedLocation() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      String? address1Str = prefs.getString('address1');
+
+      if (address1Str != null) {
+        Map<String, dynamic> json = jsonDecode(address1Str);
+        currentLocation.value = LocationModel.fromJson(json);
+        print(
+            'Loaded saved location: ${currentLocation.value?.locality}, ${currentLocation.value?.country}');
+      }
+    } catch (e) {
+      print("Error loading saved location: $e");
+    }
   }
 
   void setupSearchListener() {

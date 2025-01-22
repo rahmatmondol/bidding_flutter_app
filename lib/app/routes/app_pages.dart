@@ -38,8 +38,6 @@ import '../modules/customer/customer_otp/bindings/customer_otp_binding.dart';
 import '../modules/customer/customer_otp/views/customer_otp_view.dart';
 import '../modules/customer/customer_payment/bindings/customer_payment_binding.dart';
 import '../modules/customer/customer_payment/views/customer_payment_view.dart';
-import '../modules/customer/customer_pick_location/bindings/customer_pick_location_binding.dart';
-import '../modules/customer/customer_pick_location/views/customer_pick_location_view.dart';
 import '../modules/customer/customer_privacy_and_policy/bindings/customer_privacy_and_policy_binding.dart';
 import '../modules/customer/customer_privacy_and_policy/views/customer_privacy_and_policy_view.dart';
 import '../modules/customer/customer_reset/bindings/customer_reset_binding.dart';
@@ -48,6 +46,8 @@ import '../modules/customer/customer_search/bindings/customer_search_binding.dar
 import '../modules/customer/customer_search/views/customer_search_view.dart';
 import '../modules/customer/customer_terms_and_condition/bindings/customer_terms_and_condition_binding.dart';
 import '../modules/customer/customer_terms_and_condition/views/customer_terms_and_condition_view.dart';
+import '../modules/global/customer_pick_location/bindings/customer_pick_location_binding.dart';
+import '../modules/global/customer_pick_location/views/customer_pick_location_view.dart';
 import '../modules/global/customer_tab/bindings/customertab_binding.dart';
 import '../modules/global/customer_tab/views/customertab_view.dart';
 import '../modules/global/profile/account_details/bindings/account_details_binding.dart';

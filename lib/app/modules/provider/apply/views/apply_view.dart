@@ -143,27 +143,13 @@ class ApplyView extends GetView<ApplyController> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  '\$',
+                                  controller.price != null
+                                      ? '\$${controller.price.toString()}'
+                                      : '\$0',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
                                   ),
-                                ),
-                              ),
-                              Expanded(
-                                child: TextField(
-                                  keyboardType: TextInputType.number,
-                                  style: TextStyle(color: Colors.white),
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    contentPadding:
-                                        EdgeInsets.symmetric(horizontal: 2),
-                                    hintText: 'Enter Amount',
-                                    hintStyle: TextStyle(
-                                        color: Colors.white.withOpacity(0.7)),
-                                  ),
-                                  onChanged: (value) =>
-                                      controller.amount.value = value,
                                 ),
                               ),
                             ],
@@ -211,11 +197,14 @@ class ApplyView extends GetView<ApplyController> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                '\$',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  '\$',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
                                 ),
                               ),
                               Expanded(
@@ -238,26 +227,6 @@ class ApplyView extends GetView<ApplyController> {
                           ),
                         ),
                       ),
-                      // Container(
-                      //   height: size.height / 15,
-                      //   width: size.width / 2.7,
-                      //   decoration: BoxDecoration(
-                      //     color: LightThemeColors.secounderyColor,
-                      //     borderRadius: BorderRadius.circular(5.0.r),
-                      //   ),
-                      //   child: Center(
-                      //     child: TextField(
-                      //       maxLines: 4,
-                      //       decoration: InputDecoration(
-                      //         labelText: 'Message',
-                      //         border: OutlineInputBorder(),
-                      //         hintText: 'Write your proposal...',
-                      //       ),
-                      //       onChanged: (value) =>
-                      //           controller.message.value = value,
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
                   divider,

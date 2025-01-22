@@ -8,7 +8,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../customer_home/controllers/customer_home_controller.dart';
+import '../../../../data/user_service/user_service.dart';
+import '../../../customer/customer_home/controllers/customer_home_controller.dart';
+import '../../../provider/home/controllers/home_controller.dart';
 import '../model/location_model.dart';
 
 class CustomerPickLocationController extends GetxController {
@@ -240,7 +242,7 @@ class CustomerPickLocationController extends GetxController {
   }
 
   Future<bool> updateLocation(int addressIndex, LocationModel location) async {
-    final locationService = Get.find<CustomerHomeController>();
+    // final locationService = Get.find<CustomerHomeController>();
     try {
       print('Updating location for address $addressIndex');
       print('Location details:');
@@ -251,7 +253,34 @@ class CustomerPickLocationController extends GetxController {
       print('Locality: ${location.locality}');
       print('Country: ${location.country}');
 
-      await locationService.updateLocation(location);
+      // await locationService.updateLocation(location);
+
+      // Use UserService to check user type
+      final userService = UserService();
+      final isProviderUser = await userService.isProvider();
+
+      // Update location based on user type
+      if (isProviderUser) {
+        try {
+          final homeController = Get.find<HomeController>();
+          await homeController.updateLocation(location);
+        } catch (e) {
+          print('Error finding HomeController: $e');
+          Get.put(HomeController()); // Put if not found
+          final homeController = Get.find<HomeController>();
+          await homeController.updateLocation(location);
+        }
+      } else {
+        try {
+          final customerHomeController = Get.find<CustomerHomeController>();
+          await customerHomeController.updateLocation(location);
+        } catch (e) {
+          print('Error finding CustomerHomeController: $e');
+          Get.put(CustomerHomeController()); // Put if not found
+          final customerHomeController = Get.find<CustomerHomeController>();
+          await customerHomeController.updateLocation(location);
+        }
+      }
 
       switch (addressIndex) {
         case 1:

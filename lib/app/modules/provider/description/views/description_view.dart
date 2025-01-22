@@ -17,6 +17,7 @@ import '../../../../../utils/global_variable/divider.dart';
 import '../../../../components/custom_button.dart';
 import '../../../../components/full_map_view.dart';
 import '../../../../routes/app_pages.dart';
+import '../../home/controllers/home_controller.dart';
 import '../controllers/description_controller.dart';
 
 class DescriptionView extends GetView<DescriptionController> {
@@ -26,6 +27,8 @@ class DescriptionView extends GetView<DescriptionController> {
     final controller = Get.put(DescriptionController());
     controller.setImages(data);
   }
+
+  final HomeController homeController = Get.put(HomeController());
 
   // final controller = Get.put(DescriptionController(), permanent: true);
 
@@ -267,7 +270,7 @@ class DescriptionView extends GetView<DescriptionController> {
                     style: kTitleTextstyle.copyWith(fontSize: 15.0.sp),
                   ),
                 ),
-                gapHeight(size: 1.5.h),
+                gapHeight(size: 8.0.h),
                 // ***********Roww************ */
 
                 Padding(
@@ -288,26 +291,38 @@ class DescriptionView extends GetView<DescriptionController> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'User 0123',
+                                data.customer?.name ?? 'No Name',
                                 style: kSubtitleStyle,
                               ),
-                              Text(
-                                'Member since jun 5,2023',
-                                style: kSubtitleStyle,
-                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    'Joined At : ',
+                                    style: kSubtitleStyle,
+                                  ),
+                                  Text(
+                                    DateFormat('MM dd yyyy').format(
+                                        DateTime.parse(data.customer!.createdAt
+                                            .toString())),
+                                    style: kSubtitleStyle,
+                                  ),
+                                ],
+                              )
                             ],
                           ),
                         ],
                       ),
-                      Image.asset(
-                        Img.message,
-                        scale: 4,
-                      ),
+                      IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.message_outlined,
+                            color: Colors.blue,
+                          ))
                     ],
                   ),
                 ),
                 // ***********What’s Nearby***********
-
+                gapHeight(size: 8.0.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0.w),
                   child: Text(
@@ -431,18 +446,23 @@ class DescriptionView extends GetView<DescriptionController> {
                           padding: EdgeInsets.symmetric(horizontal: 5.0.w),
                           child: Row(
                             children: [
+                              Text('Me: '),
                               Icon(
                                 Icons.location_on,
                                 color: LightThemeColors.redColor,
                                 size: 20,
                               ),
                               gapWidth(size: 5.0.w),
-                              Text(
-                                "DHANMONDI, Road 12/A, Dhaka",
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                style: kSubtitleStyle,
-                              ),
+                              Obx(() {
+                                final location =
+                                    homeController.currentLocation.value;
+                                return Text(
+                                  location != null
+                                      ? "${location.locality}, ${location.country}"
+                                      : "UAE, Dubai",
+                                  style: kSubtitleStyle,
+                                );
+                              }),
                             ],
                           ),
                         ),
@@ -512,6 +532,9 @@ class DescriptionView extends GetView<DescriptionController> {
                             ontap: () => Get.toNamed(
                               Routes.APPLY,
                               arguments: {
+                                'currency': data.currency,
+                                'price': data.price,
+                                'priceType': data.priceType,
                                 'serviceId': data.id,
                                 'title': data.title,
                                 'description': data.description,
