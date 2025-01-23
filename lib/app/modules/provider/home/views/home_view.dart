@@ -386,13 +386,44 @@ class HomeView extends GetView<HomeController> {
                                         onWishlistTap: () {
                                           if (service.id != null) {
                                             print(
-                                                'Attempting to toggle wishlist');
-                                            favoriteController.createWishlist(
-                                              service.id.toString(),
-                                              3, // Your provider ID
-                                            );
+                                                'Wishlist button tapped for service ${service.id}');
+
+                                            // Find if this service is already in wishlist
+                                            final wishlistItem =
+                                                favoriteController
+                                                    .favoriteServices
+                                                    .firstWhereOrNull((item) =>
+                                                        item.service?.id ==
+                                                        service.id);
+
+                                            if (wishlistItem != null) {
+                                              // If it exists in wishlist, delete it
+                                              print(
+                                                  'Service found in wishlist. Deleting wishlist item ${wishlistItem.id}');
+                                              favoriteController.deleteWishlist(
+                                                  wishlistItem.id!,
+                                                  service.id.toString());
+                                            } else {
+                                              // If it doesn't exist in wishlist, create it
+                                              print(
+                                                  'Service not in wishlist. Creating new wishlist item');
+                                              favoriteController.createWishlist(
+                                                service.id.toString(),
+                                                3, // Your provider ID
+                                              );
+                                            }
                                           }
                                         },
+                                        // onWishlistTap: () {
+                                        //   if (service.id != null) {
+                                        //     print(
+                                        //         'Attempting to toggle wishlist');
+                                        //     favoriteController.createWishlist(
+                                        //       service.id.toString(),
+                                        //       3, // Your provider ID
+                                        //     );
+                                        //   }
+                                        // },
                                         imgPath:
                                             service.images?.isNotEmpty == true
                                                 ? service.images!.first.path
