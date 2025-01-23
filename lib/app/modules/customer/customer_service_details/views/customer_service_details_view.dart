@@ -8,7 +8,9 @@ import 'package:dirham_uae/config/theme/my_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
+import '../../../../components/expandable_text.dart';
 import '../controllers/customer_service_details_controller.dart';
 
 class CustomerServiceDetailsView
@@ -115,19 +117,30 @@ class CustomerServiceDetailsView
                   // Location Section
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15.0.w),
-                    child: Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(
-                          Icons.location_on,
-                          color: LightThemeColors.whiteColor,
-                          size: 15,
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.location_on,
+                              color: LightThemeColors.whiteColor,
+                              size: 15,
+                            ),
+                            gapWidth(size: 2.0.w),
+                            Expanded(
+                              child: Text(
+                                serviceData.location ??
+                                    'Location not available',
+                                style: kSubtitleStyle,
+                              ),
+                            ),
+                          ],
                         ),
-                        gapWidth(size: 2.0.w),
-                        Expanded(
-                          child: Text(
-                            serviceData.location ?? 'Location not available',
-                            style: kSubtitleStyle,
-                          ),
+                        gapHeight(size: 10.0.h),
+                        Text(
+                          'Posted at: ${DateFormat('dd-MM-yy hh:mm a').format(DateTime.parse(serviceData.createdAt!))}',
+                          style: kSubtitleStyle,
                         ),
                       ],
                     ),
@@ -181,8 +194,9 @@ class CustomerServiceDetailsView
 
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 15.0.w),
-                    child: Text(
-                      serviceData.description ?? 'No description available',
+                    child: ExpandableText(
+                      text:
+                          serviceData.description ?? 'No description available',
                       style: kSubtitleStyle,
                     ),
                   ),
@@ -190,6 +204,7 @@ class CustomerServiceDetailsView
                   gapHeight(size: 20),
 
                   // Skills Section
+
                   if (serviceData.skills != null &&
                       serviceData.skills!.isNotEmpty) ...[
                     Padding(
@@ -205,7 +220,7 @@ class CustomerServiceDetailsView
                       child: Wrap(
                         spacing: 8.0,
                         runSpacing: 8.0,
-                        children: serviceData.skills!.map((skill) {
+                        children: (serviceData.skills ?? []).map((skill) {
                           return Container(
                             padding: EdgeInsets.symmetric(
                               horizontal: 12.0.w,

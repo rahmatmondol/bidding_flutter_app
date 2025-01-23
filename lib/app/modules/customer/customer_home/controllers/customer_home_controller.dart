@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../customer_pick_location/model/location_model.dart';
+import '../../../global/customer_pick_location/model/location_model.dart';
 
 class CustomerHomeController extends GetxController {
   Rx<GetCustomerServiceModel> getCustomerModel = GetCustomerServiceModel().obs;

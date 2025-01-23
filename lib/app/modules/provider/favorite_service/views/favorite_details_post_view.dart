@@ -1,7 +1,5 @@
-import 'dart:convert';
-
 import 'package:dirham_uae/app/components/custom_appBar.dart';
-import 'package:dirham_uae/app/modules/provider/home/models/provider_service_model.dart';
+import 'package:dirham_uae/app/modules/provider/favorite_service/model/fevorite_model.dart';
 import 'package:dirham_uae/config/theme/light_theme_colors.dart';
 import 'package:dirham_uae/utils/global_variable/my_scaffold_background.dart';
 import 'package:flutter/material.dart';
@@ -18,19 +16,17 @@ import '../../../../components/custom_button.dart';
 import '../../../../components/full_map_view.dart';
 import '../../../../routes/app_pages.dart';
 import '../../home/controllers/home_controller.dart';
-import '../controllers/description_controller.dart';
+import '../controllers/favorite_service_controller.dart';
 
-class DescriptionView extends GetView<DescriptionController> {
+class FavoriteDetailsView extends GetView<FavoriteServiceController> {
   final Service data;
 
-  DescriptionView(this.data, {Key? key}) : super(key: key) {
-    final controller = Get.put(DescriptionController());
+  FavoriteDetailsView(this.data, {Key? key}) : super(key: key) {
+    final controller = Get.put(FavoriteServiceController());
     controller.setImages(data);
   }
 
   final HomeController homeController = Get.put(HomeController());
-
-  // final controller = Get.put(DescriptionController(), permanent: true);
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +63,7 @@ class DescriptionView extends GetView<DescriptionController> {
                       Row(
                         children: [
                           Container(
-                            width: 200, // Fixed width
+                            width: 200,
                             child: Text(
                               data.location.toString(),
                               style: TextStyle(color: Colors.grey[400]),
@@ -80,7 +76,6 @@ class DescriptionView extends GetView<DescriptionController> {
                     ],
                   ),
                 ),
-
                 gapHeight(size: 10.0.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0.w),
@@ -99,7 +94,6 @@ class DescriptionView extends GetView<DescriptionController> {
                   ),
                 ),
                 gapHeight(size: 10.0.h),
-
                 Container(
                   height: 280.0,
                   color: LightThemeColors.secounderyColor,
@@ -107,8 +101,6 @@ class DescriptionView extends GetView<DescriptionController> {
                   child: Stack(
                     children: [
                       Obx(() {
-                        print('Current index: ${controller.currenIndex.value}');
-                        print('Images length: ${controller.images.length}');
                         return SizedBox(
                           width: size.width,
                           height: 280.0,
@@ -176,7 +168,6 @@ class DescriptionView extends GetView<DescriptionController> {
                     ],
                   ),
                 ),
-                // ******Describe*********
                 gapHeight(size: 10.0.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0.w),
@@ -193,9 +184,10 @@ class DescriptionView extends GetView<DescriptionController> {
                       color: LightThemeColors.primaryColor,
                     ),
                     moreStyle: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                        color: LightThemeColors.primaryColor),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: LightThemeColors.primaryColor,
+                    ),
                   ),
                 ),
                 divider,
@@ -207,30 +199,30 @@ class DescriptionView extends GetView<DescriptionController> {
                   ),
                 ),
                 gapHeight(size: 7.0.h),
-                //*********Skills list********* */
-
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0.w),
                   child: Container(
                     padding: EdgeInsets.only(
-                        left: 8.0.w, right: 8.0.w, top: 3.0.h, bottom: 3.0.h),
+                      left: 8.0.w,
+                      right: 8.0.w,
+                      top: 3.0.h,
+                      bottom: 3.0.h,
+                    ),
                     decoration: BoxDecoration(
                       color: LightThemeColors.grayColor,
                       borderRadius: BorderRadius.circular(10.0.r),
                     ),
                     child: Text(
-                      // If skills is a JSON string, parse it first
                       data.skills != null
                           ? (data.skills is String
-                                  ? List<String>.from(json.decode(data.skills!))
+                                  ? List<String>.from(data.skills!)
                                   : data.skills as List<String>)
-                              .join(", ") // Join with comma and space
+                              .join(", ")
                           : "No skills",
                     ),
                   ),
                 ),
                 divider,
-                // ***********Active on this job ***********
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0.w),
                   child: Text(
@@ -239,7 +231,6 @@ class DescriptionView extends GetView<DescriptionController> {
                   ),
                 ),
                 gapHeight(size: 2.0.h),
-                //*********************** */
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0.w),
                   child: Row(
@@ -253,7 +244,8 @@ class DescriptionView extends GetView<DescriptionController> {
                         children: [
                           Text(
                             DateFormat('MM dd yyyy, hh:mm aaa').format(
-                                DateTime.parse(data.createdAt.toString())),
+                              DateTime.parse(data.createdAt.toString()),
+                            ),
                             style: TextStyle(color: Colors.grey[400]),
                           ),
                         ],
@@ -262,7 +254,6 @@ class DescriptionView extends GetView<DescriptionController> {
                   ),
                 ),
                 gapHeight(size: 8.0.w),
-                // ***********Provider information ***********
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0.w),
                   child: Text(
@@ -271,12 +262,9 @@ class DescriptionView extends GetView<DescriptionController> {
                   ),
                 ),
                 gapHeight(size: 8.0.h),
-                // ***********Roww************ */
-
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0.w),
                   child: Row(
-                    //mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
@@ -284,7 +272,8 @@ class DescriptionView extends GetView<DescriptionController> {
                           CircleAvatar(
                             radius: 30.0,
                             backgroundImage: NetworkImage(
-                                'https://picsum.photos/seed/821/600'),
+                              'https://picsum.photos/seed/821/600',
+                            ),
                           ),
                           gapWidth(size: 10.0.w),
                           Column(
@@ -302,8 +291,10 @@ class DescriptionView extends GetView<DescriptionController> {
                                   ),
                                   Text(
                                     DateFormat('MM dd yyyy').format(
-                                        DateTime.parse(data.customer!.createdAt
-                                            .toString())),
+                                      DateTime.parse(
+                                        data.customer!.createdAt.toString(),
+                                      ),
+                                    ),
                                     style: kSubtitleStyle,
                                   ),
                                 ],
@@ -313,29 +304,26 @@ class DescriptionView extends GetView<DescriptionController> {
                         ],
                       ),
                       IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.message_outlined,
-                            color: Colors.blue,
-                          ))
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.message_outlined,
+                          color: Colors.blue,
+                        ),
+                      )
                     ],
                   ),
                 ),
-                // ***********What’s Nearby***********
                 gapHeight(size: 8.0.h),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0.w),
                   child: Text(
-                    "What’s Nearby",
+                    "What's Nearby",
                     style: kTitleTextstyle.copyWith(fontSize: 15.0.sp),
                   ),
                 ),
                 gapHeight(size: 8.0.h),
-
-                // *********Container************
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0.w),
-                  //*******Frist Container******* */
                   child: Container(
                     height: size.height / 2.2,
                     width: size.width,
@@ -346,11 +334,11 @@ class DescriptionView extends GetView<DescriptionController> {
                     child: Column(
                       children: [
                         gapHeight(size: 3.0.h),
-
                         Container(
                           height: size.height / 5.7,
                           decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15)),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
                             child: GoogleMap(
@@ -375,32 +363,7 @@ class DescriptionView extends GetView<DescriptionController> {
                             ),
                           ),
                         ),
-
-                        // Container(
-
-                        //   height: size.height / 7,
-                        //   width: size.width,
-                        //   decoration: BoxDecoration(
-                        //     borderRadius: BorderRadius.circular(5.0.r),
-                        //     // image: DecorationImage(
-                        //     //   image: AssetImage(Images.img1),
-                        //     // ),
-                        //   ),
-                        //   child: GoogleMap(
-                        //     initialCameraPosition: CameraPosition(
-                        //       target: sourseLocation,
-                        //       zoom: 10.5,
-                        //     ),
-                        //     markers: {
-                        //       Marker(
-                        //         markerId: MarkerId("Source"),
-                        //         position: sourseLocation,
-                        //       )
-                        //     },
-                        //   ),
-                        // ),
                         gapHeight(size: 12.0.h),
-                        //************* */
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 5.0.w),
                           child: Row(
@@ -433,15 +396,10 @@ class DescriptionView extends GetView<DescriptionController> {
                             ],
                           ),
                         ),
-
-                        //************************ */
-
                         Divider(
                           color: LightThemeColors.grayColor,
                           thickness: 1.0,
                         ),
-                        //********************* */
-
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 5.0.w),
                           child: Row(
@@ -466,9 +424,7 @@ class DescriptionView extends GetView<DescriptionController> {
                             ],
                           ),
                         ),
-                        //********************** */
                         divider,
-
                         GestureDetector(
                           onTap: () {
                             final lat =
@@ -523,7 +479,6 @@ class DescriptionView extends GetView<DescriptionController> {
                           ),
                         ),
                         divider,
-                        // ********* apply section *******
                         gapHeight(size: 5.0.h),
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 7.0),
@@ -540,8 +495,7 @@ class DescriptionView extends GetView<DescriptionController> {
                                 'description': data.description,
                                 'createdAt': data.createdAt,
                                 'skills': data.skills is String
-                                    ? List<String>.from(
-                                        json.decode(data.skills!))
+                                    ? List<String>.from(data.skills!)
                                     : data.skills as List<String>,
                               },
                             ),

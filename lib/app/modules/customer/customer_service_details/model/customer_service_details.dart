@@ -78,22 +78,6 @@ class ServiceData {
   });
 
   factory ServiceData.fromJson(Map<String, dynamic> json) {
-    // Parse skills from JSON string
-    // List<String> parseSkills(dynamic skillsData) {
-    //   if (skillsData == null) return [];
-    //   try {
-    //     if (skillsData is String) {
-    //       final List<dynamic> decoded = jsonDecode(skillsData);
-    //       return List<String>.from(decoded);
-    //     } else if (skillsData is List) {
-    //       return List<String>.from(skillsData);
-    //     }
-    //   } catch (e) {
-    //     print("Error parsing skills: $e");
-    //   }
-    //   return [];
-    // }
-
     return ServiceData(
       id: json["id"],
       title: json["title"],

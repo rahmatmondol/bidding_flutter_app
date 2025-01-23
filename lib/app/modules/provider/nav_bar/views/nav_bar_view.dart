@@ -1,13 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:dirham_uae/config/theme/light_theme_colors.dart';
 import 'package:dirham_uae/config/theme/my_images.dart';
 import 'package:dirham_uae/config/theme/my_styles.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+
 import '../controllers/nav_bar_controller.dart';
 
 class NavBarView extends GetView<NavBarController> {
   const NavBarView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
@@ -80,7 +83,7 @@ class NavBarView extends GetView<NavBarController> {
               gapWidth(size: 50),
               IconButton(
                 icon: Icon(
-                  Icons.bookmark,
+                  CupertinoIcons.heart_fill,
                   size: 25.r,
                 ),
                 color: controller.currentTab.value == 3

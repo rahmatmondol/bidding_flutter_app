@@ -50,4 +50,9 @@ class Constants {
   static const getAllServiceUrl = "$baseUrl/get-services";
   static const getCategoriesUrl = "$baseUrl/get-categories";
   static const createBidding = "$baseUrl/auth/create-bidding";
+  static const getBidding = "$baseUrl/auth/get-biddings";
+  static const createWishList = "$baseUrl/auth/create-wishlist";
+  static const getWishList = "$baseUrl/auth/get-wishlists";
+
+  static deleteWishList(id) => "$baseUrl/auth/delete-wishlist/$id";
 }

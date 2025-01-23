@@ -7,7 +7,7 @@ import '../../../../../config/theme/my_images.dart';
 import '../../../../../config/theme/my_styles.dart';
 import '../../../../components/custom_button.dart';
 import '../../../../routes/app_pages.dart';
-import '../../customer_pick_location/controllers/customer_pick_location_controller.dart';
+import '../../../global/customer_pick_location/controllers/customer_pick_location_controller.dart';
 
 class CustomerLocationView extends GetView<CustomerPickLocationController> {
   CustomerLocationView({Key? key}) : super(key: key);

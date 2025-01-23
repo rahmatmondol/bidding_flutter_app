@@ -12,6 +12,9 @@ class ApplyController extends GetxController {
   late int serviceId;
   late String title;
   late String description;
+  late String currency;
+  late double price = 0.0;
+  late String priceType;
   late List<String> skills;
   late DateTime createdAt;
 
@@ -20,13 +23,33 @@ class ApplyController extends GetxController {
     super.onInit();
     final args = Get.arguments;
     if (args != null) {
-      serviceId = args['serviceId'];
-      title = args['title'];
-      description = args['description'];
-      createdAt = args['createdAt'];
-      skills = List<String>.from(args['skills']);
+      currency = args['currency'] ?? '';
+      // Convert price to double safely
+      price = (args['price'] ?? 0.0).toDouble();
+      priceType = args['priceType'] ?? '';
+      serviceId = args['serviceId'] ?? 0;
+      title = args['title'] ?? '';
+      description = args['description'] ?? '';
+      createdAt = args['createdAt'] ?? DateTime.now();
+      skills = List<String>.from(args['skills'] ?? []);
     }
   }
+
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  //   final args = Get.arguments;
+  //   if (args != null) {
+  //     currency = args['currency'];
+  //     price = args['price'];
+  //     priceType = args['priceType'];
+  //     serviceId = args['serviceId'];
+  //     title = args['title'];
+  //     description = args['description'];
+  //     createdAt = args['createdAt'];
+  //     skills = List<String>.from(args['skills']);
+  //   }
+  // }
 
   Future<void> submitBid() async {
     try {
