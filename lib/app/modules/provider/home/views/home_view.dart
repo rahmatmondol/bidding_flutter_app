@@ -387,7 +387,7 @@ class HomeView extends GetView<HomeController> {
                                           if (service.id != null) {
                                             print(
                                                 'Attempting to toggle wishlist');
-                                            favoriteController.toggleWishlist(
+                                            favoriteController.createWishlist(
                                               service.id.toString(),
                                               3, // Your provider ID
                                             );

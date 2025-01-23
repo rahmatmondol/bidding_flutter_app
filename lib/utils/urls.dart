@@ -53,5 +53,6 @@ class Constants {
   static const getBidding = "$baseUrl/auth/get-biddings";
   static const createWishList = "$baseUrl/auth/create-wishlist";
   static const getWishList = "$baseUrl/auth/get-wishlists";
-  static const removeWishList = "$baseUrl/auth/delete-wishlist";
+
+  static deleteWishList(id) => "$baseUrl/auth/delete-wishlist/$id";
 }

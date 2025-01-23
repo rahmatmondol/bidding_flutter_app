@@ -1,53 +1,5 @@
-// // First, let's create the WishlistModel (wishlist_model.dart):
-// class FavoriteModel {
-//   final String? message;
-//   final int? status;
-//   final bool? success;
-//   final FavoriteListData? data;
-//
-//   FavoriteModel({
-//     this.message,
-//     this.status,
-//     this.success,
-//     this.data,
-//   });
-//
-//   factory FavoriteModel.fromJson(Map<String, dynamic> json) => FavoriteModel(
-//         message: json['message'],
-//         status: json['status'],
-//         success: json['success'],
-//         data: json['data'] != null
-//             ? FavoriteListData.fromJson(json['data'])
-//             : null,
-//       );
-// }
-//
-// class FavoriteListData {
-//   final String? serviceId;
-//   final int? providerId;
-//   final String? updatedAt;
-//   final String? createdAt;
-//   final int? id;
-//
-//   FavoriteListData({
-//     this.serviceId,
-//     this.providerId,
-//     this.updatedAt,
-//     this.createdAt,
-//     this.id,
-//   });
-//
-//   factory FavoriteListData.fromJson(Map<String, dynamic> json) =>
-//       FavoriteListData(
-//         serviceId: json['service_id']?.toString(),
-//         providerId: json['provider_id'],
-//         updatedAt: json['updated_at'],
-//         createdAt: json['created_at'],
-//         id: json['id'],
-//       );
-// }
+import 'dart:convert';
 
-// favorite_model.dart
 class FavoriteModel {
   String? message;
   int? status;
@@ -126,6 +78,129 @@ class WishlistItem {
   }
 }
 
+// class Service {
+//   int? id;
+//   String? title;
+//   String? slug;
+//   String? description;
+//   double? price;
+//   String? location;
+//   String? latitude;
+//   String? longitude;
+//   String? priceType;
+//   String? currency;
+//   String? status;
+//   String? level;
+//   String? postType;
+//   String? deadline;
+//   List<String>? skills;
+//   int? commission;
+//   int? isFeatured;
+//   int? categoryId;
+//   int? subCategoryId;
+//   int? userId;
+//   String? createdAt;
+//   String? updatedAt;
+//   Customer? customer;
+//   List<ServiceImage>? images;
+//
+//   Service({
+//     this.id,
+//     this.title,
+//     this.slug,
+//     this.description,
+//     this.price,
+//     this.location,
+//     this.latitude,
+//     this.longitude,
+//     this.priceType,
+//     this.currency,
+//     this.status,
+//     this.level,
+//     this.postType,
+//     this.deadline,
+//     this.skills,
+//     this.commission,
+//     this.isFeatured,
+//     this.categoryId,
+//     this.subCategoryId,
+//     this.userId,
+//     this.createdAt,
+//     this.updatedAt,
+//     this.customer,
+//     this.images,
+//   });
+//
+//   Service.fromJson(Map<String, dynamic> json) {
+//     id = json['id'];
+//     title = json['title'];
+//     slug = json['slug'];
+//     description = json['description'];
+//     price = json['price'] is int
+//         ? (json['price'] as int).toDouble()
+//         : json['price'];
+//     location = json['location'];
+//     latitude = json['latitude'];
+//     longitude = json['longitude'];
+//     priceType = json['priceType'];
+//     currency = json['currency'];
+//     status = json['status'];
+//     level = json['level'];
+//     postType = json['postType'];
+//     deadline = json['deadline'];
+//     skills = json['skills'] != null ? List<String>.from(json['skills']) : null;
+//     // skills = json['skills'] ?? [];
+//     commission = json['commission'];
+//     isFeatured = json['is_featured'];
+//     categoryId = json['category_id'];
+//     subCategoryId = json['sub_category_id'];
+//     userId = json['user_id'];
+//     createdAt = json['created_at'];
+//     updatedAt = json['updated_at'];
+//     customer =
+//         json['customer'] != null ? Customer.fromJson(json['customer']) : null;
+//     if (json['images'] != null) {
+//       images = <ServiceImage>[];
+//       json['images'].forEach((v) {
+//         images!.add(ServiceImage.fromJson(v));
+//       });
+//     }
+//   }
+//
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = <String, dynamic>{};
+//     data['id'] = id;
+//     data['title'] = title;
+//     data['slug'] = slug;
+//     data['description'] = description;
+//     data['price'] = price;
+//     data['location'] = location;
+//     data['latitude'] = latitude;
+//     data['longitude'] = longitude;
+//     data['priceType'] = priceType;
+//     data['currency'] = currency;
+//     data['status'] = status;
+//     data['level'] = level;
+//     data['postType'] = postType;
+//     data['deadline'] = deadline;
+//     data['skills'] = skills;
+//     data['commission'] = commission;
+//     data['is_featured'] = isFeatured;
+//     data['category_id'] = categoryId;
+//     data['sub_category_id'] = subCategoryId;
+//     data['user_id'] = userId;
+//     data['created_at'] = createdAt;
+//     data['updated_at'] = updatedAt;
+//     if (customer != null) {
+//       data['customer'] = customer!.toJson();
+//     }
+//     if (images != null) {
+//       data['images'] = images!.map((v) => v.toJson()).toList();
+//     }
+//     return data;
+//   }
+// }
+
 class Service {
   int? id;
   String? title;
@@ -196,8 +271,23 @@ class Service {
     level = json['level'];
     postType = json['postType'];
     deadline = json['deadline'];
-    skills = json['skills'] != null ? List<String>.from(json['skills']) : null;
-    // skills = json['skills'] ?? [];
+
+    // Handle skills parsing
+    try {
+      if (json['skills'] != null) {
+        if (json['skills'] is String) {
+          // Parse the string representation of the list
+          final List<dynamic> parsedSkills = jsonDecode(json['skills']);
+          skills = parsedSkills.map((e) => e.toString()).toList();
+        } else if (json['skills'] is List) {
+          skills = (json['skills'] as List).map((e) => e.toString()).toList();
+        }
+      }
+    } catch (e) {
+      print('Error parsing skills: $e');
+      skills = [];
+    }
+
     commission = json['commission'];
     isFeatured = json['is_featured'];
     categoryId = json['category_id'];

@@ -14,10 +14,9 @@ class FavoriteServiceView extends GetView<FavoriteServiceController> {
   final CustomerAccountDetailsController accountDetailsController =
       Get.put(CustomerAccountDetailsController());
 
-  // final accountDetails = accountDetailsController.customerInfo.value;
-
   @override
   Widget build(BuildContext context) {
+    print('FavoriteServiceView: build method called');
     final size = MediaQuery.sizeOf(context);
 
     return Scaffold(
@@ -45,6 +44,8 @@ class FavoriteServiceView extends GetView<FavoriteServiceController> {
             gapHeight(size: 20),
             Obx(() {
               final itemCount = controller.favoriteServices.length;
+              print(
+                  'FavoriteServiceView: Number of favorite services: $itemCount');
               return Text(
                 "You have saved $itemCount ${itemCount == 1 ? 'service' : 'services'} as favorites",
                 style: kSubtitleStyle.copyWith(fontWeight: FontWeight.bold),
@@ -53,59 +54,122 @@ class FavoriteServiceView extends GetView<FavoriteServiceController> {
             gapHeight(size: 10),
             Expanded(
               child: Obx(() {
+                print('FavoriteServiceView: Rebuild triggered by Obx');
+                print(
+                    'FavoriteServiceView: isLoading: ${controller.isLoading.value}');
+                print(
+                    'FavoriteServiceView: favoriteServices length: ${controller.favoriteServices.length}');
+
                 if (controller.isLoading.value) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
                 if (controller.favoriteServices.isEmpty) {
+                  print('FavoriteServiceView: No favorite services found');
                   return Center(
-                    child: Text(
-                      'No favorite services yet',
-                      style: kSubtitleStyle,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'No favorite services yet',
+                          style: kSubtitleStyle,
+                        ),
+                        gapHeight(size: 8),
+                        Text(
+                          'Add services to your favorites to see them here',
+                          style: kSubtitleStyle.copyWith(
+                            fontSize: 12.sp,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
                     ),
                   );
                 }
 
-                return ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  padding: EdgeInsets.zero,
-                  itemCount: controller.favoriteServices.length,
-                  itemBuilder: (context, index) {
-                    final item = controller.favoriteServices[index];
-                    final service = item.service;
+                print(
+                    'FavoriteServiceView: Building ListView with ${controller.favoriteServices.length} items');
+                return RefreshIndicator(
+                  onRefresh: () => controller.fetchWishlistedItems(),
+                  child: ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(
+                      parent: BouncingScrollPhysics(),
+                    ),
+                    padding: EdgeInsets.zero,
+                    itemCount: controller.favoriteServices.length,
+                    itemBuilder: (context, index) {
+                      final item = controller.favoriteServices[index];
+                      final service = item.service;
 
-                    if (service == null) return const SizedBox();
+                      print('FavoriteServiceView: Building item $index');
+                      print(
+                          'FavoriteServiceView: Service exists: ${service != null}');
 
-                    return Container(
-                      height: size.height * 0.25.h,
-                      padding: EdgeInsets.only(bottom: 10.r),
-                      child: PopularServiceCard(
-                        size: size,
-                        name: service.title ?? 'N/A',
-                        location: service.location ?? 'N/A',
-                        description: service.description ?? 'N/A',
-                        priceLevel:
-                            '${service.priceType ?? 'N/A'} - ${service.level ?? 'N/A'}',
-                        price: service.price?.toString() ?? 'N/A',
-                        skill: service.skills?.join(', ') ?? 'N/A',
-                        isWishlisted:
-                            controller.wishlistedItems[service.id.toString()] ??
-                                false,
-                        onWishlistTap: () {
-                          if (service.id != null) {
-                            controller.toggleWishlist(
-                              service.id.toString(),
-                              accountDetailsController.customerInfo.value?.id ??
-                                  0,
-                            );
-                          }
-                        },
-                        onTap: () {
-                          Get.to(() => FavoriteDetailsView(service));
-                        },
-                      ),
-                    );
-                  },
+                      if (service == null) {
+                        print(
+                            'FavoriteServiceView: Skipping null service at index $index');
+                        return const SizedBox();
+                      }
+
+                      print(
+                          'FavoriteServiceView: Building card for service ${service.id}');
+                      print(
+                          'FavoriteServiceView: Service title: ${service.title}');
+
+                      return Container(
+                        height: size.height * 0.25.h,
+                        padding: EdgeInsets.only(bottom: 10.r),
+                        child: PopularServiceCard(
+                          size: size,
+                          name: service.title ?? 'N/A',
+                          location: service.location ?? 'N/A',
+                          description: service.description ?? 'N/A',
+                          priceLevel:
+                              '${service.priceType ?? 'N/A'} - ${service.level ?? 'N/A'}',
+                          price:
+                              '${service.currency ?? 'USD'} ${service.price?.toString() ?? 'N/A'}',
+                          skill: service.skills?.join(', ') ?? 'N/A',
+                          isWishlisted: controller
+                                  .wishlistedItems[service.id.toString()] ??
+                              false,
+                          // onWishlistTap: () {
+                          //   if (service.id != null) {
+                          //     controller.createWishlist(
+                          //       service.id.toString(),
+                          //       accountDetailsController
+                          //               .customerInfo.value?.id ??
+                          //           0,
+                          //     );
+                          //   }
+                          // },
+                          onWishlistTap: () {
+                            if (service.id != null) {
+                              // Find the wishlist item for this service
+                              final wishlistItem = controller.favoriteServices
+                                  .firstWhereOrNull(
+                                      (item) => item.service?.id == service.id);
+
+                              if (wishlistItem != null) {
+                                // If it exists in wishlist, delete it using the wishlist ID
+                                controller.deleteWishlist(
+                                    wishlistItem.id!, service.id.toString());
+                              } else {
+                                // If it doesn't exist in wishlist, create it
+                                controller.createWishlist(
+                                  service.id.toString(),
+                                  accountDetailsController
+                                          .customerInfo.value?.id ??
+                                      0,
+                                );
+                              }
+                            }
+                          },
+                          onTap: () =>
+                              Get.to(() => FavoriteDetailsView(service)),
+                        ),
+                      );
+                    },
+                  ),
                 );
               }),
             ),
