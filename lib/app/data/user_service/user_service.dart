@@ -125,4 +125,19 @@ class UserService {
     prefs!.remove('token');
     prefs!.remove('token-provider');
   }
+
+  // Only remove customer data
+  removeCustomerData() async {
+    prefs = await SharedPreferences.getInstance();
+    prefs!.remove('is-user');
+    prefs!.remove('token');
+    prefs!.remove('user-id');
+  }
+
+// Only remove provider data
+  removeProviderData() async {
+    prefs = await SharedPreferences.getInstance();
+    prefs!.remove('is-user-provider');
+    prefs!.remove('token-provider');
+  }
 }

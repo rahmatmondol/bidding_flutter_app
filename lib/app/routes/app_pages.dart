@@ -72,8 +72,8 @@ import '../modules/provider/all_subCategory/bindings/all_sub_category_binding.da
 import '../modules/provider/all_subCategory/views/all_sub_category_view.dart';
 import '../modules/provider/apply/bindings/apply_binding.dart';
 import '../modules/provider/apply/views/apply_view.dart';
-import '../modules/provider/booking/bindings/booking_binding.dart';
-import '../modules/provider/booking/views/booking_view.dart';
+import '../modules/provider/booking/bindings/provider_booking_binding.dart';
+import '../modules/provider/booking/views/provider_booking_view.dart';
 import '../modules/provider/change_password/bindings/change_password_binding.dart';
 import '../modules/provider/change_password/views/change_password_view.dart';
 import '../modules/provider/chat/bindings/chat_binding.dart';
@@ -155,7 +155,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.NAV_BAR,
-      page: () => const NavBarView(),
+      page: () => NavBarView(),
       binding: NavBarBinding(),
     ),
     GetPage(
@@ -232,7 +232,7 @@ class AppPages {
 
     GetPage(
       name: _Paths.BOOKING,
-      page: () => const BookingView(),
+      page: () => const ProviderBookingView(),
       binding: BookingBinding(),
     ),
     GetPage(

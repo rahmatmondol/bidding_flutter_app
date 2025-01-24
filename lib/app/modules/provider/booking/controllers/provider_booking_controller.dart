@@ -1,15 +1,16 @@
 import 'dart:convert';
 
 import 'package:dirham_uae/app/data/user_service/user_service.dart';
-import 'package:dirham_uae/app/modules/customer/customer_booking/model/customer_booking_model.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-class CustomerBookingController extends GetxController {
+import '../model/provider_booking_model.dart';
+
+class ProviderBookingController extends GetxController {
   // Observable lists
-  final allBookings = <BookingModel>[].obs;
-  final completedBookings = <BookingModel>[].obs;
-  final acceptedBookings = <BookingModel>[].obs;
+  final allBookings = <ProviderBookingModel>[].obs;
+  final completedBookings = <ProviderBookingModel>[].obs;
+  final acceptedBookings = <ProviderBookingModel>[].obs;
 
   // Loading states
   final isAllLoading = false.obs;
@@ -31,7 +32,7 @@ class CustomerBookingController extends GetxController {
 
   // Helper method to get headers with token
   Future<Map<String, String>> _getHeaders() async {
-    final token = await _userService.getToken();
+    final token = await _userService.getTokenProvider();
     return {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
@@ -78,7 +79,7 @@ class CustomerBookingController extends GetxController {
       final data = _handleResponse(response);
       if (data != null && data['data'] is List) {
         final bookings = (data['data'] as List)
-            .map((item) => BookingModel.fromJson(item))
+            .map((item) => ProviderBookingModel.fromJson(item))
             .toList();
         allBookings.assignAll(bookings);
       }
@@ -107,7 +108,7 @@ class CustomerBookingController extends GetxController {
       final data = _handleResponse(response);
       if (data != null && data['data'] is List) {
         final bookings = (data['data'] as List)
-            .map((item) => BookingModel.fromJson(item))
+            .map((item) => ProviderBookingModel.fromJson(item))
             .toList();
         completedBookings.assignAll(bookings);
       }
@@ -136,7 +137,7 @@ class CustomerBookingController extends GetxController {
       final data = _handleResponse(response);
       if (data != null && data['data'] is List) {
         final bookings = (data['data'] as List)
-            .map((item) => BookingModel.fromJson(item))
+            .map((item) => ProviderBookingModel.fromJson(item))
             .toList();
         acceptedBookings.assignAll(bookings);
       }

@@ -45,7 +45,7 @@ class Constants {
   static const providerLogOutUpUrl = baseUrl + "api/v1/auth/provider/logout";
   static const providerChnagePasswordUrl = "$baseUrl/auth/change-password";
   static const providerInfoUpdateUrl = "$baseUrl/auth/update-profile";
-  static const getProviderInfo = baseUrl + "api/v1/auth/provider";
+  static const getProviderInfo = "$baseUrl/auth/get-user-info";
   static const getZoneId = "$baseUrl/get-categories";
   static const getAllServiceUrl = "$baseUrl/get-services";
   static const getCategoriesUrl = "$baseUrl/get-categories";

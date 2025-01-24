@@ -9,7 +9,9 @@ import 'package:get/get.dart';
 import '../controllers/nav_bar_controller.dart';
 
 class NavBarView extends GetView<NavBarController> {
-  const NavBarView({Key? key}) : super(key: key);
+  NavBarView({Key? key}) : super(key: key);
+
+  NavBarController controller = Get.put(NavBarController());
 
   @override
   Widget build(BuildContext context) {

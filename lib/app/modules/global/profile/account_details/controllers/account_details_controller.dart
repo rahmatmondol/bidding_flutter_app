@@ -24,7 +24,7 @@ class CustomerAccountDetailsController extends GetxController {
     update();
 
     try {
-      String? token;
+      String? token = '';
       if (await _userService.isUser()) {
         token = await _userService.getToken();
       } else if (await _userService.isProvider()) {

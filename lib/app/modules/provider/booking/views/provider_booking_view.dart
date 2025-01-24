@@ -1,18 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import 'package:get/get.dart';
-import 'package:dirham_uae/app/modules/provider/booking/tabs/accept_service_tab.dart';
-import 'package:dirham_uae/app/modules/provider/booking/tabs/all_service_tab.dart';
-import 'package:dirham_uae/app/modules/provider/booking/tabs/complete_tab.dart';
 import 'package:dirham_uae/config/theme/light_theme_colors.dart';
 import 'package:dirham_uae/config/theme/my_images.dart';
 import 'package:dirham_uae/config/theme/my_styles.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
-import '../controllers/booking_controller.dart';
+import '../controllers/provider_booking_controller.dart';
+import '../tabs/all_service_tab.dart';
+import '../tabs/provider_accept_service_tab.dart';
+import '../tabs/provider_complete_tab.dart';
 
-class BookingView extends GetView<BookingController> {
-  const BookingView({Key? key}) : super(key: key);
+class ProviderBookingView extends GetView<ProviderBookingController> {
+  const ProviderBookingView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,9 +85,9 @@ class BookingView extends GetView<BookingController> {
               Expanded(
                 child: TabBarView(
                   children: [
-                    AllServiceTab(),
-                    CompleteServiceTab(),
-                    AcceptServiceTab(),
+                    ProviderAllServiceTab(),
+                    ProviderCompleteServiceTab(),
+                    ProviderAcceptServices(),
                   ],
                 ),
               ),

@@ -26,7 +26,7 @@ class ReviewView extends GetView<ReviewController> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              CustomHeaderBar(title: 'Review'),
+              CustomHeaderBar(title: 'Review Now'),
               gapHeight(size: 20),
               CircleAvatar(
                 radius: 60.r,
@@ -110,7 +110,7 @@ class ReviewView extends GetView<ReviewController> {
                               decoration: InputDecoration(
                                   hintText:
                                       "Tell us same things about this service",
-                                  hintStyle: TextStyle(color: Colors.white),
+                                  hintStyle: TextStyle(color: Colors.black12),
                                   border: InputBorder.none),
                             ),
                           ),

@@ -284,7 +284,7 @@ class DescriptionView extends GetView<DescriptionController> {
                           CircleAvatar(
                             radius: 30.0,
                             backgroundImage: NetworkImage(
-                                'https://picsum.photos/seed/821/600'),
+                                data.customer?.profile?.image ?? ''),
                           ),
                           gapWidth(size: 10.0.w),
                           Column(

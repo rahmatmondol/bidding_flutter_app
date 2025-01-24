@@ -414,16 +414,7 @@ class HomeView extends GetView<HomeController> {
                                             }
                                           }
                                         },
-                                        // onWishlistTap: () {
-                                        //   if (service.id != null) {
-                                        //     print(
-                                        //         'Attempting to toggle wishlist');
-                                        //     favoriteController.createWishlist(
-                                        //       service.id.toString(),
-                                        //       3, // Your provider ID
-                                        //     );
-                                        //   }
-                                        // },
+
                                         imgPath:
                                             service.images?.isNotEmpty == true
                                                 ? service.images!.first.path
@@ -435,8 +426,8 @@ class HomeView extends GetView<HomeController> {
                                                 'N/A',
                                         title:
                                             service.title?.toString() ?? 'N/A',
-                                        reviewsPoint: "4.9/5",
-                                        reviewsText: "(306 Reviews)",
+                                        reviewsPoint: "",
+                                        reviewsText: "",
                                         size: size,
                                         price: service.price?.toString() ?? '0',
                                       );

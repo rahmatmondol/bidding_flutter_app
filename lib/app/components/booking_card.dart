@@ -32,6 +32,7 @@ class BookingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: size.height * 0.28,
       // width: size.width * 0.8,
       // margin: EdgeInsets.only(left: 14.r),
       padding: EdgeInsets.symmetric(horizontal: 12.r, vertical: 8.r),
