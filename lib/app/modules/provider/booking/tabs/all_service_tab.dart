@@ -97,6 +97,7 @@ class ProviderAllServiceTab extends StatelessWidget {
                               // isButton: shouldShowButton(booking.status),
                               isButton: false,
                               buttonText: getButtonText(booking.status),
+                              showFavorite: false,
                               onTap: () {
                                 if (booking.status.toLowerCase() ==
                                     "accepted") {

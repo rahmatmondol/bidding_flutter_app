@@ -57,7 +57,7 @@ class ProviderBookingView extends GetView<ProviderBookingController> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(Img.allServiceIcon),
-                      gapWidth(size: 4),
+                      gapWidth(size: 2),
                       Text(
                         "All Service",
                       ),

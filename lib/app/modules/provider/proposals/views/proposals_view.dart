@@ -1,10 +1,10 @@
 import 'package:dirham_uae/app/components/custom_appBar.dart';
-import 'package:dirham_uae/config/theme/light_theme_colors.dart';
 import 'package:dirham_uae/config/theme/my_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../../../components/proposal_card.dart';
 import '../controllers/proposals_controller.dart';
 
 // proposals_view.dart
@@ -44,9 +44,11 @@ class ProposalsView extends GetView<ProposalsController> {
                       return Container(
                         margin: EdgeInsets.only(bottom: 20.r),
                         child: ProposalCard(
-                          name: bid.amount.toString(),
-                          date: bid.createdAt.toString(),
-                          duration: bid.createdAt.toString(),
+                          name: bid.service.title.toString(),
+                          date: bid.createdAt.toFormattedDate(),
+                          // Shows as "26 Jan 24"
+
+                          duration: bid.updatedAt.getDurationFromNow(),
                           status: bid.status.capitalizeFirst ?? 'Unknown',
                           ontap: () {
                             // Handle tap
@@ -65,85 +67,42 @@ class ProposalsView extends GetView<ProposalsController> {
   }
 }
 
-class ProposalCard extends StatelessWidget {
-  final String name;
-  final String date;
-  final String duration;
-  final String status;
-  final VoidCallback ontap;
+extension DateTimeExtension on DateTime {
+  String toFormattedDate() {
+    final months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
+    ];
 
-  const ProposalCard({
-    super.key,
-    required this.name,
-    required this.date,
-    required this.duration,
-    required this.status,
-    required this.ontap,
-  });
-
-  Color _getStatusColor(String status) {
-    return switch (status.toLowerCase()) {
-      'pending' => Colors.orange,
-      'accepted' => Colors.green,
-      'completed' => LightThemeColors.primaryColor,
-      _ => Colors.grey,
-    };
+    return '${day.toString().padLeft(2, '0')} ${months[month - 1]} ${year.toString().substring(2)}';
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: ontap,
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: kTitleTextstyle.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    gapHeight(size: 5),
-                    Row(
-                      children: [
-                        Text(
-                          date,
-                          style: kSubtitleStyle,
-                        ),
-                        gapWidth(size: 10),
-                        Expanded(
-                          child: Text(
-                            duration,
-                            style: kSubtitleStyle.copyWith(
-                              fontSize: 10.sp,
-                              color: LightThemeColors.secounderyTextColor,
-                            ),
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              Text(
-                status,
-                style: kSubtitleStyle.copyWith(
-                  color: _getStatusColor(status),
-                  fontWeight: FontWeight.bold,
-                ),
-              )
-            ],
-          ),
-          Divider(thickness: 2),
-        ],
-      ),
-    );
+  String getDurationFromNow() {
+    final now = DateTime.now();
+    final difference = now.difference(this);
+
+    // Convert to days
+    final days = difference.inDays;
+
+    if (days >= 30) {
+      final months = (days / 30).floor();
+      return months == 1 ? '1 month ago' : '$months months ago';
+    } else {
+      return days == 1 ? '1 day ago' : '$days days ago';
+    }
   }
 }
+
+// Usage example:
+// String date = bid.createdAt.toFormattedDate();     // "26 Jan 24"
+// String duration = bid.updatedAt.getDurationFromNow(); // "15 days ago" or "2 months ago"

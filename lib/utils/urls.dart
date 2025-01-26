@@ -30,8 +30,6 @@ class Constants {
       '$baseUrl/auth/get-bidding-info?bid_id=$id';
 
   static const acceptBooking = "$baseUrl/auth/create-booking";
-  static const String google_api_key =
-      "AIzaSyCc9NIB-ScnkTvQZzrB53TfaCwo1XUegHM";
 
   static String getSubCategoryByID(int categoryId) =>
       '$baseUrl/get-subcategories?category_id=$categoryId';
@@ -55,4 +53,7 @@ class Constants {
   static const getWishList = "$baseUrl/auth/get-wishlists";
 
   static deleteWishList(id) => "$baseUrl/auth/delete-wishlist/$id";
+
+  static const String google_api_key =
+      "AIzaSyCc9NIB-ScnkTvQZzrB53TfaCwo1XUegHM";
 }

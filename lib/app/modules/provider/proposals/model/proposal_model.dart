@@ -9,6 +9,7 @@ class Bid {
   final int customerId;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final Service service;
 
   Bid({
     required this.id,
@@ -21,6 +22,7 @@ class Bid {
     required this.customerId,
     required this.createdAt,
     required this.updatedAt,
+    required this.service,
   });
 
   factory Bid.fromJson(Map<String, dynamic> json) {
@@ -37,6 +39,30 @@ class Bid {
       customerId: json['customer_id'] ?? 0,
       createdAt: DateTime.tryParse(json['created_at'] ?? '') ?? DateTime.now(),
       updatedAt: DateTime.tryParse(json['updated_at'] ?? '') ?? DateTime.now(),
+      service: Service.fromJson(json['service'] as Map<String, dynamic>? ?? {}),
     );
   }
+}
+
+class Service {
+  final int id;
+  final String title;
+
+  const Service({
+    required this.id,
+    required this.title,
+  });
+
+  factory Service.fromJson(Map<String, dynamic> json) => Service(
+        id: json['id'] as int? ?? 0,
+        title: json['title'] as String? ?? '',
+      );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+      };
+
+  @override
+  String toString() => 'Service(id: $id, title: $title)';
 }

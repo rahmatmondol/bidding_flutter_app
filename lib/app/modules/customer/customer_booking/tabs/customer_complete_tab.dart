@@ -70,6 +70,7 @@ class CustomerCompleteServiceTab extends StatelessWidget {
                         priceLevel:
                             "${booking.service.priceType}- ${booking.service.level}",
                         price: booking.bid.amount.toString(),
+                        showFavorite: false,
                         isButton: true,
                         buttonText: 'Review Now',
                         onTap: () => controller.handleReview(booking.id),

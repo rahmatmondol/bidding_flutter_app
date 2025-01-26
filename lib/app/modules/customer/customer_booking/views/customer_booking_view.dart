@@ -1,16 +1,17 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:dirham_uae/app/modules/customer/customer_booking/controllers/customer_booking_controller.dart';
-import 'package:dirham_uae/app/modules/customer/customer_booking/tabs/customer_all_service_tab.dart';
 import 'package:dirham_uae/app/modules/customer/customer_booking/tabs/customer_accept_services.dart';
+import 'package:dirham_uae/app/modules/customer/customer_booking/tabs/customer_all_service_tab.dart';
 import 'package:dirham_uae/app/modules/customer/customer_booking/tabs/customer_complete_tab.dart';
 import 'package:dirham_uae/config/theme/light_theme_colors.dart';
 import 'package:dirham_uae/config/theme/my_images.dart';
 import 'package:dirham_uae/config/theme/my_styles.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 class CustomerBookingView extends GetView<CustomerBookingController> {
   const CustomerBookingView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +56,7 @@ class CustomerBookingView extends GetView<CustomerBookingController> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(Img.allServiceIcon),
-                      gapWidth(size: 4),
+                      gapWidth(size: 2.r),
                       Text(
                         "All Service",
                       ),

@@ -110,6 +110,7 @@ class CustomerHomeView extends GetView<CustomerHomeController> {
                             price:
                                 "${serviceData.price.toStringAsFixed(2)} ${serviceData.currency?.toUpperCase() ?? 'AED'}",
                             skill: serviceData.skills?.join(", "),
+                            showFavorite: false,
                             onTap: () {
                               final id = serviceData.id;
                               if (id != null) {
@@ -371,6 +372,7 @@ class CustomerHomeView extends GetView<CustomerHomeController> {
             ],
           ),
         ),
+        gapWidth(size: 2.r),
         SmallCustomButton(
           color: LightThemeColors.secounderyColor,
           ontap: () async {

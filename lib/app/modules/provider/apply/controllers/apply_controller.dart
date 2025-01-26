@@ -30,7 +30,17 @@ class ApplyController extends GetxController {
       serviceId = args['serviceId'] ?? 0;
       title = args['title'] ?? '';
       description = args['description'] ?? '';
-      createdAt = args['createdAt'] ?? DateTime.now();
+      // Handle createdAt based on its type
+      if (args['createdAt'] is DateTime) {
+        createdAt = args['createdAt'];
+      } else if (args['createdAt'] is String) {
+        createdAt = DateTime.parse(args['createdAt']);
+      } else {
+        createdAt = DateTime.now();
+      }
+      // createdAt = args['createdAt'] != null
+      //     ? DateTime.parse(args['createdAt'])
+      //     : DateTime.now();
       skills = List<String>.from(args['skills'] ?? []);
     }
   }

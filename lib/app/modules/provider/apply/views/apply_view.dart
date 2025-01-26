@@ -38,7 +38,7 @@ class ApplyView extends GetView<ApplyController> {
                   ),
                   gapHeight(size: 8.0.h),
                   //**************row ************/
-                  Row(
+                  Wrap(
                     children: [
                       Container(
                         padding: EdgeInsets.only(

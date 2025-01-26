@@ -13,6 +13,8 @@ class BookingCard extends StatelessWidget {
   final String? buttonText;
   final bool? isButton;
   final Function()? onTap;
+  final bool showFavorite;
+  final List<String>? skills;
 
   const BookingCard({
     super.key,
@@ -25,6 +27,8 @@ class BookingCard extends StatelessWidget {
     required this.price,
     this.isButton = false,
     this.onTap,
+    this.showFavorite = true,
+    this.skills,
   });
 
   final Size size;
@@ -32,7 +36,7 @@ class BookingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: size.height * 0.28,
+      // height: size.height * 0.35,
       // width: size.width * 0.8,
       // margin: EdgeInsets.only(left: 14.r),
       padding: EdgeInsets.symmetric(horizontal: 12.r, vertical: 8.r),
@@ -60,8 +64,8 @@ class BookingCard extends StatelessWidget {
                       ),
                     ),
                     gapHeight(size: 4),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    Wrap(
+                      // crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Icon(
                           Icons.location_on,
@@ -71,6 +75,7 @@ class BookingCard extends StatelessWidget {
                         gapWidth(size: 5),
                         Text(
                           location!,
+                          overflow: TextOverflow.ellipsis,
                           style: kSubtitleStyle.copyWith(
                             color: LightThemeColors.whiteColor,
                           ),
@@ -80,10 +85,11 @@ class BookingCard extends StatelessWidget {
                   ],
                 ),
               ),
-              CircleAvatar(
-                backgroundColor: LightThemeColors.keywordBoxColor,
-                child: Icon(Icons.favorite_border),
-              )
+              if (showFavorite)
+                CircleAvatar(
+                  backgroundColor: LightThemeColors.keywordBoxColor,
+                  child: Icon(Icons.favorite_border),
+                )
             ],
           ),
           gapHeight(size: 10),
@@ -123,7 +129,7 @@ class BookingCard extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            "Electronics",
+                            skills?[index] ?? '',
                             style: kSubtitleStyle.copyWith(
                                 color: LightThemeColors.whiteColor),
                           ),

@@ -72,6 +72,7 @@ class ProviderAcceptServices extends StatelessWidget {
                             "${booking.service.priceType}- ${booking.service.level}",
                         price: booking.bid.amount.toString(),
                         isButton: false,
+                        showFavorite: false,
                         buttonText: 'Cancel',
                         onTap: () => controller.cancelBooking(booking.id),
                       ),

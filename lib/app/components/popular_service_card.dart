@@ -192,6 +192,7 @@ class PopularServiceCard extends StatelessWidget {
   final Function()? onTap;
   final bool isWishlisted; // New parameter
   final Function()? onWishlistTap; // New parameter for handling wishlist taps
+  final bool showFavorite; // Add this new parameter
 
   const PopularServiceCard({
     super.key,
@@ -206,6 +207,7 @@ class PopularServiceCard extends StatelessWidget {
     this.skill,
     this.isWishlisted = false, // Default to false
     this.onWishlistTap,
+    this.showFavorite = true, // Default to true for backward compatibility
   });
 
   final Size size;
@@ -215,6 +217,7 @@ class PopularServiceCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
+        // height: size.height * 0.55,
         padding: EdgeInsets.symmetric(horizontal: 12.r, vertical: 8.r),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.r),
@@ -262,18 +265,19 @@ class PopularServiceCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                InkWell(
-                  onTap: onWishlistTap,
-                  child: CircleAvatar(
-                    backgroundColor: LightThemeColors.keywordBoxColor,
-                    child: Icon(
-                      isWishlisted ? Icons.favorite : Icons.favorite_border,
-                      color: isWishlisted
-                          ? Colors.red
-                          : LightThemeColors.whiteColor,
+                if (showFavorite)
+                  InkWell(
+                    onTap: onWishlistTap,
+                    child: CircleAvatar(
+                      backgroundColor: LightThemeColors.keywordBoxColor,
+                      child: Icon(
+                        isWishlisted ? Icons.favorite : Icons.favorite_border,
+                        color: isWishlisted
+                            ? Colors.red
+                            : LightThemeColors.whiteColor,
+                      ),
                     ),
-                  ),
-                )
+                  )
               ],
             ),
             gapHeight(size: 10),

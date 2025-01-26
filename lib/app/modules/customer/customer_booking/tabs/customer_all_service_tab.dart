@@ -93,6 +93,7 @@ class CustomerAllServiceTab extends StatelessWidget {
                               priceLevel:
                                   "${booking.service.priceType}- ${booking.service.level}",
                               price: booking.bid.amount.toString(),
+                              showFavorite: false,
                               isButton: shouldShowButton(booking.status),
                               buttonText: getButtonText(booking.status),
                               onTap: () {
