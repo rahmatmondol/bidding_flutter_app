@@ -415,12 +415,17 @@ class HomeView extends GetView<HomeController> {
                                           }
                                         },
 
-                                        imgPath:
-                                            service.images?.isNotEmpty == true
-                                                ? service.images!.first.path
-                                                        ?.toString() ??
-                                                    Img.message
-                                                : Img.message,
+                                        imgPath: service.images?.isNotEmpty ==
+                                                    true &&
+                                                service.images!.first.path !=
+                                                    null &&
+                                                (service.images!.first.path!
+                                                        .startsWith('http') ||
+                                                    service.images!.first.path!
+                                                        .startsWith('https'))
+                                            ? service.images!.first.path!
+                                            : 'assets/images/noimage.jpg',
+
                                         placeName:
                                             service.location?.toString() ??
                                                 'N/A',

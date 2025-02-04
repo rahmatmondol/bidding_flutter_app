@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dirham_uae/app/components/custom_appBar.dart';
 import 'package:dirham_uae/app/modules/provider/home/models/provider_service_model.dart';
 import 'package:dirham_uae/config/theme/light_theme_colors.dart';
@@ -122,7 +123,7 @@ class DescriptionView extends GetView<DescriptionController> {
                                     return const Icon(Icons.error, size: 50);
                                   },
                                 )
-                              : const Text("No image available"),
+                              : Center(child: const Text("No image available")),
                         );
                       }),
                       Positioned(
@@ -208,27 +209,34 @@ class DescriptionView extends GetView<DescriptionController> {
                 ),
                 gapHeight(size: 7.0.h),
                 //*********Skills list********* */
-
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0.w),
-                  child: Container(
-                    padding: EdgeInsets.only(
-                        left: 8.0.w, right: 8.0.w, top: 3.0.h, bottom: 3.0.h),
-                    decoration: BoxDecoration(
-                      color: LightThemeColors.grayColor,
-                      borderRadius: BorderRadius.circular(10.0.r),
-                    ),
-                    child: Text(
-                      // If skills is a JSON string, parse it first
-                      data.skills != null
-                          ? (data.skills is String
-                                  ? List<String>.from(json.decode(data.skills!))
-                                  : data.skills as List<String>)
-                              .join(", ") // Join with comma and space
-                          : "No skills",
-                    ),
+                  child: Wrap(
+                    spacing: 8.0.w, // Horizontal space between containers
+                    runSpacing: 8.0.h, // Vertical space between containers
+                    children: _buildSkillContainers(data.skills),
                   ),
                 ),
+                // Padding(
+                //   padding: EdgeInsets.symmetric(horizontal: 15.0.w),
+                //   child: Container(
+                //     padding: EdgeInsets.only(
+                //         left: 8.0.w, right: 8.0.w, top: 3.0.h, bottom: 3.0.h),
+                //     decoration: BoxDecoration(
+                //       color: LightThemeColors.grayColor,
+                //       borderRadius: BorderRadius.circular(10.0.r),
+                //     ),
+                //     child: Text(
+                //       // If skills is a JSON string, parse it first
+                //       data.skills != null
+                //           ? (data.skills is String
+                //                   ? List<String>.from(json.decode(data.skills!))
+                //                   : data.skills as List<String>)
+                //               .join(", ") // Join with comma and space
+                //           : "No skills",
+                //     ),
+                //   ),
+                // ),
                 divider,
                 // ***********Active on this job ***********
                 Padding(
@@ -283,9 +291,24 @@ class DescriptionView extends GetView<DescriptionController> {
                         children: [
                           CircleAvatar(
                             radius: 30.0,
-                            backgroundImage: NetworkImage(
-                                data.customer?.profile?.image ?? ''),
+                            child: ClipOval(
+                              child: CachedNetworkImage(
+                                imageUrl: data.customer?.profile?.image ?? '',
+                                fit: BoxFit.cover,
+                                width: 60.0,
+                                height: 60.0,
+                                placeholder: (context, url) =>
+                                    Image.asset(Img.personIcon),
+                                errorWidget: (context, url, error) =>
+                                    Image.asset(Img.personIcon),
+                              ),
+                            ),
                           ),
+                          // CircleAvatar(
+                          //   radius: 30.0,
+                          //   backgroundImage: NetworkImage(
+                          //       data.customer?.profile?.image ?? ''),
+                          // ),
                           gapWidth(size: 10.0.w),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -560,6 +583,38 @@ class DescriptionView extends GetView<DescriptionController> {
           ),
         ),
       ),
+    );
+  }
+
+  List<Widget> _buildSkillContainers(dynamic skills) {
+    if (skills == null) {
+      return [_buildSkillContainer("No skills")];
+    }
+
+    List<String> skillsList;
+    if (skills is String) {
+      try {
+        skillsList = List<String>.from(json.decode(skills));
+      } catch (e) {
+        return [_buildSkillContainer("Invalid skills format")];
+      }
+    } else if (skills is List) {
+      skillsList = List<String>.from(skills);
+    } else {
+      return [_buildSkillContainer("Invalid skills format")];
+    }
+
+    return skillsList.map((skill) => _buildSkillContainer(skill)).toList();
+  }
+
+  Widget _buildSkillContainer(String skill) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.0.w, vertical: 3.0.h),
+      decoration: BoxDecoration(
+        color: LightThemeColors.grayColor,
+        borderRadius: BorderRadius.circular(10.0.r),
+      ),
+      child: Text(skill.trim()),
     );
   }
 }

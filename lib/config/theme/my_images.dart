@@ -4,6 +4,7 @@ class Img {
 
   // app logo
   static const String appLogo = "assets/images/app_logo.png";
+
   //image
   static const String introOne = "assets/images/intro1.png";
   static const String introTwo = "assets/images/intro2.png";
@@ -16,15 +17,16 @@ class Img {
   static const String img1 = "assets/images/img1.png";
   static const String personImg = "assets/images/person_img.png";
   static const String thanksImg = "assets/images/thanks_img.png";
+
   //Icon
   static const String searchIcon = "assets/icons/search_icon.png";
   static const String locationIcon = "assets/icons/location_icon.png";
   static const String notificationIcon = "assets/icons/notifications_icon.png";
-  static const String messageIcon = "assets/icons/message.png";
+  static const String messageIcon = "assets/icons/messageIcon.png";
   static const String passwordIcon = "assets/icons/password.png";
   static const String timeIcon = "assets/icons/time.png";
   static const String filterIcon = "assets/icons/filter_icon.png";
-  static const String message = "assets/images/messageIcon.png";
+  static const String message = "assets/icons/message.png";
   static const String carIcon = "assets/icons/car_icon.png";
   static const String computerIcon = "assets/icons/computer_icon.png";
   static const String frizzeIcon = "assets/icons/frizze_icon.png";
@@ -47,7 +49,7 @@ class Img {
   static const String termsIcon = "assets/icons/terms_icon.png";
   static const String deleteIcon = "assets/icons/delete_icon.png";
   static const String tollIcon = "assets/icons/toll.png";
-static const String userIcon = "assets/icons/user.png";
+  static const String userIcon = "assets/icons/user.png";
   static const String emptyNotification =
       "assets/icons/notificattion_empty.png";
 

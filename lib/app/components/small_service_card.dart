@@ -57,13 +57,25 @@ class ServiceCard extends GetView<FavoriteServiceController> {
                   Container(
                     height: size.height / 8,
                     margin: EdgeInsets.all(6.0),
+                    // In the ServiceCard widget, modify the image part:
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5.0),
                       image: DecorationImage(
-                        image: NetworkImage(imgPath),
+                        image: imgPath.startsWith('http') ||
+                                imgPath.startsWith('https')
+                            ? NetworkImage(imgPath)
+                            : AssetImage(imgPath) as ImageProvider,
+                        // Cast AssetImage to ImageProvider
                         fit: BoxFit.fill,
                       ),
                     ),
+                    // decoration: BoxDecoration(
+                    //   borderRadius: BorderRadius.circular(5.0),
+                    //   image: DecorationImage(
+                    //     image: NetworkImage(imgPath),
+                    //     fit: BoxFit.fill,
+                    //   ),
+                    // ),
                   ),
                   gapHeight(size: 2.0.h),
                   Padding(

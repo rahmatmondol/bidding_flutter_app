@@ -33,7 +33,6 @@ abstract class Routes {
   static const CUSTOMER_ACCOUNT_DETAILS = _Paths.CUSTOMER_ACCOUNT_DETAILS;
   static const LANGUAGE = _Paths.LANGUAGE;
   static const PROPOSALS = _Paths.PROPOSALS;
-  static const TERMS_AND_CONDITION = _Paths.TERMS_AND_CONDITION;
   static const PRIVACY_AND_POLICY = _Paths.PRIVACY_AND_POLICY;
   static const ABOUT_US = _Paths.ABOUT_US;
   static const FAVORITE_SERVICE = _Paths.FAVORITE_SERVICE;
@@ -62,11 +61,12 @@ abstract class Routes {
   static const CUSTOMER_LOCATION = _Paths.CUSTOMER_LOCATION;
   static const CUSTOMER_PICK_LOCATION = _Paths.CUSTOMER_PICK_LOCATION;
   static const CUSTOMER_SEARCH = _Paths.CUSTOMER_SEARCH;
-  static const CUSTOMER_LANGUAGE = _Paths.CUSTOMER_LANGUAGE;
-  static const CUSTOMER_ABOUT_US = _Paths.CUSTOMER_ABOUT_US;
+
+  // static const CUSTOMER_LANGUAGE = _Paths.CUSTOMER_LANGUAGE;
+
   static const CUSTOMER_TERMS_AND_CONDITION =
       _Paths.CUSTOMER_TERMS_AND_CONDITION;
-  static const CUSTOMER_PRIVACY_AND_POLICY = _Paths.CUSTOMER_PRIVACY_AND_POLICY;
+  static const CUSTOMER_PRIVACY_AND_POLICY = _Paths.PRIVACY_AND_POLICY;
   static const ACCOUNT_DETAILS = _Paths.ACCOUNT_DETAILS;
   static const ACCOUNT_UPDATE_DETAILS = _Paths.ACCOUNT_UPDATE_DETAILS;
   static const CHANGE_PASSWORD = _Paths.CHANGE_PASSWORD;
@@ -104,8 +104,7 @@ abstract class _Paths {
   static const CUSTOMER_ACCOUNT_DETAILS = '/customer-account-details';
   static const LANGUAGE = '/language';
   static const PROPOSALS = '/proposals';
-  static const TERMS_AND_CONDITION = '/terms-and-condition';
-  static const PRIVACY_AND_POLICY = '/privacy-and-policy';
+
   static const ABOUT_US = '/about-us';
   static const FAVORITE_SERVICE = '/favorite-service';
   static const INBOX = '/inbox';
@@ -133,10 +132,9 @@ abstract class _Paths {
   static const CUSTOMER_LOCATION = '/customer-location';
   static const CUSTOMER_PICK_LOCATION = '/customer-pick-location';
   static const CUSTOMER_SEARCH = '/customer-search';
-  static const CUSTOMER_LANGUAGE = '/customer-language';
-  static const CUSTOMER_ABOUT_US = '/customer-about-us';
+
   static const CUSTOMER_TERMS_AND_CONDITION = '/customer-terms-and-condition';
-  static const CUSTOMER_PRIVACY_AND_POLICY = '/customer-privacy-and-policy';
+  static const PRIVACY_AND_POLICY = '/privacy-and-policy';
   static const ACCOUNT_DETAILS = '/account-details';
   static const ACCOUNT_UPDATE_DETAILS = '/account-update-details';
   static const CHANGE_PASSWORD = '/change-password';

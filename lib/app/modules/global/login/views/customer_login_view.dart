@@ -33,7 +33,7 @@ class CustomerLoginView extends StatelessWidget {
             ),
             CustomTextField(
               fillColor: Colors.white,
-              icon: Img.messageIcon,
+              icon: Img.message,
               isSuffixIcon: true,
               isIcon: true,
               hintText: "email",

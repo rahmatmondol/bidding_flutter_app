@@ -2,11 +2,14 @@ import 'package:dirham_uae/config/theme/my_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../config/theme/my_images.dart';
+
 class NotificationCard extends StatelessWidget {
   final String image;
   final String name;
   final String title;
   final String time;
+
   const NotificationCard({
     super.key,
     required this.image,
@@ -23,9 +26,16 @@ class NotificationCard extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 30.r,
-            backgroundImage: AssetImage(
-              image,
-            ),
+            backgroundImage: AssetImage(Img.personImg), // Fallback image
+            child: image.startsWith('http')
+                ? Image.network(
+                    image,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const SizedBox(); // Shows fallback image on error
+                    },
+                  )
+                : null,
           ),
           gapWidth(size: 10),
           Expanded(

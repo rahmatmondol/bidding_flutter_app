@@ -10,8 +10,6 @@ import 'package:dirham_uae/app/modules/intro_screen/splash/bindings/splash_bindi
 import 'package:dirham_uae/app/modules/intro_screen/splash/views/splash_view.dart';
 import 'package:get/get.dart';
 
-import '../modules/customer/customer_about_us/bindings/customer_about_us_binding.dart';
-import '../modules/customer/customer_about_us/views/customer_about_us_view.dart';
 import '../modules/customer/customer_add_service/bindings/customer_add_service_binding.dart';
 import '../modules/customer/customer_add_service/views/customer_add_service_view.dart';
 import '../modules/customer/customer_booking/bindings/customer_booking_binding.dart';
@@ -26,8 +24,6 @@ import '../modules/customer/customer_home/bindings/customer_home_binding.dart';
 import '../modules/customer/customer_home/views/customer_home_view.dart';
 import '../modules/customer/customer_inbox/bindings/customer_inbox_binding.dart';
 import '../modules/customer/customer_inbox/views/customer_inbox_view.dart';
-import '../modules/customer/customer_language/bindings/customer_language_binding.dart';
-import '../modules/customer/customer_language/views/customer_language_view.dart';
 import '../modules/customer/customer_location/bindings/customer_location_binding.dart';
 import '../modules/customer/customer_location/views/customer_location_view.dart';
 import '../modules/customer/customer_nav_bar/bindings/customer_nav_bar_binding.dart';
@@ -38,30 +34,32 @@ import '../modules/customer/customer_otp/bindings/customer_otp_binding.dart';
 import '../modules/customer/customer_otp/views/customer_otp_view.dart';
 import '../modules/customer/customer_payment/bindings/customer_payment_binding.dart';
 import '../modules/customer/customer_payment/views/customer_payment_view.dart';
-import '../modules/customer/customer_privacy_and_policy/bindings/customer_privacy_and_policy_binding.dart';
-import '../modules/customer/customer_privacy_and_policy/views/customer_privacy_and_policy_view.dart';
 import '../modules/customer/customer_reset/bindings/customer_reset_binding.dart';
 import '../modules/customer/customer_reset/views/customer_reset_view.dart';
 import '../modules/customer/customer_search/bindings/customer_search_binding.dart';
 import '../modules/customer/customer_search/views/customer_search_view.dart';
-import '../modules/customer/customer_terms_and_condition/bindings/customer_terms_and_condition_binding.dart';
-import '../modules/customer/customer_terms_and_condition/views/customer_terms_and_condition_view.dart';
 import '../modules/global/customer_pick_location/bindings/customer_pick_location_binding.dart';
 import '../modules/global/customer_pick_location/views/customer_pick_location_view.dart';
 import '../modules/global/customer_tab/bindings/customertab_binding.dart';
 import '../modules/global/customer_tab/views/customertab_view.dart';
+import '../modules/global/profile/about_us/bindings/about_us_binding.dart';
+import '../modules/global/profile/about_us/views/about_us_view.dart';
 import '../modules/global/profile/account_details/bindings/account_details_binding.dart';
 import '../modules/global/profile/account_details/views/account_details_view.dart';
-import '../modules/global/profile/profile_data/bindings/profile_data_binding.dart';
-import '../modules/global/profile/profile_data/views/profile_data_view.dart';
+import '../modules/global/profile/language/bindings/language_binding.dart';
+import '../modules/global/profile/language/views/language_view.dart';
+import '../modules/global/profile/privacy_and_policy/bindings/customer_privacy_and_policy_binding.dart';
+import '../modules/global/profile/privacy_and_policy/views/customer_privacy_and_policy_view.dart';
+import '../modules/global/profile/profile_view_both/bindings/profile_data_binding.dart';
+import '../modules/global/profile/profile_view_both/views/profile_data_view.dart';
+import '../modules/global/profile/terms_and_condition/bindings/terms_and_condition_binding.dart';
+import '../modules/global/profile/terms_and_condition/views/terms_and_condition_view.dart';
 import '../modules/global/profile/update_profile_details/bindings/update_profile_details_binding.dart';
 import '../modules/global/profile/update_profile_details/views/update_profile_details_view.dart';
 import '../modules/global/provider_tab/bindings/provider_tab_binding.dart';
 import '../modules/global/provider_tab/views/provider_tab_view.dart';
 import '../modules/global/review/bindings/review_binding.dart';
 import '../modules/global/review/views/review_view.dart';
-import '../modules/provider/about_us/bindings/about_us_binding.dart';
-import '../modules/provider/about_us/views/about_us_view.dart';
 import '../modules/provider/account_details/bindings/account_details_binding.dart';
 import '../modules/provider/account_details/views/account_details_view.dart';
 import '../modules/provider/account_update_details/bindings/account_update_details_binding.dart';
@@ -86,16 +84,12 @@ import '../modules/provider/home/bindings/home_binding.dart';
 import '../modules/provider/home/views/home_view.dart';
 import '../modules/provider/inbox/bindings/inbox_binding.dart';
 import '../modules/provider/inbox/views/inbox_view.dart';
-import '../modules/provider/language/bindings/language_binding.dart';
-import '../modules/provider/language/views/language_view.dart';
 import '../modules/provider/nav_bar/bindings/nav_bar_binding.dart';
 import '../modules/provider/nav_bar/views/nav_bar_view.dart';
 import '../modules/provider/notification/bindings/notification_binding.dart';
 import '../modules/provider/notification/views/notification_view.dart';
 import '../modules/provider/otp/bindings/otp_binding.dart';
 import '../modules/provider/otp/views/otp_view.dart';
-import '../modules/provider/privacy_and_policy/bindings/privacy_and_policy_binding.dart';
-import '../modules/provider/privacy_and_policy/views/privacy_and_policy_view.dart';
 import '../modules/provider/profile/bindings/profile_binding.dart';
 import '../modules/provider/profile/views/profile_view.dart';
 import '../modules/provider/proposals/bindings/proposals_binding.dart';
@@ -106,8 +100,6 @@ import '../modules/provider/search/bindings/search_binding.dart';
 import '../modules/provider/search/views/search_view.dart';
 import '../modules/provider/service_display/bindings/service_details_bindings.dart';
 import '../modules/provider/service_display/view/service_details_view.dart';
-import '../modules/provider/terms_and_condition/bindings/terms_and_condition_binding.dart';
-import '../modules/provider/terms_and_condition/views/terms_and_condition_view.dart';
 import '../modules/provider/thanks/bindings/thanks_binding.dart';
 import '../modules/provider/thanks/views/thanks_view.dart';
 import '../modules/services/bindings/services_binding.dart';
@@ -252,28 +244,13 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.LANGUAGE,
-      page: () => const LanguageView(),
+      page: () => LanguageView(),
       binding: LanguageBinding(),
     ),
     GetPage(
       name: _Paths.PROPOSALS,
       page: () => const ProposalsView(),
       binding: ProposalsBinding(),
-    ),
-    GetPage(
-      name: _Paths.TERMS_AND_CONDITION,
-      page: () => const TermsAndConditionView(),
-      binding: TermsAndConditionBinding(),
-    ),
-    GetPage(
-      name: _Paths.PRIVACY_AND_POLICY,
-      page: () => const PrivacyAndPolicyView(),
-      binding: PrivacyAndPolicyBinding(),
-    ),
-    GetPage(
-      name: _Paths.ABOUT_US,
-      page: () => const AboutUsView(),
-      binding: AboutUsBinding(),
     ),
     GetPage(
       name: _Paths.FAVORITE_SERVICE,
@@ -400,25 +377,25 @@ class AppPages {
       page: () => const CustomerSearchView(),
       binding: CustomerSearchBinding(),
     ),
+    // GetPage(
+    //   name: _Paths.CUSTOMER_LANGUAGE,
+    //   page: () =>  LanguageView(),
+    //   binding: LanguageBinding(),
+    // ),
     GetPage(
-      name: _Paths.CUSTOMER_LANGUAGE,
-      page: () => const CustomerLanguageView(),
-      binding: CustomerLanguageBinding(),
-    ),
-    GetPage(
-      name: _Paths.CUSTOMER_ABOUT_US,
-      page: () => const CustomerAboutUsView(),
-      binding: CustomerAboutUsBinding(),
+      name: _Paths.ABOUT_US,
+      page: () => const AboutUsView(),
+      binding: AboutUsBinding(),
     ),
     GetPage(
       name: _Paths.CUSTOMER_TERMS_AND_CONDITION,
-      page: () => const CustomerTermsAndConditionView(),
-      binding: CustomerTermsAndConditionBinding(),
+      page: () => const TermsAndConditionView(),
+      binding: TermsAndConditionBinding(),
     ),
     GetPage(
-      name: _Paths.CUSTOMER_PRIVACY_AND_POLICY,
-      page: () => const CustomerPrivacyAndPolicyView(),
-      binding: CustomerPrivacyAndPolicyBinding(),
+      name: _Paths.PRIVACY_AND_POLICY,
+      page: () => const PrivacyAndPolicyView(),
+      binding: PrivacyAndPolicyBinding(),
     ),
     GetPage(
       name: _Paths.ACCOUNT_DETAILS,

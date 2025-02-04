@@ -4,7 +4,7 @@ import 'package:dirham_uae/app/modules/customer/customer_inbox/views/customer_in
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../global/profile/profile_data/views/profile_data_view.dart';
+import '../../../global/profile/profile_view_both/views/profile_data_view.dart';
 
 class CustomerNavBarController extends GetxController {
   final RxInt currentTab = 0.obs;

@@ -3,8 +3,7 @@ import 'package:dirham_uae/app/modules/provider/home/views/home_view.dart';
 import 'package:dirham_uae/app/modules/provider/inbox/views/inbox_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../../global/profile/profile_data/views/profile_data_view.dart';
+import '../../../global/profile/profile_view_both/views/profile_data_view.dart';
 import '../../booking/views/provider_booking_view.dart';
 
 class NavBarController extends GetxController {

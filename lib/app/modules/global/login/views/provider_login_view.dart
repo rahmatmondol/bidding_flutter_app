@@ -1,8 +1,9 @@
+import 'package:dirham_uae/app/components/custom_text_field.dart';
+import 'package:dirham_uae/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:dirham_uae/app/components/custom_text_field.dart';
-import 'package:dirham_uae/app/routes/app_pages.dart';
+
 import '../../../../../config/theme/light_theme_colors.dart';
 import '../../../../../config/theme/my_images.dart';
 import '../../../../../config/theme/my_styles.dart';
@@ -31,7 +32,7 @@ class ProviderLoginView extends StatelessWidget {
               style: kSubtitleStyle,
             ),
             CustomTextField(
-              icon: Img.messageIcon,
+              icon: Img.message,
               isSuffixIcon: true,
               isIcon: true,
               hintText: "email",
