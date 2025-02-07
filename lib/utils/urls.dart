@@ -14,8 +14,6 @@ class Constants {
   // static const getSubCategory = "$baseUrl/get-subcategories";
   static const getServiceCustomer = "$baseUrl/get-services";
 
-  // static String ServiceCustomerDetails = '$baseUrl/get-service';
-
   static String ServiceCustomerDetails(int id) => '$baseUrl/get-service/$id';
 
   static String updatePostStatus(int id) => '$baseUrl/auth/update-booking/$id';

@@ -406,7 +406,7 @@ class CustomerHomeView extends GetView<CustomerHomeController> {
         SmallCustomButton(
           color: LightThemeColors.secounderyColor,
           ontap: () {
-            Get.toNamed(Routes.CUSTOMER_NOTIFICATION);
+            Get.toNamed(Routes.NOTIFICATION);
           },
           widget: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),

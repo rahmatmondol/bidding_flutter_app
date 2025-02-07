@@ -1,4 +1,3 @@
-import 'package:dirham_uae/app/modules/provider/account_details/controllers/account_details_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -11,8 +10,8 @@ class ProfileView extends GetView<ProfileController> {
   Widget build(BuildContext context) {
     ProfileController controller = Get.put(ProfileController());
 
-    AccountDetailsController accountDetailsController =
-        Get.put(AccountDetailsController());
+    // AccountDetailsController accountDetailsController =
+    //     Get.put(AccountDetailsController());
     return Scaffold(
       resizeToAvoidBottomInset: true,
       // body: Container(

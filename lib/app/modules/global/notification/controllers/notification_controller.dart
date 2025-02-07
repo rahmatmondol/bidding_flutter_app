@@ -1,99 +1,46 @@
-// import 'package:firebase_core/firebase_core.dart';
-// import 'package:firebase_database/firebase_database.dart';
-// import 'package:get/get.dart';
-//
-// import '../model/notification_model.dart';
-//
-// class NotificationController extends GetxController {
-//   final FirebaseDatabase _database = FirebaseDatabase.instance;
-//   late DatabaseReference _notificationsRef;
-//
-//   // Observable list to store notifications
-//   final notifications = <NotificationModel>[].obs;
-//   var isNotificationLoading = true.obs;
-//   final String userId = 'user_2';
-//
-//   @override
-//   void onInit() {
-//     super.onInit();
-//     try {
-//       print("NotificationController initialized");
-//       print("Firebase Database URL: ${FirebaseDatabase.instance.databaseURL}");
-//       print("Firebase App Name: ${Firebase.app().name}");
-//       print("Firebase Options: ${Firebase.app().options.toString()}");
-//       _initializeFirebase();
-//     } catch (e, stackTrace) {
-//       print("Firebase Initialization Error: $e");
-//       print("Stack Trace: $stackTrace");
-//     }
-//   }
-//
-//   void _initializeFirebase() {
-//     // Initialize the reference to your notifications
-//     _notificationsRef = _database.ref('notifications/$userId');
-//     _listenToNotifications();
-//   }
-//
-//   void _listenToNotifications() {
-//     print("Starting to listen to notifications for user_2");
-//
-//     _notificationsRef.onValue.listen((event) {
-//       print("Received Firebase event");
-//       print("Data received: ${event.snapshot.value}");
-//
-//       if (event.snapshot.value != null) {
-//         print("Data is not null");
-//
-//         notifications.clear();
-//         final Map<dynamic, dynamic> values =
-//             event.snapshot.value as Map<dynamic, dynamic>;
-//
-//         values.forEach((key, value) {
-//           notifications.add(NotificationModel.fromJson(
-//               {'id': key, ...value as Map<dynamic, dynamic>}));
-//         });
-//
-//         notifications.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-//
-//         isNotificationLoading.value = false;
-//       } else {
-//         print("Data is null");
-//
-//         isNotificationLoading.value = false;
-//       }
-//     }, onError: (error) {
-//       print("Firebase Error: $error");
-//       print('Error: $error');
-//       isNotificationLoading.value = false;
-//     });
-//   }
-// }
-
 import 'package:dirham_uae/config/theme/my_images.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:get/get.dart';
 
+import '../../../global/profile/account_details/controllers/account_details_controller.dart';
 import '../model/notification_model.dart';
 
 class NotificationController extends GetxController {
   final FirebaseDatabase _database = FirebaseDatabase.instance;
   late DatabaseReference _notificationsRef;
+  final CustomerAccountDetailsController customerAccountDetailsController =
+      Get.find<CustomerAccountDetailsController>();
 
   // Observable variables
   final notifications = <NotificationModel>[].obs;
   var isNotificationLoading = true.obs;
-  final String userId = 'user_2';
+  final userId = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
+    _initializeUserId();
     _initializeFirebase();
+  }
+
+  void _initializeUserId() {
+    try {
+      final customerInfo = customerAccountDetailsController.customerInfo.value;
+      if (customerInfo?.id != null) {
+        userId.value = 'user_${customerInfo!.id}';
+        print('Initialized userId: ${userId.value}');
+      } else {
+        print('Customer ID is null');
+      }
+    } catch (e) {
+      print('Error getting customer ID: $e');
+    }
   }
 
   void _initializeFirebase() {
     try {
       print("Initializing Firebase...");
-      _notificationsRef = _database.ref('notifications/$userId');
+      _notificationsRef = _database.ref('notifications/${userId.value}');
       _listenToNotifications();
     } catch (e) {
       print("Firebase initialization error: $e");
@@ -120,29 +67,12 @@ class NotificationController extends GetxController {
     return imageUrl;
   }
 
-  // String formatNotificationTime(String createdAt) {
-  //   try {
-  //     final DateTime dateTime = DateTime.parse(createdAt);
-  //     final DateTime now = DateTime.now();
-  //     final Duration difference = now.difference(dateTime);
-  //
-  //     if (difference.inMinutes < 60) {
-  //       return '${difference.inMinutes}m ago';
-  //     } else if (difference.inHours < 24) {
-  //       return '${difference.inHours}h ago';
-  //     } else if (difference.inDays < 7) {
-  //       return '${difference.inDays}d ago';
-  //     } else {
-  //       return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}';
-  //     }
-  //   } catch (e) {
-  //     print("Date formatting error: $e");
-  //     return createdAt;
-  //   }
-  // }
+  bool isNotificationRead(Map<String, dynamic> data) {
+    return data['read_at'] != null && data['read_at'] != false;
+  }
 
   void _listenToNotifications() {
-    print("Starting notification listener for user: $userId");
+    print("Starting notification listener for user: ${userId.value}");
 
     _notificationsRef.onValue.listen(
       (event) {
@@ -156,9 +86,27 @@ class NotificationController extends GetxController {
             values.forEach((key, value) {
               try {
                 if (value is Map) {
-                  final notification = NotificationModel.fromJson(
-                      {'id': key, ...Map<String, dynamic>.from(value)});
-                  newNotifications.add(notification);
+                  // Validate and get the created_at date
+                  String createdAt = value['created_at'] ?? '';
+                  try {
+                    _parseDateTime(createdAt); // Validate the date format
+
+                    // Create notification object
+                    final Map<String, dynamic> notificationData = {
+                      'id': key,
+                      'created_at': createdAt,
+                      'data': value['data'] ?? {},
+                      'read_at': value['read_at'],
+                      'title': value['title'],
+                    };
+
+                    final notification =
+                        NotificationModel.fromJson(notificationData);
+                    newNotifications.add(notification);
+                  } catch (dateError) {
+                    print(
+                        "Invalid date format for notification $key: $dateError");
+                  }
                 }
               } catch (e) {
                 print("Error processing individual notification: $e");
@@ -166,8 +114,15 @@ class NotificationController extends GetxController {
             });
 
             // Sort notifications by date (newest first)
-            newNotifications.sort((a, b) => DateTime.parse(b.createdAt)
-                .compareTo(DateTime.parse(a.createdAt)));
+            newNotifications.sort((a, b) {
+              try {
+                return _parseDateTime(b.createdAt)
+                    .compareTo(_parseDateTime(a.createdAt));
+              } catch (e) {
+                print("Error sorting dates: $e");
+                return 0; // Keep original order if date comparison fails
+              }
+            });
 
             notifications.value = newNotifications;
           } else {
@@ -188,6 +143,12 @@ class NotificationController extends GetxController {
     );
   }
 
+  // Method to handle notification tap
+  void onNotificationTap(String notificationId) {
+    markAsRead(notificationId);
+    // Future: Add navigation to details page here
+  }
+
   void markAsRead(String notificationId) {
     try {
       _notificationsRef
@@ -195,6 +156,23 @@ class NotificationController extends GetxController {
           .update({'read_at': DateTime.now().toIso8601String()});
     } catch (e) {
       print("Error marking notification as read: $e");
+    }
+  }
+
+  void markAllAsRead() {
+    try {
+      final Map<String, Object?> updates = {};
+      for (var notification in notifications) {
+        if (!notification.readAt) {
+          updates['${notification.id}/read_at'] =
+              DateTime.now().toIso8601String();
+        }
+      }
+      if (updates.isNotEmpty) {
+        _notificationsRef.update(updates);
+      }
+    } catch (e) {
+      print("Error marking all notifications as read: $e");
     }
   }
 
@@ -206,9 +184,37 @@ class NotificationController extends GetxController {
     }
   }
 
+  DateTime _parseDateTime(String dateStr) {
+    try {
+      // First try parsing as is
+      return DateTime.parse(dateStr);
+    } catch (e) {
+      try {
+        // Split the date and time
+        List<String> parts = dateStr.split(' ');
+        String date = parts[0];
+        String time = parts[1];
+
+        // Split date components
+        List<String> dateParts = date.split('-');
+        // Ensure day and month are 2 digits
+        String day = dateParts[2].padLeft(2, '0');
+        String month = dateParts[1].padLeft(2, '0');
+        String year = dateParts[0];
+
+        // Reconstruct in ISO format
+        String isoDate = '$year-$month-$day $time';
+        return DateTime.parse(isoDate);
+      } catch (e) {
+        print("Error parsing date '$dateStr': $e");
+        return DateTime.now(); // Fallback to current time
+      }
+    }
+  }
+
   String formatNotificationTime(String createdAt) {
     try {
-      final DateTime dateTime = DateTime.parse(createdAt);
+      final DateTime dateTime = _parseDateTime(createdAt);
       final DateTime now = DateTime.now();
       final Duration difference = now.difference(dateTime);
 

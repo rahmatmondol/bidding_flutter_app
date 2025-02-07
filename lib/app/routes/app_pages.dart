@@ -28,8 +28,6 @@ import '../modules/customer/customer_location/bindings/customer_location_binding
 import '../modules/customer/customer_location/views/customer_location_view.dart';
 import '../modules/customer/customer_nav_bar/bindings/customer_nav_bar_binding.dart';
 import '../modules/customer/customer_nav_bar/views/customer_nav_bar_view.dart';
-import '../modules/customer/customer_notification/bindings/customer_notification_binding.dart';
-import '../modules/customer/customer_notification/views/customer_notification_view.dart';
 import '../modules/customer/customer_otp/bindings/customer_otp_binding.dart';
 import '../modules/customer/customer_otp/views/customer_otp_view.dart';
 import '../modules/customer/customer_payment/bindings/customer_payment_binding.dart';
@@ -42,6 +40,8 @@ import '../modules/global/customer_pick_location/bindings/customer_pick_location
 import '../modules/global/customer_pick_location/views/customer_pick_location_view.dart';
 import '../modules/global/customer_tab/bindings/customertab_binding.dart';
 import '../modules/global/customer_tab/views/customertab_view.dart';
+import '../modules/global/notification/bindings/notification_binding.dart';
+import '../modules/global/notification/views/notification_view.dart';
 import '../modules/global/profile/about_us/bindings/about_us_binding.dart';
 import '../modules/global/profile/about_us/views/about_us_view.dart';
 import '../modules/global/profile/account_details/bindings/account_details_binding.dart';
@@ -60,10 +60,6 @@ import '../modules/global/provider_tab/bindings/provider_tab_binding.dart';
 import '../modules/global/provider_tab/views/provider_tab_view.dart';
 import '../modules/global/review/bindings/review_binding.dart';
 import '../modules/global/review/views/review_view.dart';
-import '../modules/provider/account_details/bindings/account_details_binding.dart';
-import '../modules/provider/account_details/views/account_details_view.dart';
-import '../modules/provider/account_update_details/bindings/account_update_details_binding.dart';
-import '../modules/provider/account_update_details/views/account_update_details_view.dart';
 import '../modules/provider/all_category/bindings/all_category_binding.dart';
 import '../modules/provider/all_category/views/all_category_view.dart';
 import '../modules/provider/all_subCategory/bindings/all_sub_category_binding.dart';
@@ -86,8 +82,6 @@ import '../modules/provider/inbox/bindings/inbox_binding.dart';
 import '../modules/provider/inbox/views/inbox_view.dart';
 import '../modules/provider/nav_bar/bindings/nav_bar_binding.dart';
 import '../modules/provider/nav_bar/views/nav_bar_view.dart';
-import '../modules/provider/notification/bindings/notification_binding.dart';
-import '../modules/provider/notification/views/notification_view.dart';
 import '../modules/provider/otp/bindings/otp_binding.dart';
 import '../modules/provider/otp/views/otp_view.dart';
 import '../modules/provider/profile/bindings/profile_binding.dart';
@@ -312,11 +306,7 @@ class AppPages {
       page: () => const CustomerChatView(),
       binding: CustomerChatBinding(),
     ),
-    GetPage(
-      name: _Paths.CUSTOMER_NOTIFICATION,
-      page: () => const CustomerNotificationView(),
-      binding: CustomerNotificationBinding(),
-    ),
+
     GetPage(
       name: _Paths.CUSTOMER_PROFILE,
       page: () => const CustomerProfileView(),
@@ -397,16 +387,7 @@ class AppPages {
       page: () => const PrivacyAndPolicyView(),
       binding: PrivacyAndPolicyBinding(),
     ),
-    GetPage(
-      name: _Paths.ACCOUNT_DETAILS,
-      page: () => const AccountDetailsView(),
-      binding: AccountDetailsBinding(),
-    ),
-    GetPage(
-      name: _Paths.ACCOUNT_UPDATE_DETAILS,
-      page: () => const AccountUpdateDetailsView(),
-      binding: AccountUpdateDetailsBinding(),
-    ),
+
     GetPage(
       name: _Paths.CHANGE_PASSWORD,
       page: () => const ChangePasswordView(),
