@@ -1,5 +1,3 @@
-// // services_model.dart
-//
 // class Providerservicemodel {
 //   final bool? success;
 //   final int? status;
@@ -57,6 +55,7 @@
 //   final DateTime? createdAt;
 //   final DateTime? updatedAt;
 //   final List<ServiceImage>? images;
+//   final Category? category;
 //   final Customer? customer;
 //
 //   Service({
@@ -83,6 +82,7 @@
 //     this.createdAt,
 //     this.updatedAt,
 //     this.images,
+//     this.category,
 //     this.customer,
 //   });
 //
@@ -117,6 +117,9 @@
 //             ? []
 //             : List<ServiceImage>.from(
 //                 json["images"]!.map((x) => ServiceImage.fromJson(x))),
+//         category: json["category"] == null
+//             ? null
+//             : Category.fromJson(json["category"]),
 //         customer: json["customer"] == null
 //             ? null
 //             : Customer.fromJson(json["customer"]),
@@ -148,6 +151,7 @@
 //         "images": images == null
 //             ? []
 //             : List<dynamic>.from(images!.map((x) => x.toJson())),
+//         "category": category?.toJson(),
 //         "customer": customer?.toJson(),
 //       };
 // }
@@ -192,33 +196,34 @@
 //       };
 // }
 //
-// class Customer {
+// class Category {
 //   final int? id;
 //   final String? name;
-//   final String? mobile;
-//   final String? email;
-//   final DateTime? emailVerifiedAt;
+//   final String? slug;
+//   final String? description;
+//   final String? image;
+//   final String? status;
 //   final DateTime? createdAt;
 //   final DateTime? updatedAt;
 //
-//   Customer({
+//   Category({
 //     this.id,
 //     this.name,
-//     this.mobile,
-//     this.email,
-//     this.emailVerifiedAt,
+//     this.slug,
+//     this.description,
+//     this.image,
+//     this.status,
 //     this.createdAt,
 //     this.updatedAt,
 //   });
 //
-//   factory Customer.fromJson(Map<String, dynamic> json) => Customer(
+//   factory Category.fromJson(Map<String, dynamic> json) => Category(
 //         id: json["id"],
 //         name: json["name"],
-//         mobile: json["mobile"],
-//         email: json["email"],
-//         emailVerifiedAt: json["email_verified_at"] == null
-//             ? null
-//             : DateTime.parse(json["email_verified_at"]),
+//         slug: json["slug"],
+//         description: json["description"],
+//         image: json["image"],
+//         status: json["status"],
 //         createdAt: json["created_at"] == null
 //             ? null
 //             : DateTime.parse(json["created_at"]),
@@ -230,9 +235,127 @@
 //   Map<String, dynamic> toJson() => {
 //         "id": id,
 //         "name": name,
+//         "slug": slug,
+//         "description": description,
+//         "image": image,
+//         "status": status,
+//         "created_at": createdAt?.toIso8601String(),
+//         "updated_at": updatedAt?.toIso8601String(),
+//       };
+// }
+//
+// class Customer {
+//   final int? id;
+//   final String? name;
+//   final String? mobile;
+//   final String? email;
+//   final String? emailVerifiedAt;
+//   final DateTime? createdAt;
+//   final DateTime? updatedAt;
+//   final Profile? profile;
+//
+//   Customer({
+//     this.id,
+//     this.name,
+//     this.mobile,
+//     this.email,
+//     this.emailVerifiedAt,
+//     this.createdAt,
+//     this.updatedAt,
+//     this.profile,
+//   });
+//
+//   factory Customer.fromJson(Map<String, dynamic> json) => Customer(
+//         id: json["id"],
+//         name: json["name"],
+//         mobile: json["mobile"],
+//         email: json["email"],
+//         emailVerifiedAt: json["email_verified_at"],
+//         createdAt: json["created_at"] == null
+//             ? null
+//             : DateTime.parse(json["created_at"]),
+//         updatedAt: json["updated_at"] == null
+//             ? null
+//             : DateTime.parse(json["updated_at"]),
+//         profile:
+//             json["profile"] == null ? null : Profile.fromJson(json["profile"]),
+//       );
+//
+//   Map<String, dynamic> toJson() => {
+//         "id": id,
+//         "name": name,
 //         "mobile": mobile,
 //         "email": email,
-//         "email_verified_at": emailVerifiedAt?.toIso8601String(),
+//         "email_verified_at": emailVerifiedAt,
+//         "created_at": createdAt?.toIso8601String(),
+//         "updated_at": updatedAt?.toIso8601String(),
+//         "profile": profile?.toJson(),
+//       };
+// }
+//
+// class Profile {
+//   final int? id;
+//   final String? lastName;
+//   final String? country;
+//   final String? bio;
+//   final String? language;
+//   final String? image;
+//   final String? location;
+//   final String? latitude;
+//   final String? longitude;
+//   final int? userId;
+//   final int? categoryId;
+//   final DateTime? createdAt;
+//   final DateTime? updatedAt;
+//
+//   Profile({
+//     this.id,
+//     this.lastName,
+//     this.country,
+//     this.bio,
+//     this.language,
+//     this.image,
+//     this.location,
+//     this.latitude,
+//     this.longitude,
+//     this.userId,
+//     this.categoryId,
+//     this.createdAt,
+//     this.updatedAt,
+//   });
+//
+//   factory Profile.fromJson(Map<String, dynamic> json) => Profile(
+//         id: json["id"],
+//         lastName: json["last_name"],
+//         country: json["country"],
+//         bio: json["bio"],
+//         language: json["language"],
+//         image: json["image"],
+//         location: json["location"],
+//         latitude: json["latitude"],
+//         longitude: json["longitude"],
+//         userId: json["user_id"],
+//         categoryId: json["category_id"],
+//         createdAt: json["created_at"] == null
+//             ? null
+//             : DateTime.parse(json["created_at"]),
+//         updatedAt: json["updated_at"] == null
+//             ? null
+//             : DateTime.parse(json["updated_at"]),
+//       );
+//
+//   Map<String, dynamic> toJson() => {
+//         "id": id,
+//         "last_name": lastName,
+//         "country": country,
+//         "bio": bio,
+//         "language": language,
+//         "image": image,
+//         "location": location,
+//         "latitude": latitude,
+//         "longitude": longitude,
+//         "user_id": userId,
+//         "category_id": categoryId,
 //         "created_at": createdAt?.toIso8601String(),
 //         "updated_at": updatedAt?.toIso8601String(),
 //       };
