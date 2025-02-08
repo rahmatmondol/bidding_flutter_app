@@ -31,23 +31,23 @@ class NavBarView extends GetView<NavBarController> {
           ),
         ),
       ),
-      floatingActionButton: InkWell(
-        onTap: () {
-          controller.setCurrentTab(2);
-        },
-        child: Padding(
-          padding: const EdgeInsets.only(top: 30.0),
-          child: CircleAvatar(
-            radius: 30,
-            backgroundColor: LightThemeColors.primaryColor,
-            child: Icon(
-              Icons.shopping_cart,
-              color: LightThemeColors.whiteColor,
-            ),
-          ),
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      // floatingActionButton: InkWell(
+      //   onTap: () {
+      //     controller.setCurrentTab(2);
+      //   },
+      //   child: Padding(
+      //     padding: const EdgeInsets.only(top: 30.0),
+      //     child: CircleAvatar(
+      //       radius: 30,
+      //       backgroundColor: LightThemeColors.primaryColor,
+      //       child: Icon(
+      //         Icons.shopping_cart,
+      //         color: LightThemeColors.whiteColor,
+      //       ),
+      //     ),
+      //   ),
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         elevation: 10,
         color: LightThemeColors.navBarColor,
@@ -82,10 +82,21 @@ class NavBarView extends GetView<NavBarController> {
                   controller.setCurrentTab(1);
                 },
               ),
-              gapWidth(size: 50),
               IconButton(
                 icon: Icon(
-                  CupertinoIcons.heart_fill,
+                  Icons.shopping_cart,
+                  size: 25.r,
+                  color: controller.currentTab.value == 2
+                      ? LightThemeColors.primaryColor
+                      : LightThemeColors.navIconColor,
+                ),
+                onPressed: () {
+                  controller.setCurrentTab(2);
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  CupertinoIcons.hourglass_tophalf_fill,
                   size: 25.r,
                 ),
                 color: controller.currentTab.value == 3
@@ -97,14 +108,38 @@ class NavBarView extends GetView<NavBarController> {
               ),
               IconButton(
                 icon: Icon(
+                  Icons.access_time_outlined,
+                  size: 25.r,
+                ),
+                color: controller.currentTab.value == 4
+                    ? LightThemeColors.primaryColor
+                    : LightThemeColors.navIconColor,
+                onPressed: () {
+                  controller.setCurrentTab(4);
+                },
+              ),
+              IconButton(
+                icon: Icon(
+                  CupertinoIcons.heart_fill,
+                  size: 25.r,
+                ),
+                color: controller.currentTab.value == 5
+                    ? LightThemeColors.primaryColor
+                    : LightThemeColors.navIconColor,
+                onPressed: () {
+                  controller.setCurrentTab(5);
+                },
+              ),
+              IconButton(
+                icon: Icon(
                   Icons.person,
                   size: 25.r,
-                  color: controller.currentTab.value == 4
+                  color: controller.currentTab.value == 6
                       ? LightThemeColors.primaryColor
                       : LightThemeColors.navIconColor,
                 ),
                 onPressed: () {
-                  controller.setCurrentTab(4);
+                  controller.setCurrentTab(6);
                 },
               ),
             ],

@@ -34,7 +34,7 @@ class CustomerAuctionView extends GetView<CustomerAuctionController> {
                       fontWeight: FontWeight.bold, fontSize: 16.r),
                 ),
               ),
-              gapHeight(size: 20),
+              gapHeight(size: 25),
               TabBar(
                 labelStyle:
                     kTitleTextstyle.copyWith(fontWeight: FontWeight.bold),
@@ -57,7 +57,7 @@ class CustomerAuctionView extends GetView<CustomerAuctionController> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset(Img.allServiceIcon),
-                      gapWidth(size: 2.r),
+                      gapWidth(size: 1.5.r),
                       Text(
                         "All Auction",
                       ),

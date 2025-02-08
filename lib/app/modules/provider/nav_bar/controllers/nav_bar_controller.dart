@@ -4,6 +4,8 @@ import 'package:dirham_uae/app/modules/provider/inbox/views/inbox_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../customer/customer_add_auction/views/customer_add_auction_view.dart';
+import '../../../customer/customer_auction/views/customer_auction_view.dart';
 import '../../../global/profile/profile_view_both/views/profile_data_view.dart';
 import '../../booking/views/provider_booking_view.dart';
 
@@ -13,6 +15,8 @@ class NavBarController extends GetxController {
     HomeView(),
     InboxView(),
     ProviderBookingView(),
+    CustomerAddAuctionView(),
+    CustomerAuctionView(),
     FavoriteServiceView(),
     CustomerProfileView(),
   ];
