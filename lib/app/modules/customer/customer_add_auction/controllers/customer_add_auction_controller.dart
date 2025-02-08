@@ -21,6 +21,9 @@ import '../model/customer_add_auction_model.dart';
 
 class CustomerAddAuctionController extends GetxController {
   RxString enteredText = "".obs;
+  RxBool isCustomer = false.obs;
+  final userService = UserService();
+
   int? categooryId;
   Rx<TextEditingController> name = TextEditingController().obs;
   Rx<TextEditingController> skill = TextEditingController().obs;
@@ -91,8 +94,12 @@ class CustomerAddAuctionController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // fetchTags();
+    checkUserType();
     getCategoory();
+  }
+
+  Future<void> checkUserType() async {
+    isCustomer.value = await userService.isUser() ?? false;
   }
 
   void updateLevel(String newValue) {
@@ -116,9 +123,11 @@ class CustomerAddAuctionController extends GetxController {
     }
 
     try {
-      // Get token using UserService
-      final userService = UserService();
-      final token = await userService.getToken();
+      final isCustomer = await userService.isUser();
+
+      final token = isCustomer == true
+          ? await userService.getToken()
+          : await userService.getTokenProvider();
 
       if (token == null) {
         CustomSnackBar.showCustomErrorToast(message: "Authentication required");

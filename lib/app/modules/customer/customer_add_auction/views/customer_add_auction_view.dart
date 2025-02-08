@@ -15,6 +15,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../../config/theme/my_images.dart';
 import '../../../../../utils/global_variable/divider.dart';
 import '../../../../components/custom_button.dart';
+import '../../../../data/user_service/user_service.dart';
 import '../../../../routes/app_pages.dart';
 import '../../../provider/home/models/get_categories_model.dart';
 import '../../customer_home/controllers/customer_home_controller.dart';
@@ -30,6 +31,7 @@ class CustomerAddAuctionView extends GetView<CustomerAddAuctionController> {
 
     final CustomerHomeController customerHomeController =
         Get.put(CustomerHomeController());
+
     final HomeController homeC = Get.put(HomeController());
     Size size = MediaQuery.sizeOf(context);
 
@@ -89,12 +91,12 @@ class CustomerAddAuctionView extends GetView<CustomerAddAuctionController> {
                                 controller.selectedthumbnail.value = pickedFiles
                                     .map((pickedFile) => XFile(pickedFile.path))
                                     .toList();
-                                controller.customerCreateAuction(
-                                    controller.categooryId ?? 0,
-                                    controller.subCategoryId.toString(),
-                                    controller.selectedCurrency.value,
-                                    controller.selectedPriceType.value,
-                                    controller.selectedLevelList.value);
+                                // controller.customerCreateAuction(
+                                //     controller.categooryId ?? 0,
+                                //     controller.subCategoryId.toString(),
+                                //     controller.selectedCurrency.value,
+                                //     controller.selectedPriceType.value,
+                                //     controller.selectedLevelList.value);
                                 print(controller.customerCreateAuction
                                     .toString());
                               } else {
@@ -677,9 +679,75 @@ class CustomerAddAuctionView extends GetView<CustomerAddAuctionController> {
                             ],
                           ),
                           gapHeight(size: 8.0.w),
+                          // Obx(() {
+                          //   // final location = homeC
+                          //   //     .currentLocation.value;
+                          //   final location =
+                          //       customerHomeController.currentLocation.value;
+                          //   return TextField(
+                          //     readOnly: true,
+                          //     decoration: InputDecoration(
+                          //       filled: true,
+                          //       fillColor: LightThemeColors.secounderyColor,
+                          //       hintText: "Search Here",
+                          //       prefixIcon: Icon(
+                          //         Icons.search,
+                          //         color: Colors.white,
+                          //       ),
+                          //       border: OutlineInputBorder(
+                          //         borderRadius: BorderRadius.circular(8),
+                          //         borderSide: BorderSide(color: Colors.white),
+                          //       ),
+                          //       enabledBorder: OutlineInputBorder(
+                          //         borderRadius: BorderRadius.circular(8),
+                          //         borderSide: BorderSide(color: Colors.white),
+                          //       ),
+                          //       focusedBorder: OutlineInputBorder(
+                          //         borderRadius: BorderRadius.circular(8),
+                          //         borderSide: BorderSide(color: Colors.white),
+                          //       ),
+                          //       contentPadding: EdgeInsets.symmetric(
+                          //           horizontal: 12, vertical: 14),
+                          //     ),
+                          //     controller: TextEditingController(
+                          //         text: location?.fullAddress ?? "UAE, Dubai"),
+                          //     onTap: () async {
+                          //       controller.currentPosition = await controller
+                          //           .locationService
+                          //           .getCurrentLocation();
+                          //       if (controller.currentPosition != null) {
+                          //         await Get.toNamed(
+                          //             Routes.CUSTOMER_PICK_LOCATION);
+                          //         if (customerHomeController
+                          //                 .currentLocation.value !=
+                          //             null) {
+                          //           // Here we get the values needed for API
+                          //           final lat = customerHomeController
+                          //               .currentLocation.value?.latitude
+                          //               .toString();
+                          //           final lng = customerHomeController
+                          //               .currentLocation.value?.longitude
+                          //               .toString();
+                          //           final fullAddress = customerHomeController
+                          //               .currentLocation.value?.fullAddress;
+                          //
+                          //           // Now you can use these values in your controller
+                          //           controller.lat = lat;
+                          //           controller.lng = lng;
+                          //           controller.address.value.text =
+                          //               fullAddress ?? "";
+                          //         }
+                          //       } else {
+                          //         print("please_get_current_loaction");
+                          //       }
+                          //     },
+                          //   );
+                          // }),
                           Obx(() {
-                            final location =
-                                customerHomeController.currentLocation.value;
+                            final location = controller.isCustomer.value
+                                ? customerHomeController.currentLocation.value
+                                : homeC.currentLocation.value;
+
                             return TextField(
                               readOnly: true,
                               decoration: InputDecoration(
@@ -708,37 +776,52 @@ class CustomerAddAuctionView extends GetView<CustomerAddAuctionController> {
                               controller: TextEditingController(
                                   text: location?.fullAddress ?? "UAE, Dubai"),
                               onTap: () async {
+                                final userService = UserService();
+                                bool? isCustomer = await userService.isUser();
+
                                 controller.currentPosition = await controller
                                     .locationService
                                     .getCurrentLocation();
                                 if (controller.currentPosition != null) {
                                   await Get.toNamed(
                                       Routes.CUSTOMER_PICK_LOCATION);
-                                  if (customerHomeController
-                                          .currentLocation.value !=
-                                      null) {
-                                    // Here we get the values needed for API
-                                    final lat = customerHomeController
-                                        .currentLocation.value?.latitude
-                                        .toString();
-                                    final lng = customerHomeController
-                                        .currentLocation.value?.longitude
-                                        .toString();
-                                    final fullAddress = customerHomeController
-                                        .currentLocation.value?.fullAddress;
 
-                                    // Now you can use these values in your controller
-                                    controller.lat = lat;
-                                    controller.lng = lng;
-                                    controller.address.value.text =
-                                        fullAddress ?? "";
+                                  if (isCustomer == true) {
+                                    if (customerHomeController
+                                            .currentLocation.value !=
+                                        null) {
+                                      controller.lat = customerHomeController
+                                          .currentLocation.value?.latitude
+                                          .toString();
+                                      controller.lng = customerHomeController
+                                          .currentLocation.value?.longitude
+                                          .toString();
+                                      controller.address.value.text =
+                                          customerHomeController.currentLocation
+                                                  .value?.fullAddress ??
+                                              "";
+                                    }
+                                  } else {
+                                    if (homeC.currentLocation.value != null) {
+                                      controller.lat = homeC
+                                          .currentLocation.value?.latitude
+                                          .toString();
+                                      controller.lng = homeC
+                                          .currentLocation.value?.longitude
+                                          .toString();
+                                      controller.address.value.text = homeC
+                                              .currentLocation
+                                              .value
+                                              ?.fullAddress ??
+                                          "";
+                                    }
                                   }
                                 } else {
-                                  print("please_get_current_loaction");
+                                  print("please_get_current_location");
                                 }
                               },
                             );
-                          }),
+                          })
                         ],
                       ),
                       divider,

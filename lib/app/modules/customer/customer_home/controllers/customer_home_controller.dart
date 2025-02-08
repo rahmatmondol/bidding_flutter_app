@@ -15,6 +15,8 @@ class CustomerHomeController extends GetxController {
   Rx<GetCustomerServiceModel> getCustomerModel = GetCustomerServiceModel().obs;
   final Rx<LocationModel?> currentLocation = Rx<LocationModel?>(null);
 
+  final searchController = TextEditingController();
+
   RxBool isLoading = false.obs;
   RxBool isRefreshing = false.obs;
 
@@ -92,7 +94,7 @@ class CustomerHomeController extends GetxController {
   }
 
   // Search and filter related variables
-  final searchController = TextEditingController();
+
   final searchResults = <ServiceData>[].obs;
   final showFilterOptions = false.obs;
 

@@ -59,7 +59,7 @@ class CustomerAuctionView extends GetView<CustomerAuctionController> {
                       Image.asset(Img.allServiceIcon),
                       gapWidth(size: 2.r),
                       Text(
-                        "All Auctions",
+                        "All Auction",
                       ),
                     ],
                   ),
