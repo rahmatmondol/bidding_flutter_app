@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import '../../../global/profile/profile_view_both/views/profile_data_view.dart';
 import '../../customer_add_auction/views/customer_add_auction_view.dart';
 import '../../customer_add_service/views/customer_add_service_view.dart';
+import '../../customer_auction/views/customer_auction_view.dart';
 
 class CustomerNavBarController extends GetxController {
   final RxInt currentTab = 0.obs;
@@ -16,6 +17,7 @@ class CustomerNavBarController extends GetxController {
     CustomerAddServiceView(),
     CustomerAddAuctionView(),
     CustomerBookingView(),
+    CustomerAuctionView(),
     CustomerProfileView(),
   ];
 

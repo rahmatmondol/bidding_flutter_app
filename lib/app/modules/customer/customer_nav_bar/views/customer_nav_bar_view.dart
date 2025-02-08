@@ -121,14 +121,26 @@ class CustomerNavBarView extends GetView<CustomerNavBarController> {
               ),
               IconButton(
                 icon: Icon(
+                  Icons.access_time_outlined,
+                  size: 25.r,
+                ),
+                color: controller.currentTab.value == 5
+                    ? LightThemeColors.primaryColor
+                    : LightThemeColors.navIconColor,
+                onPressed: () {
+                  controller.setCurrentTab(5);
+                },
+              ),
+              IconButton(
+                icon: Icon(
                   Icons.person,
                   size: 25.r,
-                  color: controller.currentTab.value == 5
+                  color: controller.currentTab.value == 6
                       ? LightThemeColors.primaryColor
                       : LightThemeColors.navIconColor,
                 ),
                 onPressed: () {
-                  controller.setCurrentTab(5);
+                  controller.setCurrentTab(6);
                 },
               ),
             ],

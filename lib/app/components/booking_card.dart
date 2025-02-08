@@ -13,6 +13,7 @@ class BookingCard extends StatelessWidget {
   final String? buttonText;
   final bool? isButton;
   final Function()? onTap;
+  final Function()? onBodyClick;
   final bool showFavorite;
   final List<String>? skills;
 
@@ -27,6 +28,7 @@ class BookingCard extends StatelessWidget {
     required this.price,
     this.isButton = false,
     this.onTap,
+    this.onBodyClick,
     this.showFavorite = true,
     this.skills,
   });
@@ -35,131 +37,134 @@ class BookingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // height: size.height * 0.35,
-      // width: size.width * 0.8,
-      // margin: EdgeInsets.only(left: 14.r),
-      padding: EdgeInsets.symmetric(horizontal: 12.r, vertical: 8.r),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8.r),
-        color: LightThemeColors.secounderyColor,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: kTitleTextstyle.copyWith(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    gapHeight(size: 4),
-                    Wrap(
-                      // crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.location_on,
-                          size: 15.sp,
-                          color: LightThemeColors.whiteColor,
+    return GestureDetector(
+      onTap: onBodyClick,
+      child: Container(
+        // height: size.height * 0.35,
+        // width: size.width * 0.8,
+        // margin: EdgeInsets.only(left: 14.r),
+        padding: EdgeInsets.symmetric(horizontal: 12.r, vertical: 8.r),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.r),
+          color: LightThemeColors.secounderyColor,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: kTitleTextstyle.copyWith(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold,
                         ),
-                        gapWidth(size: 5),
-                        Text(
-                          location!,
-                          overflow: TextOverflow.ellipsis,
-                          style: kSubtitleStyle.copyWith(
+                      ),
+                      gapHeight(size: 4),
+                      Wrap(
+                        // crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.location_on,
+                            size: 15.sp,
                             color: LightThemeColors.whiteColor,
                           ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              if (showFavorite)
-                CircleAvatar(
-                  backgroundColor: LightThemeColors.keywordBoxColor,
-                  child: Icon(Icons.favorite_border),
-                )
-            ],
-          ),
-          gapHeight(size: 10),
-          Text(
-            description!,
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-            style: kSubtitleStyle.copyWith(
-              fontSize: 10.sp,
-              color: LightThemeColors.secounderyTextColor,
-            ),
-            textAlign: TextAlign.justify,
-          ),
-          gapHeight(size: 10),
-          Text(
-            priceLevel!,
-            style: kSubtitleStyle.copyWith(
-              color: LightThemeColors.whiteColor,
-            ),
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  //color: Colors.red,
-                  height: size.height * 0.03,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: 2,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10.r),
-                        margin: EdgeInsets.only(right: 5.r),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(25.r),
-                          color: LightThemeColors.keywordBoxColor,
-                        ),
-                        child: Center(
-                          child: Text(
-                            skills?[index] ?? '',
+                          gapWidth(size: 5),
+                          Text(
+                            location!,
+                            overflow: TextOverflow.ellipsis,
                             style: kSubtitleStyle.copyWith(
-                                color: LightThemeColors.whiteColor),
-                          ),
-                        ),
-                      );
-                    },
+                              color: LightThemeColors.whiteColor,
+                            ),
+                          )
+                        ],
+                      )
+                    ],
                   ),
                 ),
+                if (showFavorite)
+                  CircleAvatar(
+                    backgroundColor: LightThemeColors.keywordBoxColor,
+                    child: Icon(Icons.favorite_border),
+                  )
+              ],
+            ),
+            gapHeight(size: 10),
+            Text(
+              description!,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+              style: kSubtitleStyle.copyWith(
+                fontSize: 10.sp,
+                color: LightThemeColors.secounderyTextColor,
               ),
-              Text(
-                "\$$price",
-                style: kTitleTextstyle.copyWith(
-                  fontSize: 14.sp,
-                  color: LightThemeColors.primaryColor,
-                  fontWeight: FontWeight.bold,
+              textAlign: TextAlign.justify,
+            ),
+            gapHeight(size: 10),
+            Text(
+              priceLevel!,
+              style: kSubtitleStyle.copyWith(
+                color: LightThemeColors.whiteColor,
+              ),
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    //color: Colors.red,
+                    height: size.height * 0.03,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 2,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          padding: EdgeInsets.symmetric(horizontal: 10.r),
+                          margin: EdgeInsets.only(right: 5.r),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(25.r),
+                            color: LightThemeColors.keywordBoxColor,
+                          ),
+                          child: Center(
+                            child: Text(
+                              skills?[index] ?? '',
+                              style: kSubtitleStyle.copyWith(
+                                  color: LightThemeColors.whiteColor),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
                 ),
-              )
-            ],
-          ),
-          isButton == true
-              ? Padding(
-                  padding: EdgeInsets.only(top: 20, bottom: 4.0),
-                  child: CustomButton(
-                    bgColor: LightThemeColors.primaryColor,
-                    ontap: onTap!,
-                    widget: Text(buttonText!),
+                Text(
+                  "\$$price",
+                  style: kTitleTextstyle.copyWith(
+                    fontSize: 14.sp,
+                    color: LightThemeColors.primaryColor,
+                    fontWeight: FontWeight.bold,
                   ),
                 )
-              : Container()
-        ],
+              ],
+            ),
+            isButton == true
+                ? Padding(
+                    padding: EdgeInsets.only(top: 20, bottom: 4.0),
+                    child: CustomButton(
+                      bgColor: LightThemeColors.primaryColor,
+                      ontap: onTap!,
+                      widget: Text(buttonText!),
+                    ),
+                  )
+                : Container()
+          ],
+        ),
       ),
     );
   }
