@@ -33,7 +33,7 @@ class NotificationCard extends StatelessWidget {
         // ADDED: Decoration for border
         decoration: BoxDecoration(
           border: Border.all(
-            color: isRead ? Colors.green : Colors.blue,
+            color: isRead ? Colors.grey.shade600 : Colors.blue.shade400,
             width: 1.5,
           ),
           borderRadius: BorderRadius.circular(12.r),
@@ -67,6 +67,7 @@ class NotificationCard extends StatelessWidget {
                     style: kSubtitleStyle.copyWith(
                       fontSize: 13.sp,
                       fontWeight: FontWeight.bold,
+                      color: isRead ? Colors.grey : Colors.white,
                     ),
                   ),
                   gapHeight(size: 4),
@@ -74,14 +75,18 @@ class NotificationCard extends StatelessWidget {
                     title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: kSubtitleStyle,
+                    style: kSubtitleStyle.copyWith(
+                      color: isRead ? Colors.grey : Colors.white,
+                    ),
                   )
                 ],
               ),
             ),
             Text(
               time,
-              style: kSubtitleStyle,
+              style: kSubtitleStyle.copyWith(
+                color: isRead ? Colors.grey : Colors.white,
+              ),
             )
           ],
         ),

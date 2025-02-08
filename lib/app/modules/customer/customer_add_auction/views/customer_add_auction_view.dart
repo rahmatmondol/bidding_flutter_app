@@ -18,15 +18,15 @@ import '../../../../components/custom_button.dart';
 import '../../../../routes/app_pages.dart';
 import '../../../provider/home/models/get_categories_model.dart';
 import '../../customer_home/controllers/customer_home_controller.dart';
-import '../controllers/customer_add_service_controller.dart';
+import '../controllers/customer_add_auction_controller.dart';
 
-class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
-  CustomerAddServiceView({Key? key}) : super(key: key);
+class CustomerAddAuctionView extends GetView<CustomerAddAuctionController> {
+  CustomerAddAuctionView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final CustomerAddServiceController customerAddServiceController =
-        Get.put(CustomerAddServiceController());
+    final CustomerAddAuctionController customerAddAuctionController =
+        Get.put(CustomerAddAuctionController());
 
     final CustomerHomeController customerHomeController =
         Get.put(CustomerHomeController());
@@ -64,8 +64,8 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CustomHeaderBar(title: 'Create a Service'),
-                      Text("Service Name",
+                      CustomHeaderBar(title: 'Create a Auction'),
+                      Text("Auction Name",
                           style: kTitleTextstyle.copyWith(
                             fontWeight: FontWeight.w600,
                           )),
@@ -89,13 +89,13 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                                 controller.selectedthumbnail.value = pickedFiles
                                     .map((pickedFile) => XFile(pickedFile.path))
                                     .toList();
-                                controller.customerCreateService(
+                                controller.customerCreateAuction(
                                     controller.categooryId ?? 0,
                                     controller.subCategoryId.toString(),
                                     controller.selectedCurrency.value,
                                     controller.selectedPriceType.value,
                                     controller.selectedLevelList.value);
-                                print(controller.customerCreateService
+                                print(controller.customerCreateAuction
                                     .toString());
                               } else {
                                 print('Image picked successfully');
@@ -168,41 +168,9 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                             ),
                         ],
                       ),
-                      // InkWell(
-                      //   onTap: () async {
-                      //     final pickedFiles =
-                      //         await ImagePicker().pickMultiImage();
-                      //     if (pickedFiles != null && pickedFiles.isNotEmpty) {
-                      //       controller.selectedthumbnail.value = pickedFiles
-                      //           .map((pickedFile) => XFile(pickedFile.path))
-                      //           .toList();
-                      //       controller.customerCreateService(
-                      //           controller.categooryId ?? 0,
-                      //           // Use this instead of selectedCategory?.id
-                      //           controller.subCategoryId.toString(),
-                      //           controller.selectedCurrency.value,
-                      //           controller.selectedPriceType.value,
-                      //           controller.selectedLevelList.value);
-                      //       print(controller.customerCreateService.toString());
-                      //     } else {
-                      //       print('Image picked successfully');
-                      //     }
-                      //   },
-                      //   child: Container(
-                      //     padding: EdgeInsets.symmetric(
-                      //       vertical: 15.r,
-                      //       horizontal: 20,
-                      //     ),
-                      //     decoration: BoxDecoration(
-                      //       color: LightThemeColors.secounderyColor,
-                      //       borderRadius: BorderRadius.circular(20.r),
-                      //     ),
-                      //     child: Center(child: Text("Add Photos")),
-                      //   ),
-                      // ),
 
                       divider,
-                      Text(" Service Description",
+                      Text(" Auction Description",
                           style: kTitleTextstyle.copyWith(
                             fontWeight: FontWeight.w600,
                           )),
@@ -224,7 +192,7 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                           // Makes the TextField expand to fill the container
                           textAlignVertical: TextAlignVertical.top,
                           decoration: InputDecoration(
-                            hintText: 'Describe your service...',
+                            hintText: 'Describe your auction...',
                             hintStyle: TextStyle(
                                 color: LightThemeColors.whiteColor
                                     .withOpacity(0.5)),
@@ -367,14 +335,14 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                       ),
                       divider,
                       Text(
-                        "Select Service Category",
+                        "Select Auction Category",
                         style: kTitleTextstyle.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                       gapHeight(size: 3.0.h),
 
-                      //********Select Service Category*********
+                      //********Select Auction Category*********
 
                       Obx(() => Container(
                             padding: EdgeInsets.symmetric(
@@ -691,75 +659,6 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                         ),
                       ),
                       divider,
-                      divider,
-                      // Column(
-                      //   children: [
-                      //     Row(
-                      //       children: [
-                      //         Text('Location',
-                      //             style: kTitleTextstyle.copyWith(
-                      //               fontWeight: FontWeight.w500,
-                      //             )),
-                      //         gapWidth(size: 4.0.w),
-                      //         Image.asset(
-                      //           Img.locationIcon,
-                      //           width: 16.r,
-                      //           height: 16.r,
-                      //         ),
-                      //         gapWidth(size: 4.0.w),
-                      //       ],
-                      //     ),
-                      //     gapHeight(size: 8.0.w),
-                      //     // Modified TextField to show same location data
-                      //     Obx(() {
-                      //       final location =
-                      //           customerHomeController.currentLocation.value;
-                      //       return TextField(
-                      //         readOnly: true,
-                      //         decoration: InputDecoration(
-                      //           filled: true,
-                      //           fillColor: LightThemeColors.secounderyColor,
-                      //           hintText: "Search Here",
-                      //           prefixIcon: Icon(
-                      //             Icons.search,
-                      //             color: Colors.white,
-                      //           ),
-                      //           border: OutlineInputBorder(
-                      //             borderRadius: BorderRadius.circular(8),
-                      //             borderSide: BorderSide(color: Colors.white),
-                      //           ),
-                      //           enabledBorder: OutlineInputBorder(
-                      //             borderRadius: BorderRadius.circular(8),
-                      //             borderSide: BorderSide(color: Colors.white),
-                      //           ),
-                      //           focusedBorder: OutlineInputBorder(
-                      //             borderRadius: BorderRadius.circular(8),
-                      //             borderSide:
-                      //                 BorderSide(color: Colors.transparent),
-                      //           ),
-                      //           contentPadding: EdgeInsets.symmetric(
-                      //               horizontal: 12, vertical: 14),
-                      //         ),
-                      //         controller: TextEditingController(
-                      //             text: location != null
-                      //                 ? "${location.locality}, ${location.country}"
-                      //                 : "UAE, Dubai"),
-                      //         onTap: () async {
-                      //           controller.currentPosition = await controller
-                      //               .locationService
-                      //               .getCurrentLocation();
-                      //           if (controller.currentPosition != null) {
-                      //             await Get.toNamed(
-                      //                 Routes.CUSTOMER_PICK_LOCATION);
-                      //             customerHomeController.currentLocation;
-                      //           } else {
-                      //             print("please_get_current_loaction");
-                      //           }
-                      //         },
-                      //       );
-                      //     }),
-                      //   ],
-                      // ),
                       Column(
                         children: [
                           Row(
@@ -848,7 +747,7 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                             ontap: controller.isLoading.value
                                 ? () {} // Empty callback instead of null
                                 : () {
-                                    controller.customerCreateService(
+                                    controller.customerCreateAuction(
                                       controller.categooryId ?? 0,
                                       controller.selectedSubCategoryId.value,
                                       controller.selectedCurrency.value,
@@ -870,23 +769,6 @@ class CustomerAddServiceView extends GetView<CustomerAddServiceController> {
                                     style: kTitleTextstyle,
                                   ),
                           )),
-                      // CustomButton(
-                      //   bgColor: LightThemeColors.primaryColor,
-                      //   ontap: () {
-                      //     controller.customerCreateService(
-                      //       controller.categooryId ?? 0,
-                      //       // Use this instead of selectedCategory?.id
-                      //       controller.selectedSubCategoryId.value,
-                      //       controller.selectedCurrency.value,
-                      //       controller.selectedPriceType.value,
-                      //       controller.selectedLevelList.value,
-                      //     );
-                      //   },
-                      //   widget: Text(
-                      //     "Create",
-                      //     style: kTitleTextstyle,
-                      //   ),
-                      // ),
                       divider,
                     ],
                   ),

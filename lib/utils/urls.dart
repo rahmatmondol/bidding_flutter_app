@@ -18,6 +18,7 @@ class Constants {
 
   static String updatePostStatus(int id) => '$baseUrl/auth/update-booking/$id';
   static const customerCreateService = "$baseUrl/auth/create-service";
+  static const customerCreateAuction = "$baseUrl/auth/create-service";
 
   static custommerBeddingList(int id) =>
       '$baseUrl/auth/get-biddings?service_id=$id';
