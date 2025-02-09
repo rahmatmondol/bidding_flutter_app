@@ -347,10 +347,16 @@ class AuctionDetailsView extends GetView<AuctionDetailsController> {
                                 'title': auction.title,
                                 'description': auction.description,
                                 'createdAt': auction.createdAt,
-                                'skills': auction.skills is String
-                                    ? List<String>.from(
-                                        json.decode(auction.skills!))
-                                    : auction.skills as List<String>,
+                                'skills': auction.skills != null
+                                    ? (auction.skills is String
+                                        ? List<String>.from(
+                                            json.decode(auction.skills!))
+                                        : auction.skills as List<String>)
+                                    : <String>[],
+                                // 'skills': auction.skills is String
+                                //     ? List<String>.from(
+                                //         json.decode(auction.skills!))
+                                //     : auction.skills as List<String>,
                               },
                             ),
                             widget: Text(

@@ -19,11 +19,10 @@ class Constants {
   static String updatePostStatus(int id) => '$baseUrl/auth/update-booking/$id';
   static const customerCreateService = "$baseUrl/auth/create-service";
   static const customerCreateAuction = "$baseUrl/auth/create-service";
+  static const getMyAuction = "$baseUrl/auth/get-my-auctions";
 
   static custommerBeddingList(int id) =>
       '$baseUrl/auth/get-biddings?service_id=$id';
-
-  // static const custommerBettingListDetails = '$baseUrl/auth/get-bidding-info';
 
   static custommerBettingListDetails(int id) =>
       '$baseUrl/auth/get-bidding-info?bid_id=$id';
