@@ -4,10 +4,10 @@ import 'package:dirham_uae/app/modules/customer/customer_inbox/views/customer_in
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../global/add_auction/views/add_auction_view.dart';
+import '../../../global/auction/views/auction_view.dart';
 import '../../../global/profile/profile_view_both/views/profile_data_view.dart';
-import '../../customer_add_auction/views/customer_add_auction_view.dart';
 import '../../customer_add_service/views/customer_add_service_view.dart';
-import '../../customer_auction/views/customer_auction_view.dart';
 
 class CustomerNavBarController extends GetxController {
   final RxInt currentTab = 0.obs;

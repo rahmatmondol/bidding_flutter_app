@@ -11,7 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../utils/urls.dart';
 import '../../../../data/local/my_shared_pref.dart';
 import '../../../../services/base_client.dart';
-import '../../../global/customer_pick_location/model/location_model.dart';
+import '../../../global/pick_location/model/location_model.dart';
 
 class HomeController extends GetxController {
   final selectedCategory = ''.obs;

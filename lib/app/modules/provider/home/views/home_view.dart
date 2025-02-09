@@ -104,13 +104,43 @@ class HomeView extends GetView<HomeController> {
                                             Obx(() {
                                               final location = homeController
                                                   .currentLocation.value;
-                                              return Text(
-                                                location != null
-                                                    ? "${location.locality}, ${location.country}"
-                                                    : "UAE, Dubai",
-                                                style: kSubtitleStyle,
+                                              String getFormattedAddress() {
+                                                if (location == null)
+                                                  return "UAE, Dubai";
+
+                                                final parts = [
+                                                  if (location
+                                                      .streetAddress.isNotEmpty)
+                                                    location.streetAddress,
+                                                  if (location
+                                                      .locality.isNotEmpty)
+                                                    location.locality,
+                                                ];
+
+                                                return parts.join(", ");
+                                              }
+
+                                              return Container(
+                                                width: 100,
+                                                child: Text(
+                                                  getFormattedAddress(),
+                                                  style: kSubtitleStyle,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                ),
                                               );
                                             }),
+                                            // Obx(() {
+                                            //   final location = homeController
+                                            //       .currentLocation.value;
+                                            //   return Text(
+                                            //     location != null
+                                            //         ? "${location.fullAddress}"
+                                            //         : "UAE, Dubai",
+                                            //     style: kSubtitleStyle,overflow: ,
+                                            //   );
+                                            // }),
                                             Icon(
                                               Icons.arrow_drop_down,
                                               color:
