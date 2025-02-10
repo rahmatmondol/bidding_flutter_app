@@ -1,12 +1,20 @@
 import 'dart:convert';
 
 import 'package:dirham_uae/app/data/user_service/user_service.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../customer/customer_home/controllers/customer_home_controller.dart';
 import '../model/auction_booking_model.dart';
 
 class CustomerAuctionController extends GetxController {
+  CustomerHomeController get homeController =>
+      Get.find<CustomerHomeController>();
+
+  final searchResults = <AuctionModel>[].obs;
+  final TextEditingController searchController = TextEditingController();
+
   // Observable lists
   final allBookings = <AuctionModel>[].obs;
   final myAuctions = <AuctionModel>[].obs;
@@ -30,6 +38,12 @@ class CustomerAuctionController extends GetxController {
   void onInit() {
     super.onInit();
     refreshAll();
+
+    // Listen to search controller changes
+    final homeController = Get.find<CustomerHomeController>();
+    ever(homeController.searchController.obs, (_) {
+      filterAuctions(homeController.searchController.text);
+    });
   }
 
   // Helper method to get headers with token
@@ -273,5 +287,24 @@ class CustomerAuctionController extends GetxController {
       // fetchAcceptedBookings(),
       fetchMyAuctions(),
     ]);
+  }
+
+  void filterAuctions(String query) {
+    if (query.isEmpty) {
+      searchResults.clear();
+      return;
+    }
+
+    var filteredAuctions = allBookings.where((auction) {
+      final searchLower = query.toLowerCase();
+      return (auction.title?.toLowerCase().contains(searchLower) ?? false) ||
+          (auction.description?.toLowerCase().contains(searchLower) ?? false) ||
+          (auction.location?.toLowerCase().contains(searchLower) ?? false) ||
+          (auction.priceType?.toLowerCase().contains(searchLower) ?? false) ||
+          (auction.level?.toLowerCase().contains(searchLower) ?? false) ||
+          (auction.status?.toLowerCase().contains(searchLower) ?? false);
+    }).toList();
+
+    searchResults.value = filteredAuctions;
   }
 }

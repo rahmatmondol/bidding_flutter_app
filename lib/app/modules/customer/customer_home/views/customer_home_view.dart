@@ -1,7 +1,4 @@
-// ignore_for_file: unnecessary_null_comparison
-
 import 'package:dirham_uae/app/components/popular_service_card.dart';
-import 'package:dirham_uae/app/components/row_text.dart';
 import 'package:dirham_uae/app/components/small_custom_button.dart';
 import 'package:dirham_uae/app/modules/customer/customer_service_details/views/customer_service_details_view.dart';
 import 'package:dirham_uae/app/routes/app_pages.dart';
@@ -12,6 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../../global/auction/controllers/auction_booking_controller.dart';
+import '../../../global/auction/tabs/all_auction_tab.dart';
+import '../../../global/auction_details_view/bindings/auction_details_binding.dart';
+import '../../../global/auction_details_view/view/auction_details_view.dart';
 import '../../../global/profile/account_details/controllers/account_details_controller.dart';
 import '../../customer_service_details/bindings/customer_service_details_binding.dart';
 import '../controllers/customer_home_controller.dart';
@@ -21,114 +22,178 @@ class CustomerHomeView extends GetView<CustomerHomeController> {
 
   final CustomerHomeController customerHomeController =
       Get.put(CustomerHomeController());
-
   final CustomerAccountDetailsController customerAccountDetailsController =
       Get.put(CustomerAccountDetailsController());
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
-    return RefreshIndicator(
-      onRefresh: () async {
-        controller.isRefreshing.value = true;
-        await controller.getCustomeService();
-        await controller.loadSavedLocation();
-        controller.isRefreshing.value = false;
-      },
-      child: Scaffold(
-        body: Container(
-          height: size.height,
-          width: size.width,
-          decoration: BoxDecoration(gradient: buildCustomGradient()),
-          child: SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.r)
-                        .copyWith(top: 30.r),
-                    child: Column(
-                      children: [
-                        _buildHeaderRow(),
-                        gapHeight(size: 20),
-                        _buildSearchSection(),
-                        gapHeight(size: 20),
-                      ],
+    return DefaultTabController(
+      length: 2,
+      child: RefreshIndicator(
+        onRefresh: () async {
+          controller.isRefreshing.value = true;
+          await controller.getCustomeService();
+          await controller.loadSavedLocation();
+          controller.isRefreshing.value = false;
+        },
+        child: Scaffold(
+          body: Container(
+            height: size.height,
+            width: size.width,
+            decoration: BoxDecoration(gradient: buildCustomGradient()),
+            child: SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.r)
+                          .copyWith(top: 30.r),
+                      child: Column(
+                        children: [
+                          _buildHeaderRow(),
+                          gapHeight(size: 20),
+                          _buildSearchSection(),
+                          gapHeight(size: 10),
+                        ],
+                      ),
                     ),
-                  ),
-                  gapHeight(size: 20),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.r),
-                    child: RowText(
-                      title: "My posted service",
-                      buttonName: "",
-                      ontap: () {},
+                    Center(
+                        child: Text(
+                      'Select Options',
+                      style: kTitleTextstyle,
+                    )),
+                    gapHeight(size: 10),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.r),
+                      child: Column(
+                        children: [
+                          TabBar(
+                            labelStyle: kTitleTextstyle.copyWith(
+                                fontWeight: FontWeight.bold),
+                            unselectedLabelStyle: kTitleTextstyle,
+                            unselectedLabelColor: LightThemeColors.whiteColor,
+                            indicator: UnderlineTabIndicator(
+                                borderSide: BorderSide(
+                                  width: 2.r,
+                                  color: LightThemeColors.primaryColor,
+                                ),
+                                insets: EdgeInsets.symmetric(horizontal: 50.r)),
+                            labelColor: LightThemeColors.primaryColor,
+                            tabs: [
+                              Tab(text: "My Services"),
+                              Tab(text: "All Auctions"),
+                            ],
+                          ),
+                          Container(
+                            height: size.height * 0.6,
+                            child: TabBarView(
+                              children: [
+                                // Services Tab
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Obx(() {
+                                      return Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 15.r),
+                                        child: Text(
+                                          "All Services (${controller.getCustomerModel.value.data?.length})",
+                                          style: kSubtitleStyle.copyWith(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      );
+                                    }),
+                                    gapHeight(size: 10),
+                                    Expanded(
+                                      // Wrap the ListView.builder with Expanded
+                                      child: Obx(() {
+                                        if (controller.isLoading.value) {
+                                          return const Center(
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        }
+
+                                        final services = controller
+                                            .getCustomerModel.value.data;
+
+                                        if (services == null ||
+                                            services.isEmpty) {
+                                          return Center(
+                                            child: Padding(
+                                              padding: EdgeInsets.all(16.r),
+                                              child: Text(
+                                                'No services found',
+                                                style: kSubtitleStyle,
+                                              ),
+                                            ),
+                                          );
+                                        }
+
+                                        return ListView.builder(
+                                          shrinkWrap: true,
+                                          physics:
+                                              const BouncingScrollPhysics(),
+                                          itemCount: services.length,
+                                          itemBuilder: (context, index) {
+                                            final serviceData = services[index];
+                                            return Container(
+                                              margin: EdgeInsets.symmetric(
+                                                      horizontal: 16.r)
+                                                  .copyWith(bottom: 10.r),
+                                              height: size.height * 0.24,
+                                              child: PopularServiceCard(
+                                                size: size,
+                                                name:
+                                                    serviceData.title ?? 'N/A',
+                                                location:
+                                                    serviceData.location ??
+                                                        'N/A',
+                                                description:
+                                                    serviceData.description ??
+                                                        'N/A',
+                                                priceLevel:
+                                                    "${serviceData.priceType ?? 'Standard'} Price - ${serviceData.level ?? 'Basic'} level",
+                                                price:
+                                                    "${serviceData.price.toStringAsFixed(2)} ${serviceData.currency?.toUpperCase() ?? 'AED'}",
+                                                skill: serviceData.skills
+                                                    ?.join(", "),
+                                                showFavorite: false,
+                                                onTap: () {
+                                                  final id = serviceData.id;
+                                                  if (id != null) {
+                                                    Get.to(
+                                                      () =>
+                                                          CustomerServiceDetailsView(
+                                                              id),
+                                                      binding:
+                                                          CustomerServiceDetailsBinding(
+                                                              id),
+                                                      preventDuplicates: false,
+                                                    );
+                                                  } else {
+                                                    Get.snackbar('Error',
+                                                        'Invalid service ID');
+                                                  }
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      }),
+                                    ),
+                                  ],
+                                ),
+                                // Auctions Tab
+                                CustomerAllAuctionTab(),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  gapHeight(size: 20),
-                  Obx(() {
-                    if (controller.isLoading.value) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-
-                    final services = controller.getCustomerModel.value.data;
-
-                    if (services == null || services.isEmpty) {
-                      return Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(16.r),
-                          child: Text(
-                            'No services found',
-                            style: kSubtitleStyle,
-                          ),
-                        ),
-                      );
-                    }
-
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: services.length,
-                      itemBuilder: (context, index) {
-                        final serviceData = services[index];
-                        print(
-                            "Building item $index with id: ${serviceData.id}"); // Debug print
-
-                        return Container(
-                          margin: EdgeInsets.symmetric(horizontal: 16.r)
-                              .copyWith(bottom: 10.r),
-                          height: size.height * 0.24,
-                          child: PopularServiceCard(
-                            size: size,
-                            name: serviceData.title ?? 'N/A',
-                            location: serviceData.location ?? 'N/A',
-                            description: serviceData.description ?? 'N/A',
-                            priceLevel:
-                                "${serviceData.priceType ?? 'Standard'} Price - ${serviceData.level ?? 'Basic'} level",
-                            price:
-                                "${serviceData.price.toStringAsFixed(2)} ${serviceData.currency?.toUpperCase() ?? 'AED'}",
-                            skill: serviceData.skills?.join(", "),
-                            showFavorite: false,
-                            onTap: () {
-                              final id = serviceData.id;
-                              if (id != null) {
-                                Get.to(
-                                  () => CustomerServiceDetailsView(id),
-                                  binding: CustomerServiceDetailsBinding(id),
-                                  preventDuplicates: false,
-                                );
-                              } else {
-                                Get.snackbar('Error', 'Invalid service ID');
-                              }
-                            },
-                          ),
-                        );
-                      },
-                    );
-                  }),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -165,12 +230,12 @@ class CustomerHomeView extends GetView<CustomerHomeController> {
                 ),
               ),
             ),
-            SizedBox(width: 8.r), // Gap between search field and filter button
+            SizedBox(width: 8.r),
             Container(
-              width: 46.r, // Fixed width for square button
-              height: 46.r, // Same height as search field
+              width: 46.r,
+              height: 46.r,
               decoration: BoxDecoration(
-                color: Colors.blue, // Using blue color as shown in UI
+                color: Colors.blue,
                 borderRadius: BorderRadius.circular(8.r),
               ),
               child: InkWell(
@@ -181,7 +246,6 @@ class CustomerHomeView extends GetView<CustomerHomeController> {
                   padding: EdgeInsets.all(12.r),
                   child: Image.asset(
                     Img.filterIcon,
-                    // Make sure to add this image to your assets
                     color: Colors.white,
                   ),
                 ),
@@ -189,7 +253,119 @@ class CustomerHomeView extends GetView<CustomerHomeController> {
             ),
           ],
         ),
-        // Filter options dropdown
+
+        // Search suggestions dropdown
+        Obx(() {
+          final services = controller.searchResults;
+          final auctions = Get.find<CustomerAuctionController>().searchResults;
+          final showResults = services.isNotEmpty || auctions.isNotEmpty;
+
+          if (!showResults || controller.searchController.text.isEmpty) {
+            return SizedBox.shrink();
+          }
+
+          return Container(
+            margin: EdgeInsets.only(top: 8.r),
+            constraints: BoxConstraints(maxHeight: 300.h),
+            decoration: BoxDecoration(
+              color: Colors.grey[800],
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                if (services.isNotEmpty) ...[
+                  Padding(
+                    padding: EdgeInsets.all(8.r),
+                    child: Text(
+                      'Services',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  ...services.map((service) => ListTile(
+                        title: Text(
+                          service.title ?? 'N/A',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              service.description ?? 'N/A',
+                              style: TextStyle(color: Colors.grey[400]),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              '${service.status ?? 'N/A'} | ${service.currency ?? 'N/A'} | ${service.level ?? 'N/A'} | ${service.priceType ?? 'N/A'}',
+                              style: TextStyle(
+                                  color: Colors.grey[400], fontSize: 12),
+                            ),
+                          ],
+                        ),
+                        onTap: () {
+                          if (service.id != null) {
+                            Get.to(
+                              () => CustomerServiceDetailsView(service.id!),
+                              binding:
+                                  CustomerServiceDetailsBinding(service.id!),
+                              preventDuplicates: false,
+                            );
+                          }
+                        },
+                      )),
+                ],
+                if (auctions.isNotEmpty) ...[
+                  Padding(
+                    padding: EdgeInsets.all(8.r),
+                    child: Text(
+                      'Auctions',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  ...auctions.map((auction) => ListTile(
+                        title: Text(
+                          auction.title ?? 'N/A',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              auction.description ?? 'N/A',
+                              style: TextStyle(color: Colors.grey[400]),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              '${auction.priceType ?? 'N/A'} | ${auction.level ?? 'N/A'} | ${auction.location ?? 'N/A'}',
+                              style: TextStyle(
+                                  color: Colors.grey[400], fontSize: 12),
+                            ),
+                          ],
+                        ),
+                        onTap: () {
+                          Get.to(
+                            () => AuctionDetailsView(auction: auction),
+                            binding: AuctionDetailsBinding(),
+                            arguments: auction,
+                            preventDuplicates: false,
+                          );
+                        },
+                      )),
+                ],
+              ],
+            ),
+          );
+        }),
+
+        // Filter options section
         Obx(() => controller.showFilterOptions.value
             ? Container(
                 margin: EdgeInsets.only(top: 8.r),
@@ -221,6 +397,9 @@ class CustomerHomeView extends GetView<CustomerHomeController> {
                                     controller.toggleFilter(
                                         status, controller.selectedStatuses);
                                   },
+                                  backgroundColor: Colors.grey[700],
+                                  selectedColor: Colors.blue,
+                                  labelStyle: TextStyle(color: Colors.white),
                                 )),
                           )
                           .toList(),
@@ -243,6 +422,9 @@ class CustomerHomeView extends GetView<CustomerHomeController> {
                                     controller.toggleFilter(currency,
                                         controller.selectedCurrencies);
                                   },
+                                  backgroundColor: Colors.grey[700],
+                                  selectedColor: Colors.blue,
+                                  labelStyle: TextStyle(color: Colors.white),
                                 )),
                           )
                           .toList(),
@@ -265,6 +447,9 @@ class CustomerHomeView extends GetView<CustomerHomeController> {
                                     controller.toggleFilter(
                                         level, controller.selectedLevels);
                                   },
+                                  backgroundColor: Colors.grey[700],
+                                  selectedColor: Colors.blue,
+                                  labelStyle: TextStyle(color: Colors.white),
                                 )),
                           )
                           .toList(),
@@ -287,61 +472,14 @@ class CustomerHomeView extends GetView<CustomerHomeController> {
                                     controller.toggleFilter(priceType,
                                         controller.selectedPriceTypes);
                                   },
+                                  backgroundColor: Colors.grey[700],
+                                  selectedColor: Colors.blue,
+                                  labelStyle: TextStyle(color: Colors.white),
                                 )),
                           )
                           .toList(),
                     ),
                   ],
-                ),
-              )
-            : SizedBox.shrink()),
-
-        // Search results dropdown
-        Obx(() => controller.searchResults.isNotEmpty
-            ? Container(
-                margin: EdgeInsets.only(top: 8.r),
-                constraints: BoxConstraints(maxHeight: 300.h),
-                decoration: BoxDecoration(
-                  color: Colors.grey[800],
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: controller.searchResults.length,
-                  itemBuilder: (context, index) {
-                    final service = controller.searchResults[index];
-                    return ListTile(
-                      title: Text(
-                        service.title ?? 'N/A',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            service.description ?? 'N/A',
-                            style: TextStyle(color: Colors.grey[400]),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Text(
-                            '${service.status ?? 'N/A'} | ${service.currency ?? 'N/A'} | ${service.level ?? 'N/A'} | ${service.priceType ?? 'N/A'}',
-                            style: TextStyle(
-                                color: Colors.grey[400], fontSize: 12),
-                          ),
-                        ],
-                      ),
-                      onTap: () {
-                        if (service.id != null) {
-                          Get.to(
-                            () => CustomerServiceDetailsView(service.id!),
-                            binding: CustomerServiceDetailsBinding(service.id!),
-                            preventDuplicates: false,
-                          );
-                        }
-                      },
-                    );
-                  },
                 ),
               )
             : SizedBox.shrink()),
@@ -387,11 +525,33 @@ class CustomerHomeView extends GetView<CustomerHomeController> {
                 gapWidth(size: 4),
                 Obx(() {
                   final location = customerHomeController.currentLocation.value;
-                  return Text(
-                    location != null
-                        ? "${location.locality}, ${location.country}"
-                        : "UAE, Dubai",
-                    style: kSubtitleStyle,
+
+                  // Helper function to construct the formatted address
+                  String getFormattedAddress() {
+                    if (location == null)
+                      return "UAE, Dubai"; // Default fallback
+
+                    final parts = <String>[
+                      if (location.streetAddress?.isNotEmpty ?? false)
+                        location.streetAddress!,
+                      if (location.locality?.isNotEmpty ?? false)
+                        location.locality!,
+                      if (location.country?.isNotEmpty ?? false)
+                        location.country!,
+                    ];
+
+                    return parts
+                        .join(", "); // Join non-empty parts with a comma
+                  }
+
+                  return Container(
+                    width: 100,
+                    child: Text(
+                      getFormattedAddress(), // Use the formatted address
+                      style: kSubtitleStyle,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
                   );
                 }),
                 Icon(

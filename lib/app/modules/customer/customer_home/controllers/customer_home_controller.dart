@@ -9,11 +9,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../global/auction/controllers/auction_booking_controller.dart';
 import '../../../global/pick_location/model/location_model.dart';
 
 class CustomerHomeController extends GetxController {
   Rx<GetCustomerServiceModel> getCustomerModel = GetCustomerServiceModel().obs;
   final Rx<LocationModel?> currentLocation = Rx<LocationModel?>(null);
+
+  // Selected filters
+  final selectedStatuses = <String>{}.obs;
+  final selectedCurrencies = <String>{}.obs;
+  final selectedLevels = <String>{}.obs;
+  final selectedPriceTypes = <String>{}.obs;
+
+  // Search and filter related variables
+
+  final searchResults = <ServiceData>[].obs;
+  final showFilterOptions = false.obs;
 
   final searchController = TextEditingController();
 
@@ -93,22 +105,11 @@ class CustomerHomeController extends GetxController {
     }
   }
 
-  // Search and filter related variables
-
-  final searchResults = <ServiceData>[].obs;
-  final showFilterOptions = false.obs;
-
-  // Selected filters
-  final selectedStatuses = <String>{}.obs;
-  final selectedCurrencies = <String>{}.obs;
-  final selectedLevels = <String>{}.obs;
-  final selectedPriceTypes = <String>{}.obs;
-
   // Available filter options (populate these from your data)
   final availableStatuses = ['Active', 'Pending', 'Completed'].obs;
-  final availableCurrencies = ['AED', 'USD', 'EUR'].obs;
-  final availableLevels = ['Basic', 'Standard', 'Premium'].obs;
-  final availablePriceTypes = ['Fixed', 'Hourly', 'Project'].obs;
+  final availableCurrencies = ['AED', 'USD'].obs;
+  final availableLevels = ['Entry', 'Intermediate', 'Expert'].obs;
+  final availablePriceTypes = ['Fixed', 'Negotiable'].obs;
 
   void toggleFilterOptions() {
     showFilterOptions.value = !showFilterOptions.value;
@@ -156,6 +157,7 @@ class CustomerHomeController extends GetxController {
     }
 
     var filteredServices = getCustomerModel.value.data?.where((service) {
+          // Search query match
           bool matchesQuery = true;
           if (query.isNotEmpty) {
             matchesQuery =
@@ -167,37 +169,39 @@ class CustomerHomeController extends GetxController {
                         false);
           }
 
-          bool matchesFilters = true;
-          if (selectedStatuses.isNotEmpty) {
-            matchesFilters = matchesFilters &&
-                (service.status != null &&
-                    selectedStatuses.contains(service.status));
-          }
-          if (selectedCurrencies.isNotEmpty) {
-            matchesFilters = matchesFilters &&
-                (service.currency != null &&
-                    selectedCurrencies.contains(service.currency));
-          }
-          if (selectedLevels.isNotEmpty) {
-            matchesFilters = matchesFilters &&
-                (service.level != null &&
-                    selectedLevels.contains(service.level));
-          }
-          if (selectedPriceTypes.isNotEmpty) {
-            matchesFilters = matchesFilters &&
-                (service.priceType != null &&
-                    selectedPriceTypes.contains(service.priceType));
-          }
+          // Filter matches
+          bool matchesStatus = selectedStatuses.isEmpty ||
+              (service.status != null &&
+                  selectedStatuses.contains(service.status));
 
-          return matchesQuery && matchesFilters;
+          bool matchesCurrency = selectedCurrencies.isEmpty ||
+              (service.currency != null &&
+                  selectedCurrencies.contains(service.currency));
+
+          bool matchesLevel = selectedLevels.isEmpty ||
+              (service.level != null && selectedLevels.contains(service.level));
+
+          bool matchesPriceType = selectedPriceTypes.isEmpty ||
+              (service.priceType != null &&
+                  selectedPriceTypes.contains(service.priceType));
+
+          return matchesQuery &&
+              matchesStatus &&
+              matchesCurrency &&
+              matchesLevel &&
+              matchesPriceType;
         }).toList() ??
         [];
 
-    // Sort by match score
-    filteredServices.sort(
-        (a, b) => calculateMatchScore(b).compareTo(calculateMatchScore(a)));
-
     searchResults.value = filteredServices;
+
+    // Also filter auctions
+    try {
+      final auctionController = Get.find<CustomerAuctionController>();
+      auctionController.filterAuctions(query);
+    } catch (e) {
+      print('Error filtering auctions: $e');
+    }
   }
 
   @override
