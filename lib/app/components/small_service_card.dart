@@ -16,10 +16,10 @@ class ServiceCard extends GetView<FavoriteServiceController> {
     required this.reviewsPoint,
     required this.reviewsText,
     required this.size,
+    required this.serviceId,
     this.onTap,
     this.onWishlistTap,
-    // required this.isWishlisted,
-    required this.serviceId,
+    this.showWishlistButton = true,
   });
 
   final Function()? onTap;
@@ -31,9 +31,8 @@ class ServiceCard extends GetView<FavoriteServiceController> {
   final String title;
   final String reviewsPoint;
   final String reviewsText;
-
-  // final bool isWishlisted;
   final String serviceId;
+  final bool showWishlistButton;
 
   @override
   Widget build(BuildContext context) {
@@ -129,11 +128,11 @@ class ServiceCard extends GetView<FavoriteServiceController> {
                             ),
                           ),
                         ),
-                        Icon(
-                          Icons.star,
-                          size: 18,
-                          color: Colors.amber,
-                        ),
+                        // Icon(
+                        //   Icons.star,
+                        //   size: 18,
+                        //   color: Colors.amber,
+                        // ),
                         Text(
                           reviewsPoint,
                           style: kSubtitleStyle,
@@ -145,36 +144,38 @@ class ServiceCard extends GetView<FavoriteServiceController> {
                 ],
               ),
               // Wishlist Button
-              // Replace the GetBuilder widget with Obx
-              Positioned(
-                top: 10.r,
-                right: 10.r,
-                child: Obx(() => InkWell(
-                      // Changed from GetBuilder to Obx
-                      onTap: () {
-                        print('Wishlist button tapped for service $serviceId');
-                        print(
-                            'Current state: ${controller.wishlistedItems[serviceId]}');
-                        onWishlistTap?.call();
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(8.r),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.5),
-                          shape: BoxShape.circle,
+              if (showWishlistButton)
+                Positioned(
+                  top: 10.r,
+                  right: 10.r,
+                  child: Obx(() => InkWell(
+                        // Changed from GetBuilder to Obx
+                        onTap: () {
+                          print(
+                              'Wishlist button tapped for service $serviceId');
+                          print(
+                              'Current state: ${controller.wishlistedItems[serviceId]}');
+                          onWishlistTap?.call();
+                        },
+                        child: Container(
+                          padding: EdgeInsets.all(8.r),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.5),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            controller.wishlistedItems[serviceId] ?? false
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color:
+                                controller.wishlistedItems[serviceId] ?? false
+                                    ? Colors.red
+                                    : Colors.white,
+                            size: 20.r,
+                          ),
                         ),
-                        child: Icon(
-                          controller.wishlistedItems[serviceId] ?? false
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color: controller.wishlistedItems[serviceId] ?? false
-                              ? Colors.red
-                              : Colors.white,
-                          size: 20.r,
-                        ),
-                      ),
-                    )),
-              ),
+                      )),
+                ),
             ],
           ),
         ),
