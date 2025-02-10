@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../utils/urls.dart';
 import '../../../../data/local/my_shared_pref.dart';
 import '../../../../services/base_client.dart';
+import '../../../global/auction/controllers/auction_booking_controller.dart';
 import '../../../global/pick_location/model/location_model.dart';
 
 class HomeController extends GetxController {
@@ -40,11 +41,11 @@ class HomeController extends GetxController {
   final selectedLevels = <String>{}.obs;
   final selectedPriceTypes = <String>{}.obs;
 
-  // Available filter options
+  // Available filter options (populate these from your data)
   final availableStatuses = ['Active', 'Pending', 'Completed'].obs;
-  final availableCurrencies = ['AED', 'USD', 'EUR'].obs;
-  final availableLevels = ['Basic', 'Standard', 'Premium'].obs;
-  final availablePriceTypes = ['Fixed', 'Hourly', 'Project'].obs;
+  final availableCurrencies = ['AED', 'USD'].obs;
+  final availableLevels = ['Entry', 'Intermediate', 'Expert'].obs;
+  final availablePriceTypes = ['Fixed', 'Negotiable'].obs;
 
   final Rx<LocationModel?> currentLocation = Rx<LocationModel?>(null);
 
@@ -188,109 +189,189 @@ class HomeController extends GetxController {
     filterServices(searchController.text);
   }
 
+  // int calculateMatchScore(Service service) {
+  //   int score = 0;
+  //   String searchText = searchController.text.toLowerCase();
+  //
+  //   // Exact matches get highest score
+  //   if (service.title?.toLowerCase() == searchText) {
+  //     score += 10;
+  //   }
+  //   // Partial matches in title
+  //   else if (service.title?.toLowerCase().contains(searchText) ?? false) {
+  //     score += 5;
+  //   }
+  //
+  //   // Matches in other fields
+  //   if (service.description?.toLowerCase().contains(searchText) ?? false)
+  //     score += 3;
+  //   if (service.location?.toLowerCase().contains(searchText) ?? false)
+  //     score += 2;
+  //
+  //   // Filter matches
+  //   if (selectedStatuses.contains(service.status)) score += 2;
+  //   if (selectedCurrencies.contains(service.currency)) score += 2;
+  //   if (selectedLevels.contains(service.level)) score += 2;
+  //   if (selectedPriceTypes.contains(service.priceType)) score += 2;
+  //
+  //   return score;
+  // }
   int calculateMatchScore(Service service) {
     int score = 0;
-    String searchText = searchController.text.toLowerCase();
 
-    // Exact matches get highest score
-    if (service.title?.toLowerCase() == searchText) {
-      score += 10;
-    }
-    // Partial matches in title
-    else if (service.title?.toLowerCase().contains(searchText) ?? false) {
-      score += 5;
+    if (selectedStatuses.isNotEmpty && service.status != null) {
+      if (selectedStatuses.contains(service.status)) score++;
     }
 
-    // Matches in other fields
-    if (service.description?.toLowerCase().contains(searchText) ?? false)
-      score += 3;
-    if (service.location?.toLowerCase().contains(searchText) ?? false)
-      score += 2;
+    if (selectedCurrencies.isNotEmpty && service.currency != null) {
+      if (selectedCurrencies.contains(service.currency)) score++;
+    }
 
-    // Filter matches
-    if (selectedStatuses.contains(service.status)) score += 2;
-    if (selectedCurrencies.contains(service.currency)) score += 2;
-    if (selectedLevels.contains(service.level)) score += 2;
-    if (selectedPriceTypes.contains(service.priceType)) score += 2;
+    if (selectedLevels.isNotEmpty && service.level != null) {
+      if (selectedLevels.contains(service.level)) score++;
+    }
+
+    if (selectedPriceTypes.isNotEmpty && service.priceType != null) {
+      if (selectedPriceTypes.contains(service.priceType)) score++;
+    }
 
     return score;
   }
 
+  // void filterServices(String query) {
+  //   isSearching.value = true;
+  //   showNoResults.value = false;
+  //
+  //   try {
+  //     if (query.isEmpty &&
+  //         selectedStatuses.isEmpty &&
+  //         selectedCurrencies.isEmpty &&
+  //         selectedLevels.isEmpty &&
+  //         selectedPriceTypes.isEmpty) {
+  //       searchResults.value = getProviderServiceModel.value.data ?? [];
+  //       return;
+  //     }
+  //
+  //     var filteredServices =
+  //         getProviderServiceModel.value.data?.where((service) {
+  //               // Search text matching
+  //               bool matchesQuery = true;
+  //               if (query.isNotEmpty) {
+  //                 matchesQuery = ((service.title
+  //                             ?.toLowerCase()
+  //                             .contains(query.toLowerCase()) ??
+  //                         false) ||
+  //                     (service.description
+  //                             ?.toLowerCase()
+  //                             .contains(query.toLowerCase()) ??
+  //                         false) ||
+  //                     (service.location
+  //                             ?.toLowerCase()
+  //                             .contains(query.toLowerCase()) ??
+  //                         false));
+  //               }
+  //
+  //               // Filter matching
+  //               bool matchesFilters = true;
+  //
+  //               if (selectedStatuses.isNotEmpty) {
+  //                 matchesFilters = matchesFilters &&
+  //                     (service.status != null &&
+  //                         selectedStatuses.contains(service.status));
+  //               }
+  //
+  //               if (selectedCurrencies.isNotEmpty) {
+  //                 matchesFilters = matchesFilters &&
+  //                     (service.currency != null &&
+  //                         selectedCurrencies.contains(service.currency));
+  //               }
+  //
+  //               if (selectedLevels.isNotEmpty) {
+  //                 matchesFilters = matchesFilters &&
+  //                     (service.level != null &&
+  //                         selectedLevels.contains(service.level));
+  //               }
+  //
+  //               if (selectedPriceTypes.isNotEmpty) {
+  //                 matchesFilters = matchesFilters &&
+  //                     (service.priceType != null &&
+  //                         selectedPriceTypes.contains(service.priceType));
+  //               }
+  //
+  //               return matchesQuery && matchesFilters;
+  //             }).toList() ??
+  //             [];
+  //
+  //     // Sort by relevance score
+  //     filteredServices.sort(
+  //         (a, b) => calculateMatchScore(b).compareTo(calculateMatchScore(a)));
+  //
+  //     searchResults.value = filteredServices;
+  //     showNoResults.value = filteredServices.isEmpty;
+  //   } catch (e) {
+  //     print('Error filtering services: $e');
+  //     CustomSnackBar.showCustomErrorToast(message: 'Error filtering services');
+  //   } finally {
+  //     isSearching.value = false;
+  //   }
+  // }
   void filterServices(String query) {
-    isSearching.value = true;
-    showNoResults.value = false;
+    if (query.isEmpty &&
+        selectedStatuses.isEmpty &&
+        selectedCurrencies.isEmpty &&
+        selectedLevels.isEmpty &&
+        selectedPriceTypes.isEmpty) {
+      // searchResults.clear();
+      searchResults.value = getProviderServiceModel.value.data ?? [];
 
+      return;
+    }
+
+    var filteredServices = getProviderServiceModel.value.data?.where((service) {
+          // Search query match
+          bool matchesQuery = true;
+          if (query.isNotEmpty) {
+            matchesQuery =
+                (service.title?.toLowerCase().contains(query.toLowerCase()) ??
+                        false) ||
+                    (service.description
+                            ?.toLowerCase()
+                            .contains(query.toLowerCase()) ??
+                        false);
+          }
+
+          // Filter matches
+          bool matchesStatus = selectedStatuses.isEmpty ||
+              (service.status != null &&
+                  selectedStatuses.contains(service.status));
+
+          bool matchesCurrency = selectedCurrencies.isEmpty ||
+              (service.currency != null &&
+                  selectedCurrencies.contains(service.currency));
+
+          bool matchesLevel = selectedLevels.isEmpty ||
+              (service.level != null && selectedLevels.contains(service.level));
+
+          bool matchesPriceType = selectedPriceTypes.isEmpty ||
+              (service.priceType != null &&
+                  selectedPriceTypes.contains(service.priceType));
+
+          return matchesQuery &&
+              matchesStatus &&
+              matchesCurrency &&
+              matchesLevel &&
+              matchesPriceType;
+        }).toList() ??
+        [];
+
+    searchResults.value = filteredServices;
+
+    // Also filter auctions
     try {
-      if (query.isEmpty &&
-          selectedStatuses.isEmpty &&
-          selectedCurrencies.isEmpty &&
-          selectedLevels.isEmpty &&
-          selectedPriceTypes.isEmpty) {
-        searchResults.value = getProviderServiceModel.value.data ?? [];
-        return;
-      }
-
-      var filteredServices =
-          getProviderServiceModel.value.data?.where((service) {
-                // Search text matching
-                bool matchesQuery = true;
-                if (query.isNotEmpty) {
-                  matchesQuery = ((service.title
-                              ?.toLowerCase()
-                              .contains(query.toLowerCase()) ??
-                          false) ||
-                      (service.description
-                              ?.toLowerCase()
-                              .contains(query.toLowerCase()) ??
-                          false) ||
-                      (service.location
-                              ?.toLowerCase()
-                              .contains(query.toLowerCase()) ??
-                          false));
-                }
-
-                // Filter matching
-                bool matchesFilters = true;
-
-                if (selectedStatuses.isNotEmpty) {
-                  matchesFilters = matchesFilters &&
-                      (service.status != null &&
-                          selectedStatuses.contains(service.status));
-                }
-
-                if (selectedCurrencies.isNotEmpty) {
-                  matchesFilters = matchesFilters &&
-                      (service.currency != null &&
-                          selectedCurrencies.contains(service.currency));
-                }
-
-                if (selectedLevels.isNotEmpty) {
-                  matchesFilters = matchesFilters &&
-                      (service.level != null &&
-                          selectedLevels.contains(service.level));
-                }
-
-                if (selectedPriceTypes.isNotEmpty) {
-                  matchesFilters = matchesFilters &&
-                      (service.priceType != null &&
-                          selectedPriceTypes.contains(service.priceType));
-                }
-
-                return matchesQuery && matchesFilters;
-              }).toList() ??
-              [];
-
-      // Sort by relevance score
-      filteredServices.sort(
-          (a, b) => calculateMatchScore(b).compareTo(calculateMatchScore(a)));
-
-      searchResults.value = filteredServices;
-      showNoResults.value = filteredServices.isEmpty;
+      final auctionController = Get.find<CustomerAuctionController>();
+      auctionController.filterAuctions(query);
     } catch (e) {
-      print('Error filtering services: $e');
-      CustomSnackBar.showCustomErrorToast(message: 'Error filtering services');
-    } finally {
-      isSearching.value = false;
+      print('Error filtering auctions: $e');
     }
   }
 

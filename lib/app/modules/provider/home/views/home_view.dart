@@ -15,6 +15,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../../customer/customer_service_details/bindings/customer_service_details_binding.dart';
+import '../../../customer/customer_service_details/views/customer_service_details_view.dart';
+import '../../../global/auction/controllers/auction_booking_controller.dart';
+import '../../../global/auction_details_view/bindings/auction_details_binding.dart';
+import '../../../global/auction_details_view/view/auction_details_view.dart';
 import '../../../global/profile/account_details/controllers/account_details_controller.dart';
 import '../../favorite_service/controllers/favorite_service_controller.dart';
 import '../controllers/home_controller.dart';
@@ -537,7 +542,7 @@ class HomeView extends GetView<HomeController> {
                   controller: controller.searchController,
                   style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
-                    hintText: "Search Services",
+                    hintText: "Search Your Service",
                     hintStyle: TextStyle(color: Colors.grey[400]),
                     prefixIcon: Icon(Icons.search, color: Colors.grey[400]),
                     border: InputBorder.none,
@@ -574,175 +579,38 @@ class HomeView extends GetView<HomeController> {
           ],
         ),
 
-        // Filter options dropdown
-        Obx(() => controller.showFilterOptions.value
-            ? Container(
-                margin: EdgeInsets.only(top: 8.r),
-                padding: EdgeInsets.all(16.r),
-                decoration: BoxDecoration(
-                  color: Colors.grey[800],
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Filters:',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold)),
-                        TextButton(
-                          onPressed: () => controller.clearFilters(),
-                          child: Text(
-                            'Clear All',
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 16.r),
-
-                    // Status Filters
-                    Text('Status:', style: TextStyle(color: Colors.white)),
-                    SizedBox(height: 8.r),
-                    Wrap(
-                      spacing: 8.r,
-                      children: controller.availableStatuses
-                          .map(
-                            (status) => Obx(() => FilterChip(
-                                  label: Text(status),
-                                  selected: controller.selectedStatuses
-                                      .contains(status),
-                                  onSelected: (bool selected) {
-                                    controller.toggleFilter(
-                                        status, controller.selectedStatuses);
-                                  },
-                                )),
-                          )
-                          .toList(),
-                    ),
-
-                    SizedBox(height: 16.r),
-
-                    // Currency Filters
-                    Text('Currency:', style: TextStyle(color: Colors.white)),
-                    SizedBox(height: 8.r),
-                    Wrap(
-                      spacing: 8.r,
-                      children: controller.availableCurrencies
-                          .map(
-                            (currency) => Obx(() => FilterChip(
-                                  label: Text(currency),
-                                  selected: controller.selectedCurrencies
-                                      .contains(currency),
-                                  onSelected: (bool selected) {
-                                    controller.toggleFilter(currency,
-                                        controller.selectedCurrencies);
-                                  },
-                                )),
-                          )
-                          .toList(),
-                    ),
-
-                    SizedBox(height: 16.r),
-
-                    // Level Filters
-                    Text('Level:', style: TextStyle(color: Colors.white)),
-                    SizedBox(height: 8.r),
-                    Wrap(
-                      spacing: 8.r,
-                      children: controller.availableLevels
-                          .map(
-                            (level) => Obx(() => FilterChip(
-                                  label: Text(level),
-                                  selected:
-                                      controller.selectedLevels.contains(level),
-                                  onSelected: (bool selected) {
-                                    controller.toggleFilter(
-                                        level, controller.selectedLevels);
-                                  },
-                                )),
-                          )
-                          .toList(),
-                    ),
-
-                    SizedBox(height: 16.r),
-
-                    // Price Type Filters
-                    Text('Price Type:', style: TextStyle(color: Colors.white)),
-                    SizedBox(height: 8.r),
-                    Wrap(
-                      spacing: 8.r,
-                      children: controller.availablePriceTypes
-                          .map(
-                            (priceType) => Obx(() => FilterChip(
-                                  label: Text(priceType),
-                                  selected: controller.selectedPriceTypes
-                                      .contains(priceType),
-                                  onSelected: (bool selected) {
-                                    controller.toggleFilter(priceType,
-                                        controller.selectedPriceTypes);
-                                  },
-                                )),
-                          )
-                          .toList(),
-                    ),
-                  ],
-                ),
-              )
-            : SizedBox.shrink()),
-
-        // Search results with loading and no results states
+        // Search suggestions dropdown
         Obx(() {
-          // Only show anything if there's an active search or filters
-          if (controller.searchController.text.isEmpty &&
-              controller.selectedStatuses.isEmpty &&
-              controller.selectedCurrencies.isEmpty &&
-              controller.selectedLevels.isEmpty &&
-              controller.selectedPriceTypes.isEmpty) {
+          final services = controller.searchResults;
+          final auctions = Get.find<CustomerAuctionController>().searchResults;
+          final showResults = services.isNotEmpty || auctions.isNotEmpty;
+
+          if (!showResults || controller.searchController.text.isEmpty) {
             return SizedBox.shrink();
           }
 
-          if (controller.isSearching.value) {
-            return Container(
-              margin: EdgeInsets.only(top: 8.r),
-              child: Center(child: CircularProgressIndicator()),
-            );
-          }
-
-          if (controller.showNoResults.value) {
-            return Container(
-              margin: EdgeInsets.only(top: 8.r),
-              padding: EdgeInsets.all(16.r),
-              decoration: BoxDecoration(
-                color: Colors.grey[800],
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              child: Center(
-                child: Text(
-                  'No results found',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            );
-          }
-
-          return controller.searchResults.isNotEmpty
-              ? Container(
-                  margin: EdgeInsets.only(top: 8.r),
-                  constraints: BoxConstraints(maxHeight: 300.h),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[800],
-                    borderRadius: BorderRadius.circular(8.r),
+          return Container(
+            margin: EdgeInsets.only(top: 8.r),
+            constraints: BoxConstraints(maxHeight: 300.h),
+            decoration: BoxDecoration(
+              color: Colors.grey[800],
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                if (services.isNotEmpty) ...[
+                  Padding(
+                    padding: EdgeInsets.all(8.r),
+                    child: Text(
+                      'Services',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: controller.searchResults.length,
-                    itemBuilder: (context, index) {
-                      final service = controller.searchResults[index];
-                      return ListTile(
+                  ...services.map((service) => ListTile(
                         title: Text(
                           service.title ?? 'N/A',
                           style: TextStyle(color: Colors.white),
@@ -765,15 +633,181 @@ class HomeView extends GetView<HomeController> {
                         ),
                         onTap: () {
                           if (service.id != null) {
-                            Get.to(() => DescriptionView(service));
+                            Get.to(
+                              () => CustomerServiceDetailsView(service.id!),
+                              binding:
+                                  CustomerServiceDetailsBinding(service.id!),
+                              preventDuplicates: false,
+                            );
                           }
                         },
-                      );
-                    },
+                      )),
+                ],
+                if (auctions.isNotEmpty) ...[
+                  Padding(
+                    padding: EdgeInsets.all(8.r),
+                    child: Text(
+                      'Auctions',
+                      style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                )
-              : SizedBox.shrink();
+                  ...auctions.map((auction) => ListTile(
+                        title: Text(
+                          auction.title ?? 'N/A',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              auction.description ?? 'N/A',
+                              style: TextStyle(color: Colors.grey[400]),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              '${auction.priceType ?? 'N/A'} | ${auction.level ?? 'N/A'} | ${auction.location ?? 'N/A'}',
+                              style: TextStyle(
+                                  color: Colors.grey[400], fontSize: 12),
+                            ),
+                          ],
+                        ),
+                        onTap: () {
+                          Get.to(
+                            () => AuctionDetailsView(auction: auction),
+                            binding: AuctionDetailsBinding(),
+                            arguments: auction,
+                            preventDuplicates: false,
+                          );
+                        },
+                      )),
+                ],
+              ],
+            ),
+          );
         }),
+
+        // Filter options section
+        Obx(() => controller.showFilterOptions.value
+            ? Container(
+                margin: EdgeInsets.only(top: 8.r),
+                padding: EdgeInsets.all(16.r),
+                decoration: BoxDecoration(
+                  color: Colors.grey[800],
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Filters:',
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold)),
+                    SizedBox(height: 16.r),
+
+                    // Status Filters
+                    Text('Status:', style: TextStyle(color: Colors.white)),
+                    SizedBox(height: 8.r),
+                    Wrap(
+                      spacing: 8.r,
+                      children: controller.availableStatuses
+                          .map(
+                            (status) => Obx(() => FilterChip(
+                                  label: Text(status),
+                                  selected: controller.selectedStatuses
+                                      .contains(status),
+                                  onSelected: (bool selected) {
+                                    controller.toggleFilter(
+                                        status, controller.selectedStatuses);
+                                  },
+                                  backgroundColor: Colors.grey[700],
+                                  selectedColor: Colors.blue,
+                                  labelStyle: TextStyle(color: Colors.white),
+                                )),
+                          )
+                          .toList(),
+                    ),
+
+                    SizedBox(height: 16.r),
+
+                    // Currency Filters
+                    Text('Currency:', style: TextStyle(color: Colors.white)),
+                    SizedBox(height: 8.r),
+                    Wrap(
+                      spacing: 8.r,
+                      children: controller.availableCurrencies
+                          .map(
+                            (currency) => Obx(() => FilterChip(
+                                  label: Text(currency),
+                                  selected: controller.selectedCurrencies
+                                      .contains(currency),
+                                  onSelected: (bool selected) {
+                                    controller.toggleFilter(currency,
+                                        controller.selectedCurrencies);
+                                  },
+                                  backgroundColor: Colors.grey[700],
+                                  selectedColor: Colors.blue,
+                                  labelStyle: TextStyle(color: Colors.white),
+                                )),
+                          )
+                          .toList(),
+                    ),
+
+                    SizedBox(height: 16.r),
+
+                    // Level Filters
+                    Text('Level:', style: TextStyle(color: Colors.white)),
+                    SizedBox(height: 8.r),
+                    Wrap(
+                      spacing: 8.r,
+                      children: controller.availableLevels
+                          .map(
+                            (level) => Obx(() => FilterChip(
+                                  label: Text(level),
+                                  selected:
+                                      controller.selectedLevels.contains(level),
+                                  onSelected: (bool selected) {
+                                    controller.toggleFilter(
+                                        level, controller.selectedLevels);
+                                  },
+                                  backgroundColor: Colors.grey[700],
+                                  selectedColor: Colors.blue,
+                                  labelStyle: TextStyle(color: Colors.white),
+                                )),
+                          )
+                          .toList(),
+                    ),
+
+                    SizedBox(height: 16.r),
+
+                    // Price Type Filters
+                    Text('Price Type:', style: TextStyle(color: Colors.white)),
+                    SizedBox(height: 8.r),
+                    Wrap(
+                      spacing: 8.r,
+                      children: controller.availablePriceTypes
+                          .map(
+                            (priceType) => Obx(() => FilterChip(
+                                  label: Text(priceType),
+                                  selected: controller.selectedPriceTypes
+                                      .contains(priceType),
+                                  onSelected: (bool selected) {
+                                    controller.toggleFilter(priceType,
+                                        controller.selectedPriceTypes);
+                                  },
+                                  backgroundColor: Colors.grey[700],
+                                  selectedColor: Colors.blue,
+                                  labelStyle: TextStyle(color: Colors.white),
+                                )),
+                          )
+                          .toList(),
+                    ),
+                  ],
+                ),
+              )
+            : SizedBox.shrink()),
       ],
     );
   }
