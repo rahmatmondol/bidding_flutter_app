@@ -21,7 +21,7 @@ class BookingCard extends StatelessWidget {
     super.key,
     required this.size,
     required this.name,
-    required this.location,
+    this.location,
     required this.description,
     required this.priceLevel,
     this.buttonText,
@@ -68,24 +68,26 @@ class BookingCard extends StatelessWidget {
                         ),
                       ),
                       gapHeight(size: 4),
-                      Wrap(
-                        // crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.location_on,
-                            size: 15.sp,
-                            color: LightThemeColors.whiteColor,
-                          ),
-                          gapWidth(size: 5),
-                          Text(
-                            location!,
-                            overflow: TextOverflow.ellipsis,
-                            style: kSubtitleStyle.copyWith(
+                      if (location != null && location!.isNotEmpty) ...[
+                        gapHeight(size: 4),
+                        Wrap(
+                          children: [
+                            Icon(
+                              Icons.location_on,
+                              size: 15.sp,
                               color: LightThemeColors.whiteColor,
                             ),
-                          )
-                        ],
-                      )
+                            gapWidth(size: 5),
+                            Text(
+                              location!,
+                              overflow: TextOverflow.ellipsis,
+                              style: kSubtitleStyle.copyWith(
+                                color: LightThemeColors.whiteColor,
+                              ),
+                            )
+                          ],
+                        )
+                      ],
                     ],
                   ),
                 ),
@@ -116,33 +118,34 @@ class BookingCard extends StatelessWidget {
             ),
             Row(
               children: [
-                Expanded(
-                  child: Container(
-                    //color: Colors.red,
-                    height: size.height * 0.03,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 2,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10.r),
-                          margin: EdgeInsets.only(right: 5.r),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(25.r),
-                            color: LightThemeColors.keywordBoxColor,
-                          ),
-                          child: Center(
-                            child: Text(
-                              skills?[index] ?? '',
-                              style: kSubtitleStyle.copyWith(
-                                  color: LightThemeColors.whiteColor),
+                if (skills != null && skills!.isNotEmpty) ...[
+                  Expanded(
+                    child: Container(
+                      height: size.height * 0.03,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: skills!.length > 2 ? 2 : skills!.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            padding: EdgeInsets.symmetric(horizontal: 10.r),
+                            margin: EdgeInsets.only(right: 5.r),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25.r),
+                              color: LightThemeColors.keywordBoxColor,
                             ),
-                          ),
-                        );
-                      },
+                            child: Center(
+                              child: Text(
+                                skills![index],
+                                style: kSubtitleStyle.copyWith(
+                                    color: LightThemeColors.whiteColor),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
-                ),
+                ],
                 Text(
                   "\$$price",
                   style: kTitleTextstyle.copyWith(

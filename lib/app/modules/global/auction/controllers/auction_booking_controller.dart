@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../customer/customer_home/controllers/customer_home_controller.dart';
+import '../model/auction_bid_model.dart';
 import '../model/auction_booking_model.dart';
 
 class CustomerAuctionController extends GetxController {
@@ -20,6 +21,10 @@ class CustomerAuctionController extends GetxController {
   final myAuctions = <AuctionModel>[].obs;
   final completedBookings = <AuctionModel>[].obs;
   final acceptedBookings = <AuctionModel>[].obs;
+  final auctionBids = <AuctionBidModel>[].obs;
+  final isBidsLoading = false.obs;
+  final bidDetails = Rxn<AuctionBidModel>();
+  final isBidDetailsLoading = false.obs;
 
   // Loading states
   final isAllLoading = false.obs;
@@ -139,146 +144,116 @@ class CustomerAuctionController extends GetxController {
     }
   }
 
-//   // Fetch completed bookings
-//   Future<void> fetchCompletedBookings() async {
-//     try {
-//       isCompletedLoading.value = true;
-//       error.value = '';
-//
-//       final headers = await _getHeaders();
-//       print('Fetching completed bookings with headers: $headers');
-//
-//       final response = await http.get(
-//         Uri.parse('$baseUrl/get-auctions?status=completed'),
-//         headers: headers,
-//       );
-//
-//       final data = _handleResponse(response);
-//       if (data != null && data['data'] is List) {
-//         final bookings = (data['data'] as List)
-//             .map((item) => AuctionModel.fromJson(item))
-//             .toList();
-//         completedBookings.assignAll(bookings);
-//       }
-//     } catch (e) {
-//       error.value = e.toString();
-//       print('Error in fetchCompletedBookings: $e');
-//     } finally {
-//       isCompletedLoading.value = false;
-//     }
-//   }
-//
-//   // Fetch accepted bookings
-//   Future<void> fetchAcceptedBookings() async {
-//     try {
-//       isAcceptedLoading.value = true;
-//       error.value = '';
-//
-//       final headers = await _getHeaders();
-//       print('Fetching accepted bookings with headers: $headers');
-//
-//       final response = await http.get(
-//         Uri.parse('$baseUrl/get-auctions?status=accepted'),
-//         headers: headers,
-//       );
-//
-//       final data = _handleResponse(response);
-//       if (data != null && data['data'] is List) {
-//         final bookings = (data['data'] as List)
-//             .map((item) => AuctionModel.fromJson(item))
-//             .toList();
-//         acceptedBookings.assignAll(bookings);
-//       }
-//     } catch (e) {
-//       error.value = e.toString();
-//       print('Error in fetchAcceptedBookings: $e');
-//     } finally {
-//       isAcceptedLoading.value = false;
-//     }
-//   }
-//
-// // mark booking completed
-//   Future<void> completeBooking(int id) async {
-//     try {
-//       final headers = await _getHeaders();
-//       print('Completing booking with headers: $headers');
-//       // Create request body with status
-//       final body = json.encode({'status': 'completed'});
-//
-//       final response = await http.post(
-//           // Uri.parse('$baseUrl/auth/update-auction/$id'),
-//           Uri.parse('$baseUrl/auth/update-booking/$id'),
-//           headers: headers,
-//           body: body);
-//
-//       final data = _handleResponse(response);
-//       if (data != null && data['success'] == true) {
-//         // Remove from accepted bookings
-//         acceptedBookings.removeWhere((booking) => booking.id == id);
-//         // Refresh all bookings
-//         await refreshAll();
-//
-//         Get.snackbar(
-//           'Success',
-//           data['message'] ?? 'Booking completed successfully',
-//           snackPosition: SnackPosition.TOP,
-//         );
-//       }
-//     } catch (e) {
-//       error.value = e.toString();
-//       print('Error in completeBooking: $e');
-//       Get.snackbar(
-//         'Error',
-//         error.value,
-//         snackPosition: SnackPosition.TOP,
-//       );
-//     }
-//   }
-//
-//   // Cancel booking
-//   Future<void> cancelBooking(int id) async {
-//     try {
-//       final headers = await _getHeaders();
-//       print('Cancelling booking with headers: $headers');
-//       // Create request body with status
-//       final body = json.encode({'status': 'cancelled'});
-//
-//       final response = await http.post(
-//           // Uri.parse('$baseUrl/auth/update-auction/$id'),
-//           Uri.parse('$baseUrl/auth/update-booking/$id'),
-//           headers: headers,
-//           body: body);
-//
-//       final data = _handleResponse(response);
-//       if (data != null && data['success'] == true) {
-//         // Remove from accepted bookings
-//         acceptedBookings.removeWhere((booking) => booking.id == id);
-//         // Refresh all bookings
-//         await refreshAll();
-//
-//         Get.snackbar(
-//           'Success',
-//           data['message'] ?? 'Booking cancelled successfully',
-//           snackPosition: SnackPosition.TOP,
-//         );
-//       }
-//     } catch (e) {
-//       error.value = e.toString();
-//       print('Error in cancelBooking: $e');
-//       Get.snackbar(
-//         'Error',
-//         error.value,
-//         snackPosition: SnackPosition.TOP,
-//       );
-//     }
-//   }
-//
-//   // Handle review navigation
-//   void handleReview(int bookingId) {
-//     Get.toNamed('/review', arguments: bookingId);
-//   }
+  Future<void> fetchAuctionBids() async {
+    try {
+      isBidsLoading.value = true;
+      error.value = '';
 
-  // Refresh all data
+      final headers = await _getHeaders();
+      final response = await http.get(
+        Uri.parse('$baseUrl/auth/get-auction-biddings'),
+        headers: headers,
+      );
+
+      final data = _handleResponse(response);
+      if (data != null && data['data'] is List) {
+        final bids = (data['data'] as List)
+            .map((item) => AuctionBidModel.fromJson(item))
+            .toList();
+        auctionBids.assignAll(bids);
+      }
+    } catch (e) {
+      error.value = e.toString();
+      print('Error in fetchAuctionBids: $e');
+    } finally {
+      isBidsLoading.value = false;
+    }
+  }
+
+  Future<void> getBidDetails(int bidId) async {
+    try {
+      isBidDetailsLoading.value = true;
+      error.value = '';
+
+      final headers = await _getHeaders();
+      final response = await http.get(
+        Uri.parse('$baseUrl/auth/get-bidding-info?bid_id=$bidId'),
+        headers: headers,
+      );
+
+      final data = _handleResponse(response);
+      if (data != null && data['data'] != null) {
+        bidDetails.value = AuctionBidModel.fromJson(data['data']);
+      }
+    } catch (e) {
+      error.value = e.toString();
+      print('Error in getBidDetails: $e');
+    } finally {
+      isBidDetailsLoading.value = false;
+    }
+  }
+
+  Future<void> acceptBid(int bidId) async {
+    try {
+      final headers = await _getHeaders();
+      final response =
+          await http.post(Uri.parse('$baseUrl/auth/auction-update-bidding'),
+              headers: headers,
+              body: jsonEncode({
+                'bid_id': bidId.toString(),
+                'status': 'accepted',
+              }));
+
+      final data = _handleResponse(response);
+      if (data != null && data['success'] == true) {
+        Get.snackbar(
+          'Success',
+          data['message'] ?? 'Bid accepted successfully',
+          snackPosition: SnackPosition.TOP,
+        );
+        await fetchAuctionBids(); // Refresh the list
+      }
+    } catch (e) {
+      error.value = e.toString();
+      Get.snackbar(
+        'Error',
+        error.value,
+        snackPosition: SnackPosition.TOP,
+      );
+    }
+  }
+
+  Future<void> rejectBid(int bidId) async {
+    try {
+      final headers = await _getHeaders();
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/auction-update-bidding'),
+        headers: headers,
+        body: jsonEncode({
+          'bid_id': bidId.toString(),
+          'status': 'rejected',
+        }),
+      );
+
+      final data = _handleResponse(response);
+      if (data != null && data['success'] == true) {
+        Get.snackbar(
+          'Success',
+          data['message'] ?? 'Bid rejected successfully',
+          snackPosition: SnackPosition.TOP,
+        );
+        await fetchAuctionBids(); // Refresh the list
+      }
+    } catch (e) {
+      error.value = e.toString();
+      Get.snackbar(
+        'Error',
+        error.value,
+        snackPosition: SnackPosition.TOP,
+      );
+    }
+  }
+
   Future<void> refreshAll() async {
     error.value = '';
     await Future.wait([
@@ -286,6 +261,7 @@ class CustomerAuctionController extends GetxController {
       // fetchCompletedBookings(),
       // fetchAcceptedBookings(),
       fetchMyAuctions(),
+      fetchAuctionBids()
     ]);
   }
 

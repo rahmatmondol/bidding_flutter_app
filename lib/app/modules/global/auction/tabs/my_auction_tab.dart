@@ -73,7 +73,6 @@ class MyAuctionsTab extends StatelessWidget {
                             child: BookingCard(
                               size: size,
                               name: auction.title,
-                              location: auction.location,
                               description: auction.description,
                               priceLevel:
                                   "${auction.priceType}- ${auction.level}",

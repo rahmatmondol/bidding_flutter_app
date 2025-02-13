@@ -559,8 +559,30 @@ class CustomerWorkPeopleDetailsView
       children: [
         CircleAvatar(
           radius: 30.r,
-          backgroundImage: NetworkImage(provider.profile?.image ?? ''),
-          onBackgroundImageError: (_, __) {},
+          backgroundColor: LightThemeColors.secounderyColor,
+          child: provider.profile?.image != null &&
+                  provider.profile!.image!.isNotEmpty
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(30.r),
+                  child: Image.network(
+                    provider.profile!.image!,
+                    fit: BoxFit.cover,
+                    width: 60.r,
+                    height: 60.r,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Icon(
+                        Icons.person,
+                        color: Colors.white,
+                        size: 30.r,
+                      );
+                    },
+                  ),
+                )
+              : Icon(
+                  Icons.person,
+                  color: Colors.white,
+                  size: 30.r,
+                ),
         ),
         gapWidth(size: 10),
         Expanded(

@@ -10,12 +10,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../../global/auction/controllers/auction_booking_controller.dart';
-import '../../../global/auction/tabs/all_auction_tab.dart';
 import '../../../global/auction_details_view/bindings/auction_details_binding.dart';
 import '../../../global/auction_details_view/view/auction_details_view.dart';
 import '../../../global/profile/account_details/controllers/account_details_controller.dart';
 import '../../customer_service_details/bindings/customer_service_details_binding.dart';
 import '../controllers/customer_home_controller.dart';
+import 'all_auction_tab.dart';
 
 class CustomerHomeView extends GetView<CustomerHomeController> {
   CustomerHomeView({Key? key}) : super(key: key);

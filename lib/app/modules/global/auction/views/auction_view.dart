@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../add_auction/views/add_auction_view.dart';
 import '../controllers/auction_booking_controller.dart';
-import '../tabs/all_auction_tab.dart';
+import '../tabs/bids_in_my_auction.dart';
 import '../tabs/my_auction_tab.dart';
 
 class CustomerAuctionView extends GetView<CustomerAuctionController> {
@@ -16,7 +17,7 @@ class CustomerAuctionView extends GetView<CustomerAuctionController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: DefaultTabController(
-        length: 2,
+        length: 3,
         child: Container(
           padding: EdgeInsets.only(
             top: MediaQuery.paddingOf(context).top + 20.r,
@@ -56,10 +57,20 @@ class CustomerAuctionView extends GetView<CustomerAuctionController> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        Image.asset(Img.completeIcon),
+                        gapWidth(size: 1.5.r),
+                        Text("My Auction"),
+                      ],
+                    ),
+                  ),
+                  FittedBox(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
                         Image.asset(Img.allServiceIcon),
                         gapWidth(size: 2.5.r),
                         Text(
-                          "All Auction",
+                          "Auction Bids",
                         ),
                       ],
                     ),
@@ -68,9 +79,11 @@ class CustomerAuctionView extends GetView<CustomerAuctionController> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset(Img.completeIcon),
-                        gapWidth(size: 1.5.r),
-                        Text("My Auction"),
+                        Image.asset(Img.allServiceIcon),
+                        gapWidth(size: 2.5.r),
+                        Text(
+                          "Add Auction",
+                        ),
                       ],
                     ),
                   ),
@@ -88,9 +101,9 @@ class CustomerAuctionView extends GetView<CustomerAuctionController> {
               Expanded(
                 child: TabBarView(
                   children: [
-                    CustomerAllAuctionTab(),
                     MyAuctionsTab(),
-                    // CustomerAcceptAuction(),
+                    BidsInMyAuctionView(),
+                    CustomerAddAuctionView()
                   ],
                 ),
               ),
