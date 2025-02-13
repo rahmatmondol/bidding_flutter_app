@@ -101,12 +101,12 @@
 //     }
 //   }
 // }
+import 'package:dirham_uae/app/data/user_service/user_service.dart';
 import 'package:dirham_uae/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../../utils/urls.dart';
-import '../../../../data/local/my_shared_pref.dart';
 import '../../../../services/base_client.dart';
 
 // class ApplyController extends GetxController {
@@ -291,7 +291,31 @@ class ApplyController extends GetxController {
 
   Future<void> submitBid() async {
     try {
-      // NEW: Use the appropriate amount based on price type
+      UserService _userService = UserService();
+      final isCustomer = await _userService.isUser();
+      if (isCustomer == true) {
+        Get.snackbar(
+          'Error',
+          'Only providers can submit bids',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        return;
+      }
+
+      final token = await _userService.getTokenProvider();
+      if (token == null) {
+        Get.snackbar(
+          'Error',
+          'Authentication required',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+        return;
+      }
+
       final bidAmount = isFixedPrice.value ? price.toString() : amount.value;
 
       final data = {
@@ -307,8 +331,7 @@ class ApplyController extends GetxController {
         RequestType.post,
         data: data,
         headers: {
-          'Authorization':
-              'Bearer ${MySharedPref.getTokenProvider("token-provider".obs).toString()}',
+          'Authorization': 'Bearer $token',
         },
         onSuccess: (response) {
           print('Bid submitted successfully: ${response.data}');

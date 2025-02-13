@@ -309,7 +309,7 @@ class AppPages {
 
     GetPage(
       name: _Paths.CUSTOMER_PROFILE,
-      page: () => const CustomerProfileView(),
+      page: () => CustomerProfileView(),
       binding: CustomerProfileBinding(),
     ),
     // GetPage(

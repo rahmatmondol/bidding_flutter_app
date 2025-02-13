@@ -110,10 +110,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../../customer/customer_home/controllers/customer_home_controller.dart';
-import '../../auction_details_view/bindings/auction_details_binding.dart';
-import '../../auction_details_view/view/auction_details_view.dart';
-import '../controllers/auction_booking_controller.dart';
+import '../../../global/auction/controllers/auction_booking_controller.dart';
+import '../../../global/auction_details_view/bindings/auction_details_binding.dart';
+import '../../../global/auction_details_view/view/auction_details_view.dart';
+import '../controllers/customer_home_controller.dart';
 
 class CustomerAllAuctionTab extends StatelessWidget {
   CustomerAllAuctionTab({super.key});

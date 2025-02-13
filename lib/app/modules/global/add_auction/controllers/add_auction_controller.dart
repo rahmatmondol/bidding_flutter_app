@@ -23,6 +23,7 @@ class CustomerAddAuctionController extends GetxController {
   RxString enteredText = "".obs;
   RxBool isCustomer = false.obs;
   final userService = UserService();
+  Rx<DateTime?> selectedDate = Rx<DateTime?>(null);
 
   int? categooryId;
   Rx<TextEditingController> name = TextEditingController().obs;
@@ -66,6 +67,9 @@ class CustomerAddAuctionController extends GetxController {
   ].obs;
 
   var selectedLevelList = ''.obs;
+
+  final durationList = List.generate(31, (index) => (index + 1).toString()).obs;
+  var selectedDuration = ''.obs;
 
   BuildContext? context;
 
@@ -116,12 +120,6 @@ class CustomerAddAuctionController extends GetxController {
       return;
     }
 
-    if (lat == null || lng == null || address.value.text.isEmpty) {
-      CustomSnackBar.showCustomErrorToast(message: "Please select a location");
-      isLoading.value = false;
-      return;
-    }
-
     try {
       final isCustomer = await userService.isUser();
 
@@ -159,13 +157,11 @@ class CustomerAddAuctionController extends GetxController {
       // Add text fields
       request.fields.addAll({
         "title": name.value.text.trim(),
-        // "slug": name.value.text.trim().toLowerCase().replaceAll(" ", "-"),
         "description": description.value.text.trim(),
         "price": price.value.text.trim(),
-
-        "location_name": address.value.text,
-        "latitude": lat ?? 0.toString(),
-        "longitude": lng ?? 0.toString(),
+        // "location_name": address.value.text,
+        // "latitude": lat ?? 0.toString(),
+        // "longitude": lng ?? 0.toString(),
         "priceType": priceType.capitalize ?? "Fixed",
         // Capitalize first letter
         "currency": currency.toUpperCase(),
@@ -173,9 +169,8 @@ class CustomerAddAuctionController extends GetxController {
         "status": "Active",
         "level": level,
         "postType": "Auction",
-        // "deadline":
-        //     DateTime.now().add(Duration(days: 7)).toString().substring(0, 10),
-        "skills": jsonEncode(selectedTags.toList()),
+        "deadline": formatSelectedDate(),
+        // "skills": jsonEncode(selectedTags.toList()),
         // "commission": "0",
         // "is_featured": "0",
         "category_id": categooryId?.toString() ?? "0",
@@ -339,6 +334,48 @@ class CustomerAddAuctionController extends GetxController {
     );
   }
 
+  // Method to show date picker
+  Future<void> selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now().add(Duration(days: 1)),
+      // Start from tomorrow
+      firstDate: DateTime.now().add(Duration(days: 1)),
+      // Can't select today or past
+      lastDate: DateTime.now().add(Duration(days: 365)),
+      // Up to 1 year ahead
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: LightThemeColors.primaryColor,
+              onPrimary: LightThemeColors.whiteColor,
+              surface: LightThemeColors.secounderyColor,
+              onSurface: LightThemeColors.whiteColor,
+            ),
+            dialogBackgroundColor: LightThemeColors.secounderyColor,
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      selectedDate.value = picked;
+    }
+  }
+
+  // Method to format date for API
+  String formatSelectedDate() {
+    if (selectedDate.value != null) {
+      return "${selectedDate.value!.year}-${selectedDate.value!.month.toString().padLeft(2, '0')}-${selectedDate.value!.day.toString().padLeft(2, '0')} 00:00:00";
+    }
+    return DateTime.now()
+        .add(Duration(days: 1))
+        .toString()
+        .substring(0, 19); // Default to tomorrow
+  }
+
   void resetAllFields() {
     // Reset text fields
     name.value.clear();
@@ -356,6 +393,7 @@ class CustomerAddAuctionController extends GetxController {
     selectedCurrency.value = "";
     selectedPriceType.value = "";
     selectedLevelList.value = "";
+    selectedDuration.value = "";
 
     // Reset category and subcategory IDs
     categooryId = null;

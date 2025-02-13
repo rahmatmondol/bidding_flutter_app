@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../customer/customer_home/controllers/customer_home_controller.dart';
+import '../model/auction_bid_model.dart';
 import '../model/auction_booking_model.dart';
 
 class CustomerAuctionController extends GetxController {
@@ -26,6 +27,9 @@ class CustomerAuctionController extends GetxController {
   final isCompletedLoading = false.obs;
   final isAcceptedLoading = false.obs;
   final isMyAuctionsLoading = false.obs;
+
+  final auctionBids = <AuctionBidModel>[].obs;
+  final isBidsLoading = false.obs;
 
   // Error state
   final error = ''.obs;
@@ -111,29 +115,71 @@ class CustomerAuctionController extends GetxController {
     }
   }
 
+  // Future<void> fetchMyAuctions() async {
+  //   try {
+  //     isMyAuctionsLoading.value = true;
+  //     error.value = '';
+  //     final url = '$baseUrl/auth/get-my-auctions';
+  //     print('Debug URL: $url');
+  //
+  //     final headers = await _getHeaders();
+  //     print('Fetching my auctions with headers: $headers');
+  //
+  //     final response = await http.get(
+  //       Uri.parse(url),
+  //       headers: headers,
+  //     );
+  //
+  //     print('=====================');
+  //     print('Fetching my auctions with headers: ${response.body}');
+  //     print('========================');
+  //
+  //     final data = _handleResponse(response);
+  //     if (data != null && data['data'] is List) {
+  //       final auctions = (data['data'] as List)
+  //           .map((item) => AuctionModel.fromJson(item))
+  //           .toList();
+  //       myAuctions.assignAll(auctions);
+  //     }
+  //   } catch (e) {
+  //     error.value = e.toString();
+  //     print('Error in fetchMyAuctions: $e');
+  //   } finally {
+  //     isMyAuctionsLoading.value = false;
+  //   }
+  // }
+
   Future<void> fetchMyAuctions() async {
     try {
       isMyAuctionsLoading.value = true;
       error.value = '';
 
       final headers = await _getHeaders();
-      print('Fetching my auctions with headers: $headers');
+      print('Complete request details:');
+      print('URL: $baseUrl/auth/get-my-auctions');
+      print('Headers: $headers');
 
       final response = await http.get(
         Uri.parse('$baseUrl/auth/get-my-auctions'),
         headers: headers,
       );
 
+      print('Raw response: ${response.body}');
+
       final data = _handleResponse(response);
+      print('Parsed data: $data');
+
       if (data != null && data['data'] is List) {
         final auctions = (data['data'] as List)
             .map((item) => AuctionModel.fromJson(item))
             .toList();
+        print('Parsed auctions length: ${auctions.length}');
         myAuctions.assignAll(auctions);
       }
     } catch (e) {
       error.value = e.toString();
-      print('Error in fetchMyAuctions: $e');
+      print('Detailed error in fetchMyAuctions: $e');
+      print('Stack trace: ${StackTrace.current}');
     } finally {
       isMyAuctionsLoading.value = false;
     }
@@ -279,6 +325,7 @@ class CustomerAuctionController extends GetxController {
 //   }
 
   // Refresh all data
+
   Future<void> refreshAll() async {
     error.value = '';
     await Future.wait([
@@ -286,6 +333,7 @@ class CustomerAuctionController extends GetxController {
       // fetchCompletedBookings(),
       // fetchAcceptedBookings(),
       fetchMyAuctions(),
+      fetchAuctionBids()
     ]);
   }
 
@@ -306,5 +354,102 @@ class CustomerAuctionController extends GetxController {
     }).toList();
 
     searchResults.value = filteredAuctions;
+  }
+
+// Add this method to fetch auction bids
+  Future<void> fetchAuctionBids() async {
+    try {
+      isBidsLoading.value = true;
+      error.value = '';
+
+      final headers = await _getHeaders();
+      print('Fetching auction bids with headers: $headers');
+      print('Request headers: ${headers.toString()}');
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/auth/get-auction-biddings'),
+        headers: headers,
+      );
+
+      print('=================');
+      print('API URL: $baseUrl/auth/get-auction-biddings');
+      print('Response status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      print('=================');
+
+      final data = _handleResponse(response);
+      if (data != null && data['data'] is List) {
+        final bids = (data['data'] as List)
+            .map((item) => AuctionBidModel.fromJson(item))
+            .toList();
+        auctionBids.assignAll(bids);
+      }
+    } catch (e) {
+      error.value = e.toString();
+      print('Error in fetchAuctionBids: $e');
+    } finally {
+      isBidsLoading.value = false;
+    }
+  }
+
+// Add methods to handle bid actions
+  Future<void> acceptBid(int bidId) async {
+    try {
+      final headers = await _getHeaders();
+      final body = json.encode({'status': 'accepted'});
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/update-bid/$bidId'),
+        headers: headers,
+        body: body,
+      );
+
+      final data = _handleResponse(response);
+      if (data != null && data['success'] == true) {
+        await fetchAuctionBids(); // Refresh bids
+        Get.snackbar(
+          'Success',
+          data['message'] ?? 'Bid accepted successfully',
+          snackPosition: SnackPosition.TOP,
+        );
+      }
+    } catch (e) {
+      print('Error accepting bid: $e');
+      Get.snackbar(
+        'Error',
+        e.toString(),
+        snackPosition: SnackPosition.TOP,
+      );
+    }
+  }
+
+  Future<void> completeBid(int bidId) async {
+    try {
+      final headers = await _getHeaders();
+      final body = json.encode({'status': 'completed'});
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/update-bid/$bidId'),
+        headers: headers,
+        body: body,
+      );
+
+      final data = _handleResponse(response);
+      if (data != null && data['success'] == true) {
+        await fetchAuctionBids(); // Refresh bids
+        Get.snackbar(
+          'Success',
+          data['message'] ?? 'Bid marked as completed',
+          snackPosition: SnackPosition.TOP,
+        );
+      }
+    } catch (e) {
+      print('Error completing bid: $e');
+      Get.snackbar(
+        'Error',
+        e.toString(),
+        snackPosition: SnackPosition.TOP,
+      );
+    }
   }
 }

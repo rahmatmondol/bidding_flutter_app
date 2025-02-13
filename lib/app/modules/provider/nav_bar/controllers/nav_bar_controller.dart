@@ -4,8 +4,8 @@ import 'package:dirham_uae/app/modules/provider/inbox/views/inbox_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../global/add_auction/views/add_auction_view.dart';
 import '../../../global/auction/views/auction_view.dart';
+import '../../../global/profile/profile_view_both/controllers/profile_data_controller.dart';
 import '../../../global/profile/profile_view_both/views/profile_data_view.dart';
 import '../../booking/views/provider_booking_view.dart';
 
@@ -15,7 +15,6 @@ class NavBarController extends GetxController {
     HomeView(),
     InboxView(),
     ProviderBookingView(),
-    CustomerAddAuctionView(),
     CustomerAuctionView(),
     FavoriteServiceView(),
     CustomerProfileView(),
@@ -34,6 +33,7 @@ class NavBarController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    Get.lazyPut(() => CustomerProfileController(), fenix: true);
   }
 
   @override

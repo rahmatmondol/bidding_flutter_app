@@ -1,6 +1,6 @@
 class Constants {
   static const baseUrl = 'https://dirham365.com/api';
-  static const getCustomerInfo = "$baseUrl/auth/get-user-info";
+  static const getCustomerInfo = "$baseUrl/auth/me";
 
   static const customerSignUpUrl = "$baseUrl/auth/register";
   static const customerLoginUrl = "$baseUrl/auth/login";

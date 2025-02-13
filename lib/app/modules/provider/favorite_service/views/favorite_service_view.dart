@@ -9,10 +9,12 @@ import '../controllers/favorite_service_controller.dart';
 import 'favorite_details_post_view.dart';
 
 class FavoriteServiceView extends GetView<FavoriteServiceController> {
-  FavoriteServiceView({Key? key}) : super(key: key);
+  FavoriteServiceView({Key? key}) : super(key: key) {}
 
   final CustomerAccountDetailsController accountDetailsController =
       Get.put(CustomerAccountDetailsController());
+
+  final FavoriteServiceController controller = FavoriteServiceController();
 
   @override
   Widget build(BuildContext context) {

@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../add_auction/views/add_auction_view.dart';
 import '../controllers/auction_booking_controller.dart';
-import '../tabs/all_auction_tab.dart';
+import '../tabs/my_auction_bids.dart';
 import '../tabs/my_auction_tab.dart';
 
 class CustomerAuctionView extends GetView<CustomerAuctionController> {
@@ -16,7 +17,7 @@ class CustomerAuctionView extends GetView<CustomerAuctionController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: DefaultTabController(
-        length: 2,
+        length: 3,
         child: Container(
           padding: EdgeInsets.only(
             top: MediaQuery.paddingOf(context).top + 20.r,
@@ -59,7 +60,7 @@ class CustomerAuctionView extends GetView<CustomerAuctionController> {
                         Image.asset(Img.allServiceIcon),
                         gapWidth(size: 2.5.r),
                         Text(
-                          "All Auction",
+                          "My Auction",
                         ),
                       ],
                     ),
@@ -70,27 +71,29 @@ class CustomerAuctionView extends GetView<CustomerAuctionController> {
                       children: [
                         Image.asset(Img.completeIcon),
                         gapWidth(size: 1.5.r),
-                        Text("My Auction"),
+                        Text("My Bids"),
                       ],
                     ),
                   ),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     Image.asset(Img.acceptIcon),
-                  //     gapWidth(size: 4),
-                  //     Text("Accept"),
-                  //   ],
-                  // ),
+                  FittedBox(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(Img.acceptIcon),
+                        gapWidth(size: 4),
+                        Text("Add Auction"),
+                      ],
+                    ),
+                  ),
                 ],
               ),
               gapHeight(size: 10),
               Expanded(
                 child: TabBarView(
                   children: [
-                    CustomerAllAuctionTab(),
                     MyAuctionsTab(),
-                    // CustomerAcceptAuction(),
+                    MyAuctionBidsView(),
+                    CustomerAddAuctionView(),
                   ],
                 ),
               ),

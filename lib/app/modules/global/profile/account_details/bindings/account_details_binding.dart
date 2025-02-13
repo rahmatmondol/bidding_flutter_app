@@ -7,6 +7,7 @@ class CustomerAccountDetailsBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<CustomerAccountDetailsController>(
       () => CustomerAccountDetailsController(),
+      fenix: true,
     );
   }
 }

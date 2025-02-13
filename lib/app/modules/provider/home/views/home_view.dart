@@ -35,6 +35,8 @@ class HomeView extends GetView<HomeController> {
         Get.put(CustomerAccountDetailsController());
     final FavoriteServiceController favoriteController =
         Get.put(FavoriteServiceController());
+    final CustomerAuctionController auctionController =
+        Get.put(CustomerAuctionController());
 
     final accountDetails = accountDetailsController.customerInfo.value;
 

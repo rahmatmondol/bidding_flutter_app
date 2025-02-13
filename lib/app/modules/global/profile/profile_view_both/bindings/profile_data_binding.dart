@@ -7,6 +7,7 @@ class CustomerProfileBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<CustomerProfileController>(
       () => CustomerProfileController(),
+      fenix: true,
     );
   }
 }

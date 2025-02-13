@@ -7,6 +7,7 @@ class FavoriteServiceBinding extends Bindings {
   void dependencies() {
     Get.lazyPut<FavoriteServiceController>(
       () => FavoriteServiceController(),
+      fenix: true,
     );
   }
 }

@@ -94,9 +94,21 @@ class NavBarView extends GetView<NavBarController> {
                   controller.setCurrentTab(2);
                 },
               ),
+              // IconButton(
+              //   icon: Icon(
+              //     CupertinoIcons.hourglass_tophalf_fill,
+              //     size: 25.r,
+              //   ),
+              //   color: controller.currentTab.value == 3
+              //       ? LightThemeColors.primaryColor
+              //       : LightThemeColors.navIconColor,
+              //   onPressed: () {
+              //     controller.setCurrentTab(3);
+              //   },
+              // ),
               IconButton(
                 icon: Icon(
-                  CupertinoIcons.hourglass_tophalf_fill,
+                  Icons.access_time_outlined,
                   size: 25.r,
                 ),
                 color: controller.currentTab.value == 3
@@ -108,7 +120,7 @@ class NavBarView extends GetView<NavBarController> {
               ),
               IconButton(
                 icon: Icon(
-                  Icons.access_time_outlined,
+                  CupertinoIcons.heart_fill,
                   size: 25.r,
                 ),
                 color: controller.currentTab.value == 4
@@ -120,26 +132,14 @@ class NavBarView extends GetView<NavBarController> {
               ),
               IconButton(
                 icon: Icon(
-                  CupertinoIcons.heart_fill,
-                  size: 25.r,
-                ),
-                color: controller.currentTab.value == 5
-                    ? LightThemeColors.primaryColor
-                    : LightThemeColors.navIconColor,
-                onPressed: () {
-                  controller.setCurrentTab(5);
-                },
-              ),
-              IconButton(
-                icon: Icon(
                   Icons.person,
                   size: 25.r,
-                  color: controller.currentTab.value == 6
+                  color: controller.currentTab.value == 5
                       ? LightThemeColors.primaryColor
                       : LightThemeColors.navIconColor,
                 ),
                 onPressed: () {
-                  controller.setCurrentTab(6);
+                  controller.setCurrentTab(5);
                 },
               ),
             ],

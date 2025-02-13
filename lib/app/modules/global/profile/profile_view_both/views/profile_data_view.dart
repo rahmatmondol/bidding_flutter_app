@@ -14,12 +14,14 @@ import '../../account_details/controllers/account_details_controller.dart';
 import '../controllers/profile_data_controller.dart';
 
 class CustomerProfileView extends GetView<CustomerProfileController> {
-  const CustomerProfileView({Key? key}) : super(key: key);
+  CustomerProfileView({Key? key}) : super(key: key) {
+    if (!Get.isRegistered<CustomerProfileController>()) {
+      Get.put(CustomerProfileController());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final CustomerProfileController customerProfileController =
-        Get.put(CustomerProfileController());
     final CustomerAccountDetailsController customerAccountDetailsController =
         Get.put(CustomerAccountDetailsController());
 

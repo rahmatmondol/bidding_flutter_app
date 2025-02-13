@@ -3,18 +3,15 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:readmore/readmore.dart';
 
 import '../../../../../config/theme/light_theme_colors.dart';
-import '../../../../../config/theme/my_images.dart';
 import '../../../../../config/theme/my_styles.dart';
 import '../../../../../utils/global_variable/divider.dart';
 import '../../../../../utils/global_variable/my_scaffold_background.dart';
 import '../../../../components/custom_appBar.dart';
 import '../../../../components/custom_button.dart';
-import '../../../../components/full_map_view.dart';
 import '../../../../routes/app_pages.dart';
 import '../../auction/model/auction_booking_model.dart';
 import '../controllers/auction_details_controller.dart';
@@ -51,29 +48,29 @@ class AuctionDetailsView extends GetView<AuctionDetailsController> {
                   ),
                 ),
                 // Location
-                gapHeight(size: 20.0.h),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15.0.w),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.location_on,
-                        color: LightThemeColors.whiteColor,
-                        size: 15,
-                      ),
-                      gapWidth(size: 2.0.w),
-                      Container(
-                        width: 200,
-                        child: Text(
-                          auction.location,
-                          style: TextStyle(color: Colors.grey[400]),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+
+                // Padding(
+                //   padding: EdgeInsets.symmetric(horizontal: 15.0.w),
+                //   child: Row(
+                //     children: [
+                //       Icon(
+                //         Icons.location_on,
+                //         color: LightThemeColors.whiteColor,
+                //         size: 15,
+                //       ),
+                //       gapWidth(size: 2.0.w),
+                //       Container(
+                //         width: 200,
+                //         child: Text(
+                //           auction.location,
+                //           style: TextStyle(color: Colors.grey[400]),
+                //           maxLines: 1,
+                //           overflow: TextOverflow.ellipsis,
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 // Posted Date
                 gapHeight(size: 10.0.h),
                 Padding(
@@ -225,148 +222,275 @@ class AuctionDetailsView extends GetView<AuctionDetailsController> {
                 divider,
 
                 // Skills Section
-                if (auction.skills != null) ...[
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15.0.w),
-                    child: Text(
-                      "Skills Required",
-                      style: kTitleTextstyle.copyWith(fontSize: 15.0.sp),
-                    ),
-                  ),
-                  gapHeight(size: 10.0.h),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15.0.w),
-                    child: Wrap(
-                      spacing: 8.0.w,
-                      runSpacing: 8.0.h,
-                      children: _buildSkillContainers(auction.skills),
-                    ),
-                  ),
-                  divider,
-                ],
+                // if (auction.skills != null) ...[
+                //   Padding(
+                //     padding: EdgeInsets.symmetric(horizontal: 15.0.w),
+                //     child: Text(
+                //       "Skills Required",
+                //       style: kTitleTextstyle.copyWith(fontSize: 15.0.sp),
+                //     ),
+                //   ),
+                //   gapHeight(size: 10.0.h),
+                //   Padding(
+                //     padding: EdgeInsets.symmetric(horizontal: 15.0.w),
+                //     child: Wrap(
+                //       spacing: 8.0.w,
+                //       runSpacing: 8.0.h,
+                //       children: _buildSkillContainers(auction.skills),
+                //     ),
+                //   ),
+                //   divider,
+                // ],
 
                 // Map Section
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0.w),
-                  child: Container(
-                    height: size.height / 2.2,
-                    width: size.width,
-                    decoration: BoxDecoration(
-                      color: LightThemeColors.secounderyColor,
-                      borderRadius: BorderRadius.circular(5.0.r),
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: size.height / 5.7,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(15),
-                            child: GoogleMap(
-                              initialCameraPosition: CameraPosition(
-                                target: LatLng(
-                                  double.tryParse(auction.latitude) ?? 0.0,
-                                  double.tryParse(auction.longitude) ?? 0.0,
-                                ),
-                                zoom: 10.5,
-                              ),
-                              markers: {
-                                Marker(
-                                  markerId: MarkerId("auction_location"),
-                                  position: LatLng(
-                                    double.tryParse(auction.latitude) ?? 0.0,
-                                    double.tryParse(auction.longitude) ?? 0.0,
+                  child: Column(
+                    children: [
+                      // Container(
+                      //   height: size.height / 5.7,
+                      //   child: ClipRRect(
+                      //     borderRadius: BorderRadius.circular(15),
+                      //     child: GoogleMap(
+                      //       initialCameraPosition: CameraPosition(
+                      //         target: LatLng(
+                      //           double.tryParse(auction.latitude) ?? 0.0,
+                      //           double.tryParse(auction.longitude) ?? 0.0,
+                      //         ),
+                      //         zoom: 10.5,
+                      //       ),
+                      //       markers: {
+                      //         Marker(
+                      //           markerId: MarkerId("auction_location"),
+                      //           position: LatLng(
+                      //             double.tryParse(auction.latitude) ?? 0.0,
+                      //             double.tryParse(auction.longitude) ?? 0.0,
+                      //           ),
+                      //         )
+                      //       },
+                      //     ),
+                      //   ),
+                      // ),
+                      //
+                      // // View Map Button
+                      // gapHeight(size: 12.0.h),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     Get.to(() => FullMapView(
+                      //           latitude:
+                      //               double.tryParse(auction.latitude) ?? 0.0,
+                      //           longitude:
+                      //               double.tryParse(auction.longitude) ?? 0.0,
+                      //           location: auction.location,
+                      //         ));
+                      //   },
+                      //   child: Padding(
+                      //     padding: EdgeInsets.symmetric(horizontal: 10.0.w),
+                      //     child: Container(
+                      //       height: size.height / 14,
+                      //       decoration: BoxDecoration(
+                      //         border: Border.all(
+                      //           color: LightThemeColors.whiteColor,
+                      //         ),
+                      //         borderRadius: BorderRadius.circular(15.0.r),
+                      //       ),
+                      //       child: Padding(
+                      //         padding:
+                      //             EdgeInsets.symmetric(horizontal: 12.0.w),
+                      //         child: Row(
+                      //           mainAxisAlignment:
+                      //               MainAxisAlignment.spaceBetween,
+                      //           children: [
+                      //             Text(
+                      //               'View Map',
+                      //               style: kTitleTextstyle,
+                      //             ),
+                      //             Text(
+                      //               'Find auction location',
+                      //               style: kSubtitleStyle.copyWith(
+                      //                   fontSize: 11.2.sp),
+                      //             ),
+                      //             Image.asset(
+                      //               Img.arrowIcon,
+                      //               scale: 3.8,
+                      //             )
+                      //           ],
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+
+                      // Bid Button
+                      // Padding(
+                      //   padding: EdgeInsets.symmetric(horizontal: 7.0),
+                      //   child: CustomButton(
+                      //     bgColor: LightThemeColors.primaryColor,
+                      //     ontap: () => Get.toNamed(
+                      //       Routes.APPLY,
+                      //       arguments: {
+                      //         'currency': auction.currency,
+                      //         'price': auction.price,
+                      //         'priceType': auction.priceType,
+                      //         'serviceId': auction.id,
+                      //         'title': auction.title,
+                      //         'description': auction.description,
+                      //         'createdAt': auction.createdAt,
+                      //         'skills': auction.skills != null
+                      //             ? (auction.skills is String
+                      //                 ? List<String>.from(
+                      //                     json.decode(auction.skills!))
+                      //                 : auction.skills as List<String>)
+                      //             : <String>[],
+                      //       },
+                      //     ),
+                      //     widget: Text(
+                      //       "Bid now",
+                      //       style: kTitleTextstyle,
+                      //     ),
+                      //   ),
+                      // ),
+                      // Add this near the top of the view, after the price details section
+                      // Remove the timer section from inside the map container and place it before it
+                      // After the price and level section and before the map section
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15.0.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Time Remaining",
+                              style:
+                                  kTitleTextstyle.copyWith(fontSize: 15.0.sp),
+                            ),
+                            gapHeight(size: 5.0.h),
+                            Obx(() => Text(
+                                  controller.remainingTime.value,
+                                  style: TextStyle(
+                                    color: controller.isAuctionEnded.value
+                                        ? Colors.red
+                                        : LightThemeColors.primaryColor,
+                                    fontSize: 18.0.sp,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                )
-                              },
-                            ),
-                          ),
+                                )),
+                          ],
                         ),
+                      ),
+                      divider,
 
-                        // View Map Button
-                        gapHeight(size: 12.0.h),
-                        GestureDetector(
-                          onTap: () {
-                            Get.to(() => FullMapView(
-                                  latitude:
-                                      double.tryParse(auction.latitude) ?? 0.0,
-                                  longitude:
-                                      double.tryParse(auction.longitude) ?? 0.0,
-                                  location: auction.location,
-                                ));
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10.0.w),
-                            child: Container(
-                              height: size.height / 14,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: LightThemeColors.whiteColor,
+                      // And modify the Bid Button implementation
+                      // Padding(
+                      //   padding: EdgeInsets.symmetric(horizontal: 7.0),
+                      //   child: Obx(() => CustomButton(
+                      //         bgColor: controller.isAuctionEnded.value
+                      //             ? LightThemeColors.grayColor
+                      //             : LightThemeColors.primaryColor,
+                      //         ontap: () => controller.isAuctionEnded.value
+                      //             ? null // If auction ended, button is disabled
+                      //             : () {
+                      //                 // If auction is still active, navigate to APPLY route
+                      //                 print('Clicked');
+                      //                 Get.toNamed(
+                      //                   Routes.APPLY,
+                      //                   arguments: {
+                      //                     'currency': auction.currency,
+                      //                     'price': auction.price,
+                      //                     'priceType': auction.priceType,
+                      //                     'serviceId': auction.id,
+                      //                     'title': auction.title,
+                      //                     'description': auction.description,
+                      //                     'createdAt': auction.createdAt,
+                      //                     'skills': auction.skills != null
+                      //                         ? (auction.skills is String
+                      //                             ? List<String>.from(json
+                      //                                 .decode(auction.skills!))
+                      //                             : auction.skills
+                      //                                 as List<String>)
+                      //                         : <String>[],
+                      //                   },
+                      //                 );
+                      //               },
+                      //         widget: Text(
+                      //           controller.isAuctionEnded.value
+                      //               ? "Auction Ended"
+                      //               : "Bid now",
+                      //           style: kTitleTextstyle.copyWith(
+                      //             color: controller.isAuctionEnded.value
+                      //                 ? Colors.grey
+                      //                 : LightThemeColors.whiteColor,
+                      //           ),
+                      //         ),
+                      //       )),
+                      // ),
+                      // Padding(
+                      //   padding: EdgeInsets.symmetric(horizontal: 7.0),
+                      //   child: CustomButton(
+                      //     bgColor: LightThemeColors.primaryColor,
+                      //     ontap: () => Get.toNamed(
+                      //       Routes.APPLY,
+                      //       arguments: {
+                      //         'currency': auction.currency,
+                      //         'price': auction.price,
+                      //         'priceType': auction.priceType,
+                      //         'serviceId': auction.id,
+                      //         'title': auction.title,
+                      //         'description': auction.description,
+                      //         'createdAt': auction.createdAt,
+                      //         'skills': auction.skills != null
+                      //             ? (auction.skills is String
+                      //                 ? List<String>.from(
+                      //                     json.decode(auction.skills!))
+                      //                 : auction.skills as List<String>)
+                      //             : <String>[],
+                      //       },
+                      //     ),
+                      //     widget: Text(
+                      //       "Bid now",
+                      //       style: kTitleTextstyle,
+                      //     ),
+                      //   ),
+                      // ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 7.0),
+                        child: Obx(() => CustomButton(
+                              bgColor: controller.isAuctionEnded.value
+                                  ? LightThemeColors.grayColor
+                                  : LightThemeColors.primaryColor,
+                              ontap: controller.isAuctionEnded.value
+                                  ? null
+                                  : () => Get.toNamed(
+                                        Routes.APPLY,
+                                        arguments: {
+                                          'currency': auction.currency,
+                                          'price': auction.price,
+                                          'priceType': auction.priceType,
+                                          'serviceId': auction.id,
+                                          'title': auction.title,
+                                          'description': auction.description,
+                                          'createdAt': auction.createdAt,
+                                          'skills': auction.skills != null
+                                              ? (auction.skills is String
+                                                  ? List<String>.from(json
+                                                      .decode(auction.skills!))
+                                                  : auction.skills
+                                                      as List<String>)
+                                              : <String>[],
+                                        },
+                                      ),
+                              widget: Text(
+                                controller.isAuctionEnded.value
+                                    ? "Auction Ended"
+                                    : "Bid now",
+                                style: kTitleTextstyle.copyWith(
+                                  color: controller.isAuctionEnded.value
+                                      ? Colors.grey
+                                      : LightThemeColors.whiteColor,
                                 ),
-                                borderRadius: BorderRadius.circular(15.0.r),
                               ),
-                              child: Padding(
-                                padding:
-                                    EdgeInsets.symmetric(horizontal: 12.0.w),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'View Map',
-                                      style: kTitleTextstyle,
-                                    ),
-                                    Text(
-                                      'Find auction location',
-                                      style: kSubtitleStyle.copyWith(
-                                          fontSize: 11.2.sp),
-                                    ),
-                                    Image.asset(
-                                      Img.arrowIcon,
-                                      scale: 3.8,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        divider,
-                        // Bid Button
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 7.0),
-                          child: CustomButton(
-                            bgColor: LightThemeColors.primaryColor,
-                            ontap: () => Get.toNamed(
-                              Routes.APPLY,
-                              arguments: {
-                                'currency': auction.currency,
-                                'price': auction.price,
-                                'priceType': auction.priceType,
-                                'serviceId': auction.id,
-                                'title': auction.title,
-                                'description': auction.description,
-                                'createdAt': auction.createdAt,
-                                'skills': auction.skills != null
-                                    ? (auction.skills is String
-                                        ? List<String>.from(
-                                            json.decode(auction.skills!))
-                                        : auction.skills as List<String>)
-                                    : <String>[],
-                                // 'skills': auction.skills is String
-                                //     ? List<String>.from(
-                                //         json.decode(auction.skills!))
-                                //     : auction.skills as List<String>,
-                              },
-                            ),
-                            widget: Text(
-                              "Bid now",
-                              style: kTitleTextstyle,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                            )),
+                      ),
+                    ],
                   ),
                 ),
               ],

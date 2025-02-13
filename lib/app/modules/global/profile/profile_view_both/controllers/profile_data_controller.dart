@@ -54,6 +54,7 @@ class CustomerProfileController extends GetxController {
       // Reset token timestamps in TokenRefreshService
       await TokenRefreshService().resetTokenTimestamp(isProvider: false);
       await TokenRefreshService().resetTokenTimestamp(isProvider: true);
+      Get.reset();
       // Show success message
       CustomSnackBar.showCustomToast(
         message: "Logged out successfully",
