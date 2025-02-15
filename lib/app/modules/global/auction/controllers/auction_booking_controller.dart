@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dirham_uae/app/data/user_service/user_service.dart';
@@ -15,22 +16,27 @@ class CustomerAuctionController extends GetxController {
 
   final searchResults = <AuctionModel>[].obs;
   final TextEditingController searchController = TextEditingController();
+  late final AuctionBidModel auction;
 
   // Observable lists
   final allBookings = <AuctionModel>[].obs;
-  final myAuctions = <AuctionModel>[].obs;
+  final myAuctions = <AuctionBidModel>[].obs;
   final completedBookings = <AuctionModel>[].obs;
   final acceptedBookings = <AuctionModel>[].obs;
   final auctionBids = <AuctionBidModel>[].obs;
   final isBidsLoading = false.obs;
   final bidDetails = Rxn<AuctionBidModel>();
   final isBidDetailsLoading = false.obs;
+  RxBool isAuctionEnded = false.obs;
+  RxString remainingTime = ''.obs;
 
   // Loading states
   final isAllLoading = false.obs;
   final isCompletedLoading = false.obs;
   final isAcceptedLoading = false.obs;
   final isMyAuctionsLoading = false.obs;
+  final currenIndex = 0.obs;
+  Timer? countdownTimer;
 
   // Error state
   final error = ''.obs;
@@ -43,12 +49,51 @@ class CustomerAuctionController extends GetxController {
   void onInit() {
     super.onInit();
     refreshAll();
+    startTimer();
 
     // Listen to search controller changes
     final homeController = Get.find<CustomerHomeController>();
     ever(homeController.searchController.obs, (_) {
       filterAuctions(homeController.searchController.text);
     });
+  }
+
+  @override
+  void onClose() {
+    countdownTimer?.cancel();
+    super.onClose();
+  }
+
+  void startTimer() {
+    try {
+      final deadline = DateTime.parse(auction.service.deadline ?? '00.00');
+
+      countdownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+        final now = DateTime.now();
+        final difference = deadline.difference(now);
+
+        if (difference.isNegative) {
+          timer.cancel();
+          isAuctionEnded.value = true;
+          remainingTime.value = 'Auction Ended';
+        } else {
+          final days = difference.inDays;
+          final hours = difference.inHours % 24;
+          final minutes = difference.inMinutes % 60;
+          final seconds = difference.inSeconds % 60;
+
+          remainingTime.value = '${days}d ${hours}h ${minutes}m ${seconds}s';
+        }
+      });
+    } catch (e) {
+      print('Error in startTimer: $e');
+      remainingTime.value = 'Auction Ended';
+    }
+  }
+
+  // Method to update current image index
+  void updateImageIndex(int index) {
+    currenIndex.value = index;
   }
 
   // Helper method to get headers with token
@@ -125,14 +170,14 @@ class CustomerAuctionController extends GetxController {
       print('Fetching my auctions with headers: $headers');
 
       final response = await http.get(
-        Uri.parse('$baseUrl/auth/get-my-auctions'),
+        Uri.parse('$baseUrl/auth/get-auction-biddings'),
         headers: headers,
       );
 
       final data = _handleResponse(response);
       if (data != null && data['data'] is List) {
         final auctions = (data['data'] as List)
-            .map((item) => AuctionModel.fromJson(item))
+            .map((item) => AuctionBidModel.fromJson(item))
             .toList();
         myAuctions.assignAll(auctions);
       }
@@ -190,6 +235,38 @@ class CustomerAuctionController extends GetxController {
       print('Error in getBidDetails: $e');
     } finally {
       isBidDetailsLoading.value = false;
+    }
+  }
+
+  Future<void> completeBid(int auctionId) async {
+    try {
+      final headers = await _getHeaders();
+      final response = await http.post(
+        Uri.parse('$baseUrl/auth/auction-update-bidding'),
+        headers: headers,
+        body: jsonEncode({
+          'auction_id': auctionId.toString(),
+          'status': 'completed',
+        }),
+      );
+
+      final data = _handleResponse(response);
+      if (data != null && data['success'] == true) {
+        Get.snackbar(
+          'Success',
+          data['message'] ?? 'Auction completed successfully',
+          snackPosition: SnackPosition.TOP,
+        );
+        // Refresh all the lists to update the UI
+        await refreshAll();
+      }
+    } catch (e) {
+      error.value = e.toString();
+      Get.snackbar(
+        'Error',
+        error.value,
+        snackPosition: SnackPosition.TOP,
+      );
     }
   }
 

@@ -5,9 +5,10 @@ import 'package:get/get.dart';
 import '../../auction/model/auction_booking_model.dart';
 
 class AuctionDetailsController extends GetxController {
+  late AuctionModel auction;
+
   RxList<String> images = <String>[].obs;
   RxInt currenIndex = 0.obs;
-  late final AuctionModel auction;
 
   // Add these variables for the timer
   RxBool isAuctionEnded = false.obs;
@@ -17,6 +18,8 @@ class AuctionDetailsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    // setImages(auction);
+    // startTimer();
     if (Get.arguments != null && Get.arguments is AuctionModel) {
       auction = Get.arguments;
       setImages(auction);
@@ -61,6 +64,7 @@ class AuctionDetailsController extends GetxController {
       });
     } catch (e) {
       print('Error in startTimer: $e');
+      remainingTime.value = 'Auction Ended';
     }
   }
 

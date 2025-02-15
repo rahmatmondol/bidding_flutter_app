@@ -110,10 +110,11 @@ class DescriptionView extends GetView<DescriptionController> {
                         return SizedBox(
                           width: size.width,
                           height: 280.0,
-                          child: controller.images.isNotEmpty
+                          child: data.images != null && data.images!.isNotEmpty
                               ? Image.network(
-                                  controller
-                                      .images[controller.currenIndex.value],
+                                  data.images![controller.currenIndex.value]
+                                          .path ??
+                                      '',
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) {
                                     print('Error loading image: $error');

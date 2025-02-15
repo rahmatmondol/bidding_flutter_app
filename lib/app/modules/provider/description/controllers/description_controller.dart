@@ -4,10 +4,9 @@ import '../../home/models/provider_service_model.dart';
 
 // DescriptionController.dart
 class DescriptionController extends GetxController {
+  late final Service data;
   RxList<String> images = <String>[].obs;
   RxInt currenIndex = 0.obs;
-
-  late final Service data;
 
   @override
   void onInit() {

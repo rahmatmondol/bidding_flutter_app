@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,15 +25,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -51,7 +42,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyA1rV5wnPirvZHQjyDowggdngru5jIUUyk',
-    appId: '1:255497040130:android:98c5d0cbd3eec37374921b',
+    appId: '1:255497040130:android:76c0575be85fa8de74921b',
     messagingSenderId: '255497040130',
     projectId: 'bidding-ee056',
     databaseURL: 'https://bidding-ee056-default-rtdb.firebaseio.com',
@@ -65,7 +56,42 @@ class DefaultFirebaseOptions {
     projectId: 'bidding-ee056',
     databaseURL: 'https://bidding-ee056-default-rtdb.firebaseio.com',
     storageBucket: 'bidding-ee056.firebasestorage.app',
-    iosClientId: '255497040130-tjuttb6p8mre59hv0fpd9s95g4mb3ord.apps.googleusercontent.com',
-    iosBundleId: 'com.example.dirhamUae',
+    iosClientId:
+        '255497040130-tjuttb6p8mre59hv0fpd9s95g4mb3ord.apps.googleusercontent.com',
+    iosBundleId: 'com.dirham365.dirham',
+  );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyCxbBnfcik23XD0EuB8LCjcJpbtPhURUoM',
+    appId: '1:255497040130:web:997f70d3769f87a174921b',
+    messagingSenderId: '255497040130',
+    projectId: 'bidding-ee056',
+    authDomain: 'bidding-ee056.firebaseapp.com',
+    databaseURL: 'https://bidding-ee056-default-rtdb.firebaseio.com',
+    storageBucket: 'bidding-ee056.firebasestorage.app',
+    measurementId: 'G-40HGZV2J5E',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyAAJqDejx9PKrutYygBJ5cmvSFXAeF94Zk',
+    appId: '1:255497040130:ios:32d85ea3a9bfe83274921b',
+    messagingSenderId: '255497040130',
+    projectId: 'bidding-ee056',
+    databaseURL: 'https://bidding-ee056-default-rtdb.firebaseio.com',
+    storageBucket: 'bidding-ee056.firebasestorage.app',
+    iosClientId:
+        '255497040130-tjuttb6p8mre59hv0fpd9s95g4mb3ord.apps.googleusercontent.com',
+    iosBundleId: 'com.dirham365.dirham',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyC1haZ9mt_GGYvZ4G84rROjGQ41NpNLMM0',
+    appId: '1:255497040130:web:0f1de0c7bb0f9ea874921b',
+    messagingSenderId: '255497040130',
+    projectId: 'bidding-ee056',
+    authDomain: 'bidding-ee056.firebaseapp.com',
+    databaseURL: 'https://bidding-ee056-default-rtdb.firebaseio.com',
+    storageBucket: 'bidding-ee056.firebasestorage.app',
+    measurementId: 'G-M4CZYBCD4K',
   );
 }

@@ -32,6 +32,7 @@ abstract class Routes {
   static const NOTIFICATION = _Paths.NOTIFICATION;
   static const CUSTOMER_ACCOUNT_DETAILS = _Paths.CUSTOMER_ACCOUNT_DETAILS;
   static const LANGUAGE = _Paths.LANGUAGE;
+  static const MY_AUCTION_BIDS_TO_OTHERS = _Paths.MY_AUCTION_BIDS_TO_OTHERS;
   static const PROPOSALS = _Paths.PROPOSALS;
   static const PRIVACY_AND_POLICY = _Paths.PRIVACY_AND_POLICY;
   static const ABOUT_US = _Paths.ABOUT_US;
@@ -104,6 +105,7 @@ abstract class _Paths {
   static const CUSTOMER_ACCOUNT_DETAILS = '/customer-account-details';
   static const LANGUAGE = '/language';
   static const PROPOSALS = '/proposals';
+  static const MY_AUCTION_BIDS_TO_OTHERS = '/my-auction-bids-to-others';
 
   static const ABOUT_US = '/about-us';
   static const FAVORITE_SERVICE = '/favorite-service';

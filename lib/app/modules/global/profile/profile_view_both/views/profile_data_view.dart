@@ -25,61 +25,65 @@ class CustomerProfileView extends GetView<CustomerProfileController> {
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      body: Container(
-        padding: EdgeInsets.only(
-          top: MediaQuery.paddingOf(context).top + 20.r,
-          left: 15.r,
-          right: 15.r,
-        ),
-        decoration: BoxDecoration(gradient: buildCustomGradient()),
-        child: RefreshIndicator(
-          onRefresh: () => customerAccountDetailsController.getCustomerInfo(),
-          child: Obx(() {
-            if (customerAccountDetailsController.isCustomerInfoloading.value) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            final customerInfo =
-                customerAccountDetailsController.customerInfo.value;
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.only(
+            top: MediaQuery.paddingOf(context).top + 20.r,
+            left: 15.r,
+            right: 15.r,
+          ),
+          decoration: BoxDecoration(gradient: buildCustomGradient()),
+          child: RefreshIndicator(
+            onRefresh: () => customerAccountDetailsController.getCustomerInfo(),
+            child: Obx(() {
+              if (customerAccountDetailsController
+                  .isCustomerInfoloading.value) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              final customerInfo =
+                  customerAccountDetailsController.customerInfo.value;
 
-            return Column(
-              children: [
-                Center(
-                  child: Text(
-                    'Profile',
-                    style: kTitleTextstyle.copyWith(
-                        fontWeight: FontWeight.bold, fontSize: 16.sp),
+              return Column(
+                children: [
+                  Center(
+                    child: Text(
+                      'Profile',
+                      style: kTitleTextstyle.copyWith(
+                          fontWeight: FontWeight.bold, fontSize: 16.sp),
+                    ),
                   ),
-                ),
-                gapHeight(size: 20),
+                  gapHeight(size: 20),
 
-                // Profile Image
-                CircleAvatar(
-                  radius: 60.r,
-                  backgroundImage:
-                      _getProfileImage(customerInfo?.profile?.image),
-                  backgroundColor: LightThemeColors.secounderyColor,
-                  child: _shouldShowDefaultIcon(customerInfo?.profile?.image)
-                      ? Icon(
-                          Icons.person,
-                          size: 60.r,
-                          color: LightThemeColors.whiteColor,
-                        )
-                      : null,
-                ),
+                  // Profile Image
+                  CircleAvatar(
+                    radius: 60.r,
+                    backgroundImage:
+                        _getProfileImage(customerInfo?.profile?.image),
+                    backgroundColor: LightThemeColors.secounderyColor,
+                    child: _shouldShowDefaultIcon(customerInfo?.profile?.image)
+                        ? Icon(
+                            Icons.person,
+                            size: 60.r,
+                            color: LightThemeColors.whiteColor,
+                          )
+                        : null,
+                  ),
 
-                gapHeight(size: 10),
-                Text(
-                  customerInfo?.name ?? 'User',
-                  style: kTitleTextstyle.copyWith(fontWeight: FontWeight.bold),
-                ),
+                  gapHeight(size: 10),
+                  Text(
+                    customerInfo?.name ?? 'User',
+                    style:
+                        kTitleTextstyle.copyWith(fontWeight: FontWeight.bold),
+                  ),
 
-                gapHeight(size: 30),
+                  gapHeight(size: 30),
 
-                // Profile Options
-                _buildProfileOptions(),
-              ],
-            );
-          }),
+                  // Profile Options
+                  _buildProfileOptions(),
+                ],
+              );
+            }),
+          ),
         ),
       ),
     );
@@ -113,6 +117,40 @@ class CustomerProfileView extends GetView<CustomerProfileController> {
           },
         ),
         gapHeight(size: 30),
+        Obx(() {
+          if (controller.isProvider.value) {
+            return Column(
+              children: [
+                ProfileCard(
+                  iconName: Img.proposalIcon,
+                  name: "My Auction Proposals",
+                  ontap: () {
+                    Get.toNamed(Routes.MY_AUCTION_BIDS_TO_OTHERS);
+                  },
+                ),
+              ],
+            );
+          }
+          return const SizedBox.shrink();
+        }),
+        gapHeight(size: 30),
+        Obx(() {
+          if (controller.isProvider.value) {
+            return Column(
+              children: [
+                ProfileCard(
+                  iconName: Img.proposalIcon,
+                  name: "My Service Bids",
+                  ontap: () {
+                    Get.toNamed(Routes.PROPOSALS);
+                  },
+                ),
+              ],
+            );
+          }
+          return const SizedBox.shrink();
+        }),
+        gapHeight(size: 30),
         ProfileCard(
           iconName: Img.languageIcon,
           name: "Language",
@@ -128,23 +166,6 @@ class CustomerProfileView extends GetView<CustomerProfileController> {
             Get.toNamed(Routes.ABOUT_US);
           },
         ),
-        gapHeight(size: 30),
-        Obx(() {
-          if (controller.isProvider.value) {
-            return Column(
-              children: [
-                ProfileCard(
-                  iconName: Img.proposalIcon,
-                  name: "My proposals",
-                  ontap: () {
-                    Get.toNamed(Routes.PROPOSALS);
-                  },
-                ),
-              ],
-            );
-          }
-          return const SizedBox.shrink();
-        }),
         gapHeight(size: 30),
         ProfileCard(
           iconName: Img.termsIcon,

@@ -35,6 +35,9 @@ class Constants {
   static const getBookings = "$baseUrl/auth/get-bookings";
   static const createReview = "$baseUrl/auth/create-review";
 
+  static const getAuctionBiddingToOthersProposal =
+      "$baseUrl/auth/get-my-auction-bidding";
+
   // *************Provider**************
   static const providerSignUpUrl = "$baseUrl/auth/register";
   static const providerLoginUpUrl = "$baseUrl/auth/login";

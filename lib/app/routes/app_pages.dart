@@ -38,6 +38,8 @@ import '../modules/customer/customer_search/bindings/customer_search_binding.dar
 import '../modules/customer/customer_search/views/customer_search_view.dart';
 import '../modules/global/customer_tab/bindings/customertab_binding.dart';
 import '../modules/global/customer_tab/views/customertab_view.dart';
+import '../modules/global/my_auction_bids_to_other/bindings/my_auction_bidding_to_others_proposals_binding.dart';
+import '../modules/global/my_auction_bids_to_other/views/my_auction_bids_to_other_proposals_view.dart';
 import '../modules/global/notification/bindings/notification_binding.dart';
 import '../modules/global/notification/views/notification_view.dart';
 import '../modules/global/pick_location/bindings/pick_location_binding.dart';
@@ -245,6 +247,12 @@ class AppPages {
       name: _Paths.PROPOSALS,
       page: () => const ProposalsView(),
       binding: ProposalsBinding(),
+    ),
+
+    GetPage(
+      name: _Paths.MY_AUCTION_BIDS_TO_OTHERS,
+      page: () => const MyAuctionBidsToOtherProposalsView(),
+      binding: MyAuctionBiddingToOthersProposalsBinding(),
     ),
     GetPage(
       name: _Paths.FAVORITE_SERVICE,
