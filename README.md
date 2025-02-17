@@ -1,16 +1,19 @@
 # dirham_uae
 
-A new Flutter project.
+I am a fresh developer and started this project on dec 31 2024.
+before me another developer maintained this code and worked on it.
 
-## Getting Started
+There was no chance for me to clean the code and maintain usability. still I
+tried. in some cases you will find screens duplicated. That's because 1st
+developer didn't reuse the code.
 
-This project is a starting point for a Flutter application.
+I tryied in some cases but mostly I had no chance to follow. Because of lack of time.
+You will find FVM installed.
 
-A few resources to get you started if this is your first Flutter project:
+"flutterSdkVersion": "3.24.5" and use Kola version of android studio if you find problem.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+thanks.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
+

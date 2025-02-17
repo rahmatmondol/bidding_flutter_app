@@ -2,10 +2,49 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+<!-- For Always location permission -->
+<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+<string>This app needs access to location to show nearby services.</string>
+
+<!-- For When in Use location permission -->
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>This app needs access to location to show nearby services.</string>
+
+<!-- If you need background location updates -->
+<key>NSLocationAlwaysUsageDescription</key>
+<string>This app needs access to location when in the background.</string>
+
+<!-- For precise location -->
+<key>NSLocationTemporaryUsageDescriptionDictionary</key>
+<dict>
+    <key>PreciseLocation</key>
+    <string>This app needs access to precise location to show accurate nearby services.</string>
+</dict>
+<!-- For picking files and photos -->
+<key>NSPhotoLibraryUsageDescription</key>
+<string>This app needs access to your photos to let you share them.</string>
+
+<!-- For picking images from camera -->
+<key>NSCameraUsageDescription</key>
+<string>This app needs camera access to take photos that you can share.</string>
+
+<!-- For picking files from documents -->
+<key>UISupportsDocumentBrowser</key>
+<true/>
+<key>LSSupportsOpeningDocumentsInPlace</key>
+<true/>
+
+<!-- For picking from media library -->
+<key>NSAppleMusicUsageDescription</key>
+<string>This app needs access to your media library to let you pick files.</string>
+
+<!-- If you need to access downloads/files -->
+<key>UIFileSharingEnabled</key>
+<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Dirham Uae</string>
+	<string>Dirham</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

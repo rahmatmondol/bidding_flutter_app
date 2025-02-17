@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "255497040130",
+    "firebase_url": "https://bidding-ee056-default-rtdb.firebaseio.com",
+    "project_id": "bidding-ee056",
+    "storage_bucket": "bidding-ee056.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255497040130:android:76c0575be85fa8de74921b",
+        "android_client_info": {
+          "package_name": "com.dirham365.dirham"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "255497040130-050h9cfchjhfkhr43troqkuedgp26h1c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1rV5wnPirvZHQjyDowggdngru5jIUUyk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "255497040130-050h9cfchjhfkhr43troqkuedgp26h1c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "255497040130-palo9f7epsjhdeeimot0irdjggsoae6e.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dirham365.dirham"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255497040130:android:98c5d0cbd3eec37374921b",
+        "android_client_info": {
+          "package_name": "com.example.dirham_uae"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "255497040130-050h9cfchjhfkhr43troqkuedgp26h1c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1rV5wnPirvZHQjyDowggdngru5jIUUyk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "255497040130-050h9cfchjhfkhr43troqkuedgp26h1c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "255497040130-palo9f7epsjhdeeimot0irdjggsoae6e.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dirham365.dirham"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
